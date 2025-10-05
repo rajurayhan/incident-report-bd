@@ -153,18 +153,24 @@ const loading = ref(true)
 const fetchComments = async () => {
   try {
     const response = await axios.get('/api/user/comments')
-    comments.value = response.data
+    console.log('Comments response:', response.data)
+    comments.value = response.data || []
   } catch (error) {
     console.error('Error fetching comments:', error)
+    console.error('Error details:', error.response?.data || error.message)
+    comments.value = []
   }
 }
 
 const fetchVerifications = async () => {
   try {
     const response = await axios.get('/api/user/verifications')
-    verifications.value = response.data
+    console.log('Verifications response:', response.data)
+    verifications.value = response.data || []
   } catch (error) {
     console.error('Error fetching verifications:', error)
+    console.error('Error details:', error.response?.data || error.message)
+    verifications.value = []
   }
 }
 

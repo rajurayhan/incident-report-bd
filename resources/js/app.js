@@ -3,6 +3,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createRouter, createWebHistory } from 'vue-router';
 import { createHead } from '@vueuse/head';
+import i18n from './i18n';
 
 // Import components
 import App from './components/App.vue';
@@ -54,5 +55,6 @@ const app = createApp(App);
 app.use(pinia);
 app.use(router);
 app.use(head);
+app.use(i18n);
 
 app.mount('#app');

@@ -22,12 +22,17 @@
               class="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               :class="{ 'text-red-600 bg-red-50': $route.name === item.routeName }"
             >
-              {{ item.label }}
+              {{ $t(`nav.${item.name}`) }}
             </router-link>
           </div>
           
+          <!-- Language Switcher -->
+          <div class="border-l border-gray-200 pl-4">
+            <LanguageSwitcher />
+          </div>
+          
           <!-- User Actions -->
-          <div v-if="user" class="flex items-center space-x-2 ml-4 pl-4 border-l border-gray-200">
+          <div v-if="user" class="flex items-center space-x-2 pl-4 border-l border-gray-200">
             <UserMenu />
           </div>
           
@@ -62,6 +67,7 @@ import { computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import UserMenu from './UserMenu.vue'
 import MobileMenu from './MobileMenu.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const authStore = useAuthStore()
 
@@ -72,25 +78,21 @@ const user = computed(() => authStore.user)
 const navigationItems = [
   {
     name: 'home',
-    label: 'Home',
     to: '/',
     routeName: 'home'
   },
   {
     name: 'report',
-    label: 'Report Incident',
     to: '/report',
     routeName: 'report'
   },
   {
     name: 'map',
-    label: 'Map',
     to: '/map',
     routeName: 'map'
   },
   {
     name: 'analytics',
-    label: 'Analytics',
     to: '/analytics',
     routeName: 'analytics'
   }

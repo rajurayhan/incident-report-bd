@@ -3,20 +3,20 @@
     <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
+          {{ $t('auth.signIn') }}
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          Or
-          <router-link to="/register" class="font-medium text-red-600 hover:text-red-500">
-            create a new account
+          {{ $t('auth.orCreate') }}
+          <router-link to="/register" class="font-medium text-red-600 hover:text-red-500 ml-1">
+            {{ $t('nav.register') }}
           </router-link>
         </p>
       </div>
       
       <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-        <div class="rounded-md shadow-sm -space-y-px">
+        <div class="space-y-4">
           <div>
-            <label for="email" class="sr-only">Email address</label>
+            <label for="email" class="sr-only">{{ $t('auth.email') }}</label>
             <input
               id="email"
               v-model="form.email"
@@ -24,12 +24,12 @@
               type="email"
               autocomplete="email"
               required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-              placeholder="Email address"
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+              :placeholder="$t('auth.email')"
             />
           </div>
           <div>
-            <label for="password" class="sr-only">Password</label>
+            <label for="password" class="sr-only">{{ $t('auth.password') }}</label>
             <input
               id="password"
               v-model="form.password"
@@ -37,8 +37,8 @@
               type="password"
               autocomplete="current-password"
               required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-              placeholder="Password"
+              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+              :placeholder="$t('auth.password')"
             />
           </div>
         </div>
@@ -61,7 +61,7 @@
         <div class="flex items-center justify-between">
           <div class="text-sm">
             <router-link to="/forgot-password" class="font-medium text-red-600 hover:text-red-500">
-              Forgot your password?
+              {{ $t('auth.forgotPassword') }}
             </router-link>
           </div>
         </div>
@@ -72,8 +72,8 @@
             :disabled="loading"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span v-if="loading">Signing in...</span>
-            <span v-else>Sign in</span>
+            <span v-if="loading">{{ $t('auth.signingIn') }}</span>
+            <span v-else>{{ $t('auth.signInButton') }}</span>
           </button>
         </div>
       </form>
