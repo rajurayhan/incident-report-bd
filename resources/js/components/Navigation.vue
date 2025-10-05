@@ -1,5 +1,12 @@
 <template>
-  <nav class="bg-white shadow-lg">
+  <nav 
+    class="bg-white shadow-lg transition-all duration-300 ease-in-out"
+    :class="{
+      'fixed top-0 left-0 right-0 z-50 transform': isFloating,
+      'relative transform -translate-y-full opacity-0': isHidden,
+      'relative transform translate-y-0 opacity-100': !isFloating && !isHidden
+    }"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <!-- Logo/Brand -->
@@ -60,16 +67,28 @@
       </div>
     </div>
   </nav>
+  
+  <!-- Spacer to prevent content jump when nav becomes fixed -->
+  <div v-if="isFloating" class="h-16"></div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import { useRoute } from 'vue-router'
 import UserMenu from './UserMenu.vue'
 import MobileMenu from './MobileMenu.vue'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const authStore = useAuthStore()
+const route = useRoute()
+
+// Scroll detection for floating navigation
+const isFloating = ref(false)
+const isHidden = ref(false)
+const lastScrollY = ref(0)
+const scrollThreshold = 100 // Minimum scroll distance to trigger floating
+const hideThreshold = 200 // Scroll distance to hide navigation when scrolling down
 
 // Computed properties
 const user = computed(() => authStore.user)
@@ -97,4 +116,107 @@ const navigationItems = [
     routeName: 'analytics'
   }
 ]
+
+// Scroll handler
+const handleScroll = () => {
+  const currentScrollY = window.scrollY
+  
+  // Only activate floating on desktop (md and up)
+  if (window.innerWidth >= 768) {
+    if (currentScrollY > scrollThreshold) {
+      // Scrolling down - hide navigation with smooth transition
+      if (currentScrollY > lastScrollY.value && currentScrollY > hideThreshold) {
+        isFloating.value = false
+        isHidden.value = true
+      }
+      // Scrolling up - show floating navigation with smooth transition
+      else if (currentScrollY < lastScrollY.value) {
+        isFloating.value = true
+        isHidden.value = false
+      }
+    } else {
+      // Near top of page - always show normal navigation
+      isFloating.value = false
+      isHidden.value = false
+    }
+  } else {
+    // On mobile, always use normal navigation
+    isFloating.value = false
+    isHidden.value = false
+  }
+  
+  lastScrollY.value = currentScrollY
+}
+
+// Resize handler to reset floating on mobile
+const handleResize = () => {
+  if (window.innerWidth < 768) {
+    isFloating.value = false
+    isHidden.value = false
+  }
+}
+
+// Reset navigation state when route changes
+watch(() => route.path, () => {
+  // Reset navigation to normal state when navigating to a new page
+  isFloating.value = false
+  isHidden.value = false
+  lastScrollY.value = 0
+})
+
+// Lifecycle hooks
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleResize)
+})
 </script>
+
+<style scoped>
+/* Enhanced floating navigation styles */
+nav.fixed {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* Smooth transitions for all navigation states */
+nav {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, opacity;
+}
+
+/* Hidden state - slides up and fades out */
+nav.transform.-translate-y-full {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Normal state - visible and in place */
+nav.transform.translate-y-0 {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Ensure proper z-index stacking */
+nav.fixed {
+  z-index: 1000;
+}
+
+/* Prevent content jump when navigation becomes fixed */
+nav + div {
+  transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Smooth backdrop blur transition */
+nav.fixed {
+  transition: backdrop-filter 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+</style>

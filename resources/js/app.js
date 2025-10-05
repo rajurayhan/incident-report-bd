@@ -43,6 +43,46 @@ const router = createRouter({
     routes,
 });
 
+// Smooth scroll to top utility function
+const smoothScrollToTop = () => {
+    const currentScrollY = window.scrollY;
+    
+    // If we're already at the top, no need to scroll
+    if (currentScrollY === 0) return;
+    
+    // Create a smooth scroll animation
+    const startTime = performance.now();
+    const duration = Math.min(800, currentScrollY * 0.5); // Dynamic duration based on scroll distance
+    
+    const animateScroll = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Use easeOutCubic for smooth deceleration
+        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+        const scrollY = currentScrollY * (1 - easeOutCubic);
+        
+        window.scrollTo(0, scrollY);
+        
+        if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+        }
+    };
+    
+    requestAnimationFrame(animateScroll);
+};
+
+// Smooth scroll to top on route change
+router.afterEach((to, from) => {
+    // Only scroll to top if we're navigating to a different route
+    if (to.path !== from.path) {
+        // Use our custom smooth scroll function with a slight delay
+        setTimeout(() => {
+            smoothScrollToTop();
+        }, 150);
+    }
+});
+
 // Create Pinia store
 const pinia = createPinia();
 

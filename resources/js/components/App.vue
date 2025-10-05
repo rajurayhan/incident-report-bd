@@ -10,10 +10,14 @@
 
     <!-- Footer -->
     <Footer />
+    
+    <!-- Scroll to Top Button -->
+    <ScrollToTop />
   </div>
 </template>
 
 <script setup>
 import Navigation from './Navigation.vue'
 import Footer from './Footer.vue'
+import ScrollToTop from './ScrollToTop.vue'
 </script>
