@@ -19,5 +19,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Seed fake incidents for heat map visualization
+        $this->call(IncidentSeeder::class);
     }
 }

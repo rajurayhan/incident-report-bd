@@ -7,6 +7,11 @@ Route::get('/incident/{id}', function () {
     return view('welcome');
 })->where('id', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}');
 
+// Map route
+Route::get('/map', function () {
+    return view('welcome');
+});
+
 // Serve the Vue.js app for all other frontend routes
 // This catch-all route should be last to avoid conflicts with API routes
 Route::get('/{any}', function () {

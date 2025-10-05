@@ -27,6 +27,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // Incident routes (public read access)
 Route::get('/incidents', [IncidentController::class, 'index']);
 Route::get('/incidents/{id}', [IncidentController::class, 'show']);
+Route::get('/incidents/map/data', [IncidentController::class, 'mapData']);
 
 // Analytics (public read access)
 Route::get('/analytics/stats', [AnalyticsController::class, 'stats']);

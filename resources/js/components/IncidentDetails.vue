@@ -17,20 +17,17 @@
 
     <div v-else-if="incident" class="bg-white shadow-lg rounded-lg p-6">
       <!-- Header -->
-      <div class="flex justify-between items-start mb-6">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ incident.title }}</h1>
-          <div class="flex items-center space-x-4 text-sm text-gray-600">
-            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded">{{ incident.category_label }}</span>
-            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded">{{ incident.status_label }}</span>
-            <span class="px-2 py-1 bg-green-100 text-green-800 rounded">{{ incident.priority_label }}</span>
+      <PageHeader 
+        :title="incident.title"
+        :subtitle="`${incident.category_label} • ${incident.status_label} • ${incident.priority_label}`"
+      >
+        <template #actions>
+          <div class="text-right text-sm text-gray-500">
+            <p>Reported: {{ formatDate(incident.created_at) }}</p>
+            <p v-if="incident.incident_date">Incident Date: {{ formatDate(incident.incident_date) }}</p>
           </div>
-        </div>
-        <div class="text-right text-sm text-gray-500">
-          <p>Reported: {{ formatDate(incident.created_at) }}</p>
-          <p v-if="incident.incident_date">Incident Date: {{ formatDate(incident.incident_date) }}</p>
-        </div>
-      </div>
+        </template>
+      </PageHeader>
 
       <!-- Description -->
       <div class="mb-6">
@@ -125,93 +122,72 @@
       <div v-if="incident.media && incident.media.length > 0" class="mb-6">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Media</h3>
         
-        <!-- Debug Info (remove this later) -->
-        <div class="mb-2 text-xs text-gray-500 bg-gray-100 p-2 rounded">
-          Debug: Media count: {{ incident.media.length }}, 
-          Current index: {{ currentSliderIndex }}, 
-          Current media: {{ incident.media[currentSliderIndex]?.file_name || 'none' }},
-          File path: {{ incident.media[currentSliderIndex]?.file_path || 'none' }}
-        </div>
-        
-        <!-- Main Slider -->
-        <div class="relative bg-gray-100 rounded-lg overflow-hidden mb-4">
-          <!-- Main Image/Video Display -->
-          <div class="relative aspect-video cursor-pointer group" @click="openGallery(currentSliderIndex)">
-            <!-- Main Image Display -->
-            <img v-if="incident.media && incident.media.length > 0 && incident.media[currentSliderIndex] && incident.media[currentSliderIndex].file_type === 'image'" 
-                 :src="getMediaUrl(incident.media[currentSliderIndex])" 
-                 :alt="incident.media[currentSliderIndex].file_name"
-                 class="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
-                 @load="console.log('Image loaded successfully:', incident.media[currentSliderIndex].file_name)"
-                 @error="console.log('Image failed to load:', $event.target.src)">
-            
-            <div v-else-if="incident.media && incident.media[currentSliderIndex] && incident.media[currentSliderIndex].file_type === 'video'" 
-                 class="w-full h-full bg-gray-900 flex items-center justify-center">
-              <div class="text-center text-white">
-                <div class="text-6xl mb-4">▶️</div>
-                <div class="text-lg font-medium">{{ incident.media[currentSliderIndex].file_name }}</div>
-                <div class="text-sm text-gray-400 mt-2">{{ incident.media[currentSliderIndex].file_type }}</div>
+        <!-- CSS Radio Button Slider -->
+        <div class="media-slider">
+          <!-- Radio Inputs for Navigation -->
+          <input 
+            v-for="(media, index) in incident.media" 
+            :key="`radio-${media.id}`"
+            type="radio" 
+            :name="`slider-${incident.id}`" 
+            :id="`slide-${incident.id}-${index}`"
+            :checked="index === 0"
+            class="slider-radio"
+            @change="updateSliderIndex(index)"
+          >
+          
+          <!-- Slides Container -->
+          <div class="slides-container">
+            <div 
+              v-for="(media, index) in incident.media" 
+              :key="`slide-${media.id}`"
+              class="slide"
+              @click="openGallery(index)"
+            >
+              <!-- Image Slide -->
+              <div v-if="media.file_type === 'image'" class="slide-content">
+                <img 
+                  :src="getMediaUrl(media)" 
+                  :alt="media.file_name"
+                  class="slide-image"
+                  @load="console.log('Image loaded:', media.file_name)"
+                  @error="console.log('Image failed to load:', $event.target.src)"
+                >
+                
+                <!-- Zoom Overlay -->
+                <div class="zoom-overlay">
+                  <svg class="zoom-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                  </svg>
+                </div>
               </div>
-            </div>
-            
-            <!-- Fallback for loading or no media -->
-            <div v-else class="w-full h-full bg-gray-200 flex items-center justify-center">
-              <div class="text-center text-gray-500">
-                <div class="text-4xl mb-2">📷</div>
-                <div class="text-sm">Loading media...</div>
-              </div>
-            </div>
-            
-            <!-- Overlay with play icon for images -->
-            <div v-if="incident.media && incident.media[currentSliderIndex] && incident.media[currentSliderIndex].file_type === 'image'" 
-                 class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-              <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
-                </svg>
+              
+              <!-- Video Slide -->
+              <div v-else-if="media.file_type === 'video'" class="slide-content video-slide">
+                <div class="video-placeholder">
+                  <div class="video-icon">▶️</div>
+                  <div class="video-title">{{ media.file_name }}</div>
+                  <div class="video-type">{{ media.file_type }}</div>
+                </div>
               </div>
             </div>
           </div>
-
-          <!-- Navigation Arrows -->
-          <button v-if="incident.media.length > 1 && currentSliderIndex > 0" 
-                  @click.stop="previousSliderImage" 
-                  class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-          </button>
-
-          <button v-if="incident.media.length > 1 && currentSliderIndex < incident.media.length - 1" 
-                  @click.stop="nextSliderImage" 
-                  class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </button>
-
-          <!-- Image Counter -->
-          <div v-if="incident.media.length > 1" 
-               class="absolute top-4 right-4 bg-black/50 text-white text-sm px-3 py-1 rounded-full">
-            {{ currentSliderIndex + 1 }} / {{ incident.media.length }}
+          
+          <!-- Navigation Dots -->
+          <div class="navigation-dots">
+            <label 
+              v-for="(media, index) in incident.media" 
+              :key="`dot-${media.id}`"
+              :for="`slide-${incident.id}-${index}`"
+              class="nav-dot"
+            ></label>
           </div>
-        </div>
-
-        <!-- Thumbnail Strip -->
-        <div v-if="incident.media.length > 1" class="flex space-x-2 overflow-x-auto pb-2">
-          <div v-for="(media, index) in incident.media" :key="media.id" 
-               @click="goToSliderImage(index)"
-               class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden cursor-pointer transition-all duration-200"
-               :class="index === currentSliderIndex ? 'ring-2 ring-blue-500' : 'opacity-60 hover:opacity-80'">
-            <img v-if="media.file_type === 'image'" 
-                 :src="getMediaUrl(media)" 
-                 :alt="media.file_name"
-                 class="w-full h-full object-cover">
-            <div v-else class="w-full h-full bg-gray-200 flex items-center justify-center">
-              <div class="text-center text-gray-500">
-                <div class="text-lg">📹</div>
-              </div>
-            </div>
+          
+          <!-- Slide Counter -->
+          <div class="slide-counter">
+            <span class="current-slide">{{ currentSliderIndex + 1 }}</span>
+            <span class="slide-separator">/</span>
+            <span class="total-slides">{{ incident.media.length }}</span>
           </div>
         </div>
       </div>
@@ -345,9 +321,376 @@
   </div>
 </template>
 
+<style scoped>
+/* CSS Radio Button Slider Styles */
+.media-slider {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background: #f8fafc;
+}
+
+.slider-radio {
+  display: none;
+}
+
+.slides-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.slide-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.slide:hover .slide-image {
+  transform: scale(1.05);
+}
+
+.zoom-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.slide:hover .zoom-overlay {
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 1;
+}
+
+.zoom-icon {
+  width: 48px;
+  height: 48px;
+  color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.video-slide {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.video-placeholder {
+  text-align: center;
+  color: white;
+  padding: 2rem;
+}
+
+.video-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.video-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.video-type {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Radio button navigation - Show first slide by default */
+.slide:first-child {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Radio button navigation - Show specific slide when radio is checked */
+.slider-radio:nth-child(1):checked ~ .slides-container .slide:nth-child(1) {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slider-radio:nth-child(2):checked ~ .slides-container .slide:nth-child(1) {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slider-radio:nth-child(2):checked ~ .slides-container .slide:nth-child(2) {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slider-radio:nth-child(3):checked ~ .slides-container .slide:nth-child(1),
+.slider-radio:nth-child(3):checked ~ .slides-container .slide:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slider-radio:nth-child(3):checked ~ .slides-container .slide:nth-child(3) {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slider-radio:nth-child(4):checked ~ .slides-container .slide:nth-child(1),
+.slider-radio:nth-child(4):checked ~ .slides-container .slide:nth-child(2),
+.slider-radio:nth-child(4):checked ~ .slides-container .slide:nth-child(3) {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slider-radio:nth-child(4):checked ~ .slides-container .slide:nth-child(4) {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slider-radio:nth-child(5):checked ~ .slides-container .slide:nth-child(1),
+.slider-radio:nth-child(5):checked ~ .slides-container .slide:nth-child(2),
+.slider-radio:nth-child(5):checked ~ .slides-container .slide:nth-child(3),
+.slider-radio:nth-child(5):checked ~ .slides-container .slide:nth-child(4) {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slider-radio:nth-child(5):checked ~ .slides-container .slide:nth-child(5) {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Navigation Dots */
+.navigation-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.nav-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.nav-dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+/* Navigation dots - Show first dot as active by default */
+.nav-dot:first-child {
+  background: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Navigation dots - Show specific dot as active when radio is checked */
+.slider-radio:nth-child(1):checked ~ .navigation-dots .nav-dot:nth-child(1) {
+  background: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.slider-radio:nth-child(2):checked ~ .navigation-dots .nav-dot:nth-child(1) {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+.slider-radio:nth-child(2):checked ~ .navigation-dots .nav-dot:nth-child(2) {
+  background: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.slider-radio:nth-child(3):checked ~ .navigation-dots .nav-dot:nth-child(1),
+.slider-radio:nth-child(3):checked ~ .navigation-dots .nav-dot:nth-child(2) {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+.slider-radio:nth-child(3):checked ~ .navigation-dots .nav-dot:nth-child(3) {
+  background: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.slider-radio:nth-child(4):checked ~ .navigation-dots .nav-dot:nth-child(1),
+.slider-radio:nth-child(4):checked ~ .navigation-dots .nav-dot:nth-child(2),
+.slider-radio:nth-child(4):checked ~ .navigation-dots .nav-dot:nth-child(3) {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+.slider-radio:nth-child(4):checked ~ .navigation-dots .nav-dot:nth-child(4) {
+  background: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.slider-radio:nth-child(5):checked ~ .navigation-dots .nav-dot:nth-child(1),
+.slider-radio:nth-child(5):checked ~ .navigation-dots .nav-dot:nth-child(2),
+.slider-radio:nth-child(5):checked ~ .navigation-dots .nav-dot:nth-child(3),
+.slider-radio:nth-child(5):checked ~ .navigation-dots .nav-dot:nth-child(4) {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+.slider-radio:nth-child(5):checked ~ .navigation-dots .nav-dot:nth-child(5) {
+  background: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Slide Counter */
+.slide-counter {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.current-slide {
+  font-weight: 600;
+}
+
+.slide-separator {
+  margin: 0 4px;
+  opacity: 0.7;
+}
+
+.total-slides {
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .media-slider {
+    height: 300px;
+  }
+  
+  .navigation-dots {
+    bottom: 15px;
+  }
+  
+  .nav-dot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .slide-counter {
+    top: 15px;
+    right: 15px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+  
+  .video-icon {
+    font-size: 3rem;
+  }
+  
+  .video-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .media-slider {
+    height: 250px;
+  }
+  
+  .zoom-icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .video-icon {
+    font-size: 2.5rem;
+  }
+}
+
+/* Animation for slide transitions */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+/* Smooth transitions for all slides */
+.slide {
+  animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus styles for accessibility */
+.slider-radio:focus + .slides-container .slide {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.nav-dot:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+</style>
+
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import PageHeader from './PageHeader.vue'
 
 const route = useRoute()
 const incident = ref(null)
@@ -557,16 +900,33 @@ const copyCoordinates = async () => {
 const nextSliderImage = () => {
   if (currentSliderIndex.value < incident.value.media.length - 1) {
     currentSliderIndex.value++
+    // Trigger radio button change
+    const radioId = `slide-${incident.value.id}-${currentSliderIndex.value}`
+    const radio = document.getElementById(radioId)
+    if (radio) radio.checked = true
   }
 }
 
 const previousSliderImage = () => {
   if (currentSliderIndex.value > 0) {
     currentSliderIndex.value--
+    // Trigger radio button change
+    const radioId = `slide-${incident.value.id}-${currentSliderIndex.value}`
+    const radio = document.getElementById(radioId)
+    if (radio) radio.checked = true
   }
 }
 
 const goToSliderImage = (index) => {
+  currentSliderIndex.value = index
+  // Trigger radio button change
+  const radioId = `slide-${incident.value.id}-${index}`
+  const radio = document.getElementById(radioId)
+  if (radio) radio.checked = true
+}
+
+// Update slider index when radio button changes
+const updateSliderIndex = (index) => {
   currentSliderIndex.value = index
 }
 

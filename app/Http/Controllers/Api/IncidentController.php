@@ -205,4 +205,92 @@ class IncidentController extends Controller
 
         return response()->json($incident);
     }
+
+    public function mapData(Request $request)
+    {
+        $query = Incident::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->with(['user', 'media']);
+
+        // Apply filters
+        if ($request->has('category')) {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('verified')) {
+            $query->where('is_verified', $request->boolean('verified'));
+        }
+
+        if ($request->has('bounds')) {
+            $bounds = $request->bounds;
+            if (isset($bounds['north'], $bounds['south'], $bounds['east'], $bounds['west'])) {
+                $query->whereBetween('latitude', [$bounds['south'], $bounds['north']])
+                      ->whereBetween('longitude', [$bounds['west'], $bounds['east']]);
+            }
+        }
+
+        // Get incidents with coordinates
+        $incidents = $query->orderBy('created_at', 'desc')->get();
+
+        // Format data for map
+        $mapData = $incidents->map(function ($incident) {
+            return [
+                'id' => $incident->id,
+                'title' => $incident->title,
+                'description' => $incident->description,
+                'category' => $incident->category,
+                'category_label' => $incident->category_label,
+                'status' => $incident->status,
+                'status_label' => $incident->status_label,
+                'priority' => $incident->priority,
+                'priority_label' => $incident->priority_label,
+                'is_verified' => $incident->is_verified,
+                'verification_count' => $incident->verification_count,
+                'dispute_count' => $incident->dispute_count,
+                'verification_ratio' => $incident->verification_ratio,
+                'latitude' => (float) $incident->latitude,
+                'longitude' => (float) $incident->longitude,
+                'address' => $incident->address,
+                'city' => $incident->city,
+                'district' => $incident->district,
+                'division' => $incident->division,
+                'incident_date' => $incident->incident_date,
+                'created_at' => $incident->created_at,
+                'media_count' => $incident->media->count(),
+                'has_media' => $incident->media->count() > 0,
+                'reporter_name' => $incident->is_anonymous ? 'Anonymous' : $incident->reporter_name,
+            ];
+        });
+
+        return response()->json([
+            'incidents' => $mapData,
+            'total' => $mapData->count(),
+            'bounds' => $this->calculateBounds($incidents)
+        ]);
+    }
+
+    private function calculateBounds($incidents)
+    {
+        if ($incidents->isEmpty()) {
+            return null;
+        }
+
+        $latitudes = $incidents->pluck('latitude')->filter();
+        $longitudes = $incidents->pluck('longitude')->filter();
+
+        if ($latitudes->isEmpty() || $longitudes->isEmpty()) {
+            return null;
+        }
+
+        return [
+            'north' => $latitudes->max(),
+            'south' => $latitudes->min(),
+            'east' => $longitudes->max(),
+            'west' => $longitudes->min(),
+        ];
+    }
 }
