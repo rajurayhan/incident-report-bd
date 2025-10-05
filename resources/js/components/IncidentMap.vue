@@ -505,14 +505,27 @@ const addIncidentMarker = (incident) => {
   marker.bindPopup(popup)
   
   // Add click listener when popup opens
-  marker.on('popupopen', () => {
-    const btn = document.querySelector('.incident-details-btn')
-    if (btn) {
-      btn.addEventListener('click', () => {
-        const incidentId = btn.getAttribute('data-incident-id')
-        router.push(`/incident/${incidentId}`)
-      })
-    }
+  marker.on('popupopen', (e) => {
+    // Use setTimeout to ensure DOM is ready
+    setTimeout(() => {
+      const popupElement = e.popup.getElement()
+      const btn = popupElement?.querySelector('.incident-details-btn')
+      if (btn) {
+        // Remove any existing listeners to prevent duplicates
+        const newBtn = btn.cloneNode(true)
+        btn.parentNode.replaceChild(newBtn, btn)
+        
+        // Add fresh click listener
+        newBtn.addEventListener('click', (event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          const incidentId = newBtn.getAttribute('data-incident-id')
+          if (incidentId) {
+            router.push(`/incident/${incidentId}`)
+          }
+        })
+      }
+    }, 10)
   })
   
   marker.addTo(map.value)
