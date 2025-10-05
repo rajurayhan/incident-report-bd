@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('incident_verifications', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('incident_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('incident_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->nullable()->constrained()->onDelete('set null');
             $table->enum('verification_type', ['confirm', 'dispute']);
             $table->text('comment')->nullable();
             $table->boolean('is_anonymous')->default(false);

@@ -403,7 +403,12 @@ const submitReport = async () => {
     // Add form fields
     Object.keys(form).forEach(key => {
       if (form[key] !== '') {
-        formData.append(key, form[key]);
+        // Convert boolean to string for FormData
+        if (key === 'is_anonymous') {
+          formData.append(key, form[key] ? 'true' : 'false');
+        } else {
+          formData.append(key, form[key]);
+        }
       }
     });
 

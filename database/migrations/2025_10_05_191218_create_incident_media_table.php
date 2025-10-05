@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('incident_media', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('incident_id')->constrained()->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('incident_id')->constrained()->onDelete('cascade');
             $table->string('file_path');
             $table->string('file_name');
             $table->string('file_type'); // image, video, audio

@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_alerts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('incident_id')->constrained()->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignUuid('incident_id')->constrained()->onDelete('cascade');
             $table->string('phone_number')->nullable();
             $table->string('email')->nullable();
             $table->enum('alert_type', ['sms', 'email', 'push']);

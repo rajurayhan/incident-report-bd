@@ -2,6 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+// Specific routes for better SEO and direct access
+Route::get('/incident/{id}', function () {
     return view('welcome');
-});
+})->where('id', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}');
+
+// Serve the Vue.js app for all other frontend routes
+// This catch-all route should be last to avoid conflicts with API routes
+Route::get('/{any}', function () {
+    return view('welcome');
+})->where('any', '^(?!api).*$');
