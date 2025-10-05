@@ -3,8 +3,8 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Profile</h1>
-        <p class="mt-2 text-gray-600">Manage your account information</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ $t('profile.profile') }}</h1>
+        <p class="mt-2 text-gray-600">{{ $t('profile.updateProfile') }}</p>
       </div>
 
       <!-- Profile Card -->
@@ -34,7 +34,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Name -->
               <div>
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">{{ $t('auth.name') }}</label>
                 <input
                   type="text"
                   id="name"
@@ -46,7 +46,7 @@
 
               <!-- Email -->
               <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">{{ $t('auth.email') }}</label>
                 <input
                   type="email"
                   id="email"
@@ -58,7 +58,7 @@
 
               <!-- Phone -->
               <div>
-                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">{{ $t('auth.phone') }}</label>
                 <input
                   type="tel"
                   id="phone"
@@ -70,7 +70,7 @@
 
               <!-- City -->
               <div>
-                <label for="city" class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                <label for="city" class="block text-sm font-medium text-gray-700 mb-2">{{ $t('profile.city') }}</label>
                 <input
                   type="text"
                   id="city"
@@ -123,7 +123,7 @@
             <div class="grid grid-cols-1 gap-6">
               <!-- Current Password -->
               <div>
-                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">{{ $t('profile.currentPassword') }}</label>
                 <input
                   type="password"
                   id="current_password"
@@ -135,7 +135,7 @@
 
               <!-- New Password -->
               <div>
-                <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">{{ $t('profile.newPassword') }}</label>
                 <input
                   type="password"
                   id="new_password"
@@ -147,7 +147,7 @@
 
               <!-- Confirm New Password -->
               <div>
-                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">{{ $t('auth.confirmPassword') }}</label>
                 <input
                   type="password"
                   id="password_confirmation"

@@ -80,18 +80,44 @@ export default {
     confirmed: 'নিশ্চিত করা হয়েছে',
     disputed: 'বিতর্কিত'
   },
-  common: {
-    cancel: 'বাতিল',
-    save: 'সংরক্ষণ',
-    edit: 'সম্পাদনা',
-    delete: 'মুছে ফেলুন',
-    close: 'বন্ধ করুন',
-    back: 'পিছনে',
-    next: 'পরবর্তী',
-    submit: 'জমা দিন',
-    search: 'অনুসন্ধান',
-    filter: 'ফিল্টার',
-    all: 'সব'
-  }
+  home: {
+    hero: {
+      badge: 'কমিউনিটি নিরাপত্তা প্ল্যাটফর্ম',
+      title: 'ঘটনা রিপোর্ট করুন,',
+      subtitle: 'কমিউনিটিকে নিরাপদ রাখুন',
+      description: 'বাংলাদেশ জুড়ে ঘটনা রিপোর্ট এবং ট্র্যাক করার জন্য একটি কমিউনিটি-চালিত প্ল্যাটফর্ম। আপনার এলাকাকে নিরাপদ রাখতে সাহায্য করুন।',
+      reportIncident: 'ঘটনা রিপোর্ট করুন',
+      viewMap: 'মানচিত্র দেখুন'
+    },
+    nearbyIncidents: {
+      title: 'আপনার কাছাকাছি ঘটনা',
+      description: 'আপনার অবস্থান থেকে {radius}কিমি এর মধ্যে রিপোর্ট',
+      refresh: 'রিফ্রেশ',
+      viewAll: 'সব {count}টি কাছাকাছি ঘটনা দেখুন',
+      kmAway: '{distance} কিমি দূরে'
+    },
+    locationRequest: {
+      title: 'আপনার কাছাকাছি ঘটনা দেখুন',
+      description: 'আপনার এলাকায় ঘটমান ঘটনা দেখতে অবস্থান অ্যাক্সেস অনুমতি দিন',
+      enableLocation: 'অবস্থান সক্রিয় করুন'
+    },
+    stats: {
+      totalReports: 'মোট রিপোর্ট',
+      verifiedReports: 'যাচাইকৃত রিপোর্ট',
+      activeLocations: 'সক্রিয় অবস্থান',
+      resolvedToday: 'আজ সমাধান হয়েছে'
+    },
+    recentIncidents: {
+      title: 'সাম্প্রতিক ঘটনা',
+      description: 'আপনার কমিউনিটি থেকে সর্বশেষ রিপোর্ট',
+      viewAll: 'সব দেখুন',
+      noIncidents: 'এখনো কোনো ঘটনা রিপোর্ট করা হয়নি',
+      beFirst: 'প্রথম ঘটনা রিপোর্ট করুন!'
+    },
+    categories: {
+      title: 'রিপোর্ট বিভাগ',
+      description: 'বিভাগ অনুযায়ী ঘটনা ব্রাউজ করুন'
+    }
+  },
 }
 

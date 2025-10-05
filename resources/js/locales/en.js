@@ -80,18 +80,44 @@ export default {
     confirmed: 'Confirmed',
     disputed: 'Disputed'
   },
-  common: {
-    cancel: 'Cancel',
-    save: 'Save',
-    edit: 'Edit',
-    delete: 'Delete',
-    close: 'Close',
-    back: 'Back',
-    next: 'Next',
-    submit: 'Submit',
-    search: 'Search',
-    filter: 'Filter',
-    all: 'All'
-  }
+  home: {
+    hero: {
+      badge: 'Community Safety Platform',
+      title: 'Report Incidents,',
+      subtitle: 'Keep Communities Safe',
+      description: 'A community-driven platform for reporting and tracking incidents across Bangladesh. Help keep your neighborhood safe.',
+      reportIncident: 'Report Incident',
+      viewMap: 'View Map'
+    },
+    nearbyIncidents: {
+      title: 'Incidents Near You',
+      description: 'Reports within {radius}km of your location',
+      refresh: 'Refresh',
+      viewAll: 'View all {count} nearby incidents',
+      kmAway: '{distance} km away'
+    },
+    locationRequest: {
+      title: 'See Incidents Near You',
+      description: 'Allow location access to view incidents happening in your area',
+      enableLocation: 'Enable Location'
+    },
+    stats: {
+      totalReports: 'Total Reports',
+      verifiedReports: 'Verified Reports',
+      activeLocations: 'Active Locations',
+      resolvedToday: 'Resolved Today'
+    },
+    recentIncidents: {
+      title: 'Recent Incidents',
+      description: 'Latest reports from your community',
+      viewAll: 'View All',
+      noIncidents: 'No incidents reported yet',
+      beFirst: 'Be the first to report an incident!'
+    },
+    categories: {
+      title: 'Report Categories',
+      description: 'Browse incidents by category'
+    }
+  },
 }
 

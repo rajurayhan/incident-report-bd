@@ -7,17 +7,16 @@
         <div class="max-w-4xl mx-auto text-center">
           <div class="inline-flex items-center px-4 py-2 bg-red-500/20 backdrop-blur-sm border border-red-400/30 rounded-full text-sm font-medium mb-8">
             <span class="mr-2">🚨</span>
-            Community Safety Platform
+            {{ $t('home.hero.badge') }}
           </div>
           <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-            Report Incidents,<br/>
+            {{ $t('home.hero.title') }}<br/>
             <span class="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
-              Keep Communities Safe
+              {{ $t('home.hero.subtitle') }}
             </span>
           </h1>
           <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
-            A community-driven platform for reporting and tracking incidents across Bangladesh. 
-            Help keep your neighborhood safe.
+            {{ $t('home.hero.description') }}
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <router-link 
@@ -28,7 +27,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                 </svg>
-                Report Incident
+                {{ $t('home.hero.reportIncident') }}
               </span>
             </router-link>
             <router-link 
@@ -49,8 +48,8 @@
     <div v-if="userLocation && nearbyIncidents.length > 0" class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
       <div class="flex justify-between items-center mb-6">
         <div>
-          <h2 class="text-2xl font-bold text-gray-900">Incidents Near You</h2>
-          <p class="text-sm text-gray-600 mt-1">Reports within {{ radiusKm }}km of your location</p>
+          <h2 class="text-2xl font-bold text-gray-900">{{ $t('home.nearbyIncidents.title') }}</h2>
+          <p class="text-sm text-gray-600 mt-1">{{ $t('home.nearbyIncidents.description', { radius: radiusKm }) }}</p>
         </div>
         <button 
           @click="refreshNearbyIncidents"
@@ -85,7 +84,7 @@
               </p>
               <div class="flex items-center justify-between text-xs">
                 <span class="text-blue-600 font-medium">
-                  📍 {{ incident.distance ? `${incident.distance} km away` : incident.city }}
+                  📍 {{ incident.distance ? $t('home.nearbyIncidents.kmAway', { distance: incident.distance }) : incident.city }}
                 </span>
                 <span 
                   class="px-2 py-0.5 rounded-full font-medium"
@@ -103,7 +102,7 @@
           to="/map" 
           class="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700"
         >
-          View all {{ nearbyIncidents.length }} nearby incidents
+          {{ $t('home.nearbyIncidents.viewAll', { count: nearbyIncidents.length }) }}
           <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
@@ -119,8 +118,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
         </svg>
       </div>
-      <h3 class="text-xl font-bold text-gray-900 mb-2">See Incidents Near You</h3>
-      <p class="text-gray-600 mb-6">Allow location access to view incidents happening in your area</p>
+      <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $t('home.locationRequest.title') }}</h3>
+      <p class="text-gray-600 mb-6">{{ $t('home.locationRequest.description') }}</p>
       <button 
         @click="requestLocation"
         class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors"
@@ -144,7 +143,7 @@
           </div>
         </div>
         <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.totalReports }}</h3>
-        <p class="text-sm text-gray-600">Total Reports</p>
+        <p class="text-sm text-gray-600">{{ $t('home.stats.totalReports') }}</p>
       </div>
 
       <!-- Verified Reports -->
@@ -157,7 +156,7 @@
           </div>
         </div>
         <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.verifiedReports }}</h3>
-        <p class="text-sm text-gray-600">Verified Reports</p>
+        <p class="text-sm text-gray-600">{{ $t('home.stats.verifiedReports') }}</p>
       </div>
 
       <!-- Active Locations -->
@@ -171,7 +170,7 @@
           </div>
         </div>
         <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.activeUsers }}</h3>
-        <p class="text-sm text-gray-600">Active Locations</p>
+        <p class="text-sm text-gray-600">{{ $t('home.stats.activeLocations') }}</p>
       </div>
 
       <!-- Resolved Today -->
@@ -184,7 +183,7 @@
           </div>
         </div>
         <h3 class="text-3xl font-bold text-gray-900 mb-1">{{ stats.resolvedToday }}</h3>
-        <p class="text-sm text-gray-600">Resolved Today</p>
+        <p class="text-sm text-gray-600">{{ $t('home.stats.resolvedToday') }}</p>
       </div>
     </div>
 
@@ -193,8 +192,8 @@
       <div class="px-8 py-6 border-b border-gray-100">
         <div class="flex justify-between items-center">
           <div>
-            <h2 class="text-2xl font-bold text-gray-900">Recent Incidents</h2>
-            <p class="text-sm text-gray-600 mt-1">Latest reports from your community</p>
+            <h2 class="text-2xl font-bold text-gray-900">{{ $t('home.recentIncidents.title') }}</h2>
+            <p class="text-sm text-gray-600 mt-1">{{ $t('home.recentIncidents.description') }}</p>
           </div>
           <router-link 
             to="/map" 
@@ -226,8 +225,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
         </div>
-        <p class="text-gray-500 font-medium">No incidents reported yet</p>
-        <p class="text-sm text-gray-400 mt-1">Be the first to report an incident!</p>
+        <p class="text-gray-500 font-medium">{{ $t('home.recentIncidents.noIncidents') }}</p>
+        <p class="text-sm text-gray-400 mt-1">{{ $t('home.recentIncidents.beFirst') }}</p>
       </div>
 
       <div v-else class="divide-y divide-gray-100">
@@ -297,8 +296,8 @@
     <!-- Categories - Modern Grid -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
       <div class="px-8 py-6 border-b border-gray-100">
-        <h2 class="text-2xl font-bold text-gray-900">Report Categories</h2>
-        <p class="text-sm text-gray-600 mt-1">Browse incidents by category</p>
+        <h2 class="text-2xl font-bold text-gray-900">{{ $t('home.categories.title') }}</h2>
+        <p class="text-sm text-gray-600 mt-1">{{ $t('home.categories.description') }}</p>
       </div>
       <div class="p-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

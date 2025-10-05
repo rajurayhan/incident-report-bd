@@ -3,8 +3,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">My Activity</h1>
-        <p class="mt-2 text-gray-600">View your comments and verifications</p>
+    <h1 class="text-3xl font-bold text-gray-900">{{ $t('activity.myActivity') }}</h1>
+    <p class="mt-2 text-gray-600">{{ $t('activity.viewComments') }}</p>
       </div>
 
       <!-- Tabs -->
