@@ -225,6 +225,7 @@ const filters = ref({
   verified: false,
   division: '',
   district: '',
+  thana: '',
   date_from: '',
   date_to: ''
 })
@@ -269,6 +270,7 @@ const loadIncidents = async (reset = true) => {
     if (filters.value.verified) params.append('verified', 'true')
     if (filters.value.division) params.append('division', filters.value.division)
     if (filters.value.district) params.append('district', filters.value.district)
+    if (filters.value.thana) params.append('thana', filters.value.thana)
     if (filters.value.date_from) params.append('date_from', filters.value.date_from)
     if (filters.value.date_to) params.append('date_to', filters.value.date_to)
     params.append('page', currentPage.value.toString())

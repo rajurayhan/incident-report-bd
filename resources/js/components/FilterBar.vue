@@ -107,14 +107,14 @@
 
     <!-- Advanced Filters (Collapsible) -->
     <div v-if="showAdvanced" class="border-t border-gray-200 bg-gray-50 p-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
         <!-- Location Section -->
         <div class="space-y-2">
           <label class="text-xs font-medium text-gray-700 flex items-center gap-1">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
             </svg>
-            Location
+            Division
           </label>
           <select 
             v-model="localFilters.division" 
@@ -129,7 +129,7 @@
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-medium text-gray-700 flex items-center gap-1 opacity-50">
+          <label class="text-xs font-medium text-gray-700 flex items-center gap-1">
             District
           </label>
           <select 
@@ -141,6 +141,23 @@
             <option value="">All Districts</option>
             <option v-for="district in availableDistricts" :key="district" :value="district">
               {{ district }}
+            </option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-medium text-gray-700 flex items-center gap-1">
+            Thana / Upazila
+          </label>
+          <select 
+            v-model="localFilters.thana" 
+            @change="onThanaChange"
+            :disabled="!localFilters.district"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
+          >
+            <option value="">All Thanas</option>
+            <option v-for="thana in availableThanas" :key="thana" :value="thana">
+              {{ thana }}
             </option>
           </select>
         </div>
@@ -179,7 +196,7 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue'
-import { getDivisions, getDistricts } from '../data/bangladesh-locations'
+import { getDivisions, getDistricts, getThanas } from '../data/bangladesh-locations'
 
 const props = defineProps({
   filters: {
@@ -190,6 +207,7 @@ const props = defineProps({
       verified: false,
       division: '',
       district: '',
+      thana: '',
       date_from: '',
       date_to: ''
     })
@@ -204,6 +222,7 @@ const localFilters = ref({
   verified: false,
   division: '',
   district: '',
+  thana: '',
   date_from: '',
   date_to: '',
   ...props.filters 
@@ -219,12 +238,18 @@ const availableDistricts = computed(() => {
   return getDistricts(localFilters.value.division)
 })
 
+const availableThanas = computed(() => {
+  if (!localFilters.value.division || !localFilters.value.district) return []
+  return getThanas(localFilters.value.division, localFilters.value.district)
+})
+
 const hasActiveFilters = computed(() => {
   return localFilters.value.category !== '' ||
          localFilters.value.status !== '' ||
          localFilters.value.verified !== false ||
          localFilters.value.division !== '' ||
          localFilters.value.district !== '' ||
+         localFilters.value.thana !== '' ||
          localFilters.value.date_from !== '' ||
          localFilters.value.date_to !== ''
 })
@@ -236,6 +261,7 @@ const activeFilterCount = computed(() => {
   if (localFilters.value.verified) count++
   if (localFilters.value.division) count++
   if (localFilters.value.district) count++
+  if (localFilters.value.thana) count++
   if (localFilters.value.date_from) count++
   if (localFilters.value.date_to) count++
   return count
@@ -243,10 +269,16 @@ const activeFilterCount = computed(() => {
 
 const onDivisionChange = () => {
   localFilters.value.district = ''
+  localFilters.value.thana = ''
   handleFilterChange()
 }
 
 const onDistrictChange = () => {
+  localFilters.value.thana = ''
+  handleFilterChange()
+}
+
+const onThanaChange = () => {
   handleFilterChange()
 }
 
@@ -261,6 +293,7 @@ const clearFilters = () => {
     verified: false,
     division: '',
     district: '',
+    thana: '',
     date_from: '',
     date_to: ''
   }

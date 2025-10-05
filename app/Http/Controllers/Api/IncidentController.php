@@ -28,6 +28,18 @@ class IncidentController extends Controller
             $query->where('is_verified', $request->boolean('verified'));
         }
 
+        if ($request->has('division') && $request->division) {
+            $query->where('division', $request->division);
+        }
+
+        if ($request->has('district') && $request->district) {
+            $query->where('district', $request->district);
+        }
+
+        if ($request->has('thana') && $request->thana) {
+            $query->where('city', $request->thana);
+        }
+
         if ($request->has('latitude') && $request->has('longitude')) {
             $query->nearby($request->latitude, $request->longitude, $request->get('radius', 5));
         }
@@ -231,6 +243,10 @@ class IncidentController extends Controller
 
         if ($request->has('district') && $request->district) {
             $query->where('district', $request->district);
+        }
+
+        if ($request->has('thana') && $request->thana) {
+            $query->where('city', $request->thana);
         }
 
         if ($request->has('date_from') && $request->date_from) {
