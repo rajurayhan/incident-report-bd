@@ -213,16 +213,32 @@ class IncidentController extends Controller
             ->with(['user', 'media']);
 
         // Apply filters
-        if ($request->has('category')) {
+        if ($request->has('category') && $request->category) {
             $query->where('category', $request->category);
         }
 
-        if ($request->has('status')) {
+        if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
         }
 
-        if ($request->has('verified')) {
+        if ($request->has('verified') && $request->verified) {
             $query->where('is_verified', $request->boolean('verified'));
+        }
+
+        if ($request->has('division') && $request->division) {
+            $query->where('division', $request->division);
+        }
+
+        if ($request->has('district') && $request->district) {
+            $query->where('district', $request->district);
+        }
+
+        if ($request->has('date_from') && $request->date_from) {
+            $query->whereDate('incident_date', '>=', $request->date_from);
+        }
+
+        if ($request->has('date_to') && $request->date_to) {
+            $query->whereDate('incident_date', '<=', $request->date_to);
         }
 
         if ($request->has('bounds')) {
@@ -233,8 +249,19 @@ class IncidentController extends Controller
             }
         }
 
-        // Get incidents with coordinates
-        $incidents = $query->orderBy('created_at', 'desc')->get();
+        // Get total count before pagination
+        $total = $query->count();
+
+        // Get all incidents for bounds calculation
+        $allIncidents = $query->get(['latitude', 'longitude']);
+
+        // Apply pagination
+        $perPage = $request->get('per_page', 20);
+        $page = $request->get('page', 1);
+        $incidents = $query->orderBy('created_at', 'desc')
+                           ->skip(($page - 1) * $perPage)
+                           ->take($perPage)
+                           ->get();
 
         // Format data for map
         $mapData = $incidents->map(function ($incident) {
@@ -268,8 +295,10 @@ class IncidentController extends Controller
 
         return response()->json([
             'incidents' => $mapData,
-            'total' => $mapData->count(),
-            'bounds' => $this->calculateBounds($incidents)
+            'total' => $total,
+            'page' => (int) $page,
+            'per_page' => (int) $perPage,
+            'bounds' => $this->calculateBounds($allIncidents)
         ]);
     }
 
@@ -292,5 +321,59 @@ class IncidentController extends Controller
             'east' => $longitudes->max(),
             'west' => $longitudes->min(),
         ];
+    }
+
+    public function nearby($id, Request $request)
+    {
+        $incident = Incident::findOrFail($id);
+        
+        if (!$incident->latitude || !$incident->longitude) {
+            return response()->json([
+                'incidents' => [],
+                'total' => 0
+            ]);
+        }
+
+        $radiusKm = $request->get('radius', 10); // Default 10km
+        $limit = $request->get('limit', 6); // Default 6 incidents
+
+        $nearbyIncidents = Incident::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->where('id', '!=', $id)
+            ->nearby($incident->latitude, $incident->longitude, $radiusKm)
+            ->with(['media'])
+            ->limit($limit)
+            ->get();
+
+        $formatted = $nearbyIncidents->map(function ($inc) {
+            return [
+                'id' => $inc->id,
+                'title' => $inc->title,
+                'description' => $inc->description,
+                'category' => $inc->category,
+                'category_label' => $inc->category_label,
+                'status' => $inc->status,
+                'status_label' => $inc->status_label,
+                'priority' => $inc->priority,
+                'priority_label' => $inc->priority_label,
+                'is_verified' => $inc->is_verified,
+                'latitude' => (float) $inc->latitude,
+                'longitude' => (float) $inc->longitude,
+                'address' => $inc->address,
+                'city' => $inc->city,
+                'district' => $inc->district,
+                'division' => $inc->division,
+                'incident_date' => $inc->incident_date,
+                'created_at' => $inc->created_at,
+                'media_count' => $inc->media->count(),
+                'has_media' => $inc->media->count() > 0,
+                'distance' => isset($inc->distance) ? round($inc->distance, 2) : null,
+            ];
+        });
+
+        return response()->json([
+            'incidents' => $formatted,
+            'total' => $formatted->count()
+        ]);
     }
 }

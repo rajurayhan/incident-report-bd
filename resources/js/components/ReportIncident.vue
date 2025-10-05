@@ -122,40 +122,53 @@
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
-                City
+              <label for="division" class="block text-sm font-medium text-gray-700 mb-2">
+                Division
               </label>
-              <input
-                id="city"
-                v-model="form.city"
-                type="text"
+              <select
+                id="division"
+                v-model="form.division"
+                @change="onDivisionChange"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                placeholder="Dhaka"
-              />
+              >
+                <option value="">Select Division</option>
+                <option v-for="division in divisions" :key="division" :value="division">
+                  {{ division }}
+                </option>
+              </select>
             </div>
             <div>
               <label for="district" class="block text-sm font-medium text-gray-700 mb-2">
                 District
               </label>
-              <input
+              <select
                 id="district"
                 v-model="form.district"
-                type="text"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                placeholder="Dhaka"
-              />
+                @change="onDistrictChange"
+                :disabled="!form.division"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+              >
+                <option value="">Select District</option>
+                <option v-for="district in availableDistricts" :key="district" :value="district">
+                  {{ district }}
+                </option>
+              </select>
             </div>
             <div>
-              <label for="division" class="block text-sm font-medium text-gray-700 mb-2">
-                Division
+              <label for="thana" class="block text-sm font-medium text-gray-700 mb-2">
+                Thana / Upazila
               </label>
-              <input
-                id="division"
-                v-model="form.division"
-                type="text"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                placeholder="Dhaka"
-              />
+              <select
+                id="thana"
+                v-model="form.city"
+                :disabled="!form.district"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+              >
+                <option value="">Select Thana</option>
+                <option v-for="thana in availableThanas" :key="thana" :value="thana">
+                  {{ thana }}
+                </option>
+              </select>
             </div>
           </div>
 
@@ -310,10 +323,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { useIncidentStore } from '../stores/incidents';
 import { useRouter } from 'vue-router';
 import PageHeader from './PageHeader.vue';
+import { getDivisions, getDistricts, getThanas } from '../data/bangladesh-locations';
 
 const incidentStore = useIncidentStore();
 const router = useRouter();
@@ -339,6 +353,27 @@ const form = reactive({
 });
 
 const { categories } = incidentStore;
+
+// Location dropdowns
+const divisions = ref(getDivisions());
+const availableDistricts = computed(() => {
+  if (!form.division) return [];
+  return getDistricts(form.division);
+});
+
+const availableThanas = computed(() => {
+  if (!form.division || !form.district) return [];
+  return getThanas(form.division, form.district);
+});
+
+const onDivisionChange = () => {
+  form.district = '';
+  form.city = '';
+};
+
+const onDistrictChange = () => {
+  form.city = '';
+};
 
 onMounted(() => {
   // Set default incident date to now

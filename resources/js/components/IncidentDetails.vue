@@ -52,12 +52,12 @@
           </p>
         </div>
 
-        <!-- Google Map -->
+        <!-- OpenStreet Map -->
         <div class="relative">
           <div id="incident-map" class="w-full h-96 rounded-lg overflow-hidden border border-gray-200 shadow-sm"></div>
           
           <!-- Map Controls -->
-          <div class="absolute top-4 right-4 z-10 flex flex-col space-y-2">
+          <div class="absolute top-4 right-4 z-[1000] flex flex-col space-y-2">
             <button @click="centerMap" 
                     class="bg-white hover:bg-gray-50 text-gray-700 px-3 py-2 rounded-lg shadow-md transition-colors duration-200 text-sm font-medium">
               <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,18 +66,10 @@
               </svg>
               Center
             </button>
-            
-            <button @click="toggleMapType" 
-                    class="bg-white hover:bg-gray-50 text-gray-700 px-3 py-2 rounded-lg shadow-md transition-colors duration-200 text-sm font-medium">
-              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-              </svg>
-              {{ mapType === 'roadmap' ? 'Satellite' : 'Map' }}
-            </button>
           </div>
 
           <!-- Map Info -->
-          <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md text-sm text-gray-700">
+          <div class="absolute bottom-4 left-4 z-[1000] bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md text-sm text-gray-700">
             <div class="flex items-center space-x-2">
               <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
@@ -309,6 +301,50 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Nearby Incidents Section -->
+    <div v-if="incident && nearbyIncidents.length > 0" class="bg-white shadow-lg rounded-lg p-6 mt-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Nearby Incidents</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <router-link 
+          v-for="nearbyIncident in nearbyIncidents" 
+          :key="nearbyIncident.id"
+          :to="`/incident/${nearbyIncident.id}`"
+          class="group block p-4 border border-gray-200 rounded-lg hover:border-red-300 hover:shadow-md transition-all duration-200"
+        >
+          <div class="flex items-start space-x-3 mb-2">
+            <div 
+              class="w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg flex-shrink-0"
+              :class="getCategoryColorClass(nearbyIncident.category)"
+            >
+              {{ getCategoryIconText(nearbyIncident.category) }}
+            </div>
+            <div class="flex-1 min-w-0">
+              <h4 class="font-medium text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
+                {{ nearbyIncident.title }}
+              </h4>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 line-clamp-2 mb-2">
+            {{ nearbyIncident.description }}
+          </p>
+          <div class="flex items-center justify-between text-xs text-gray-500">
+            <span class="flex items-center">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              </svg>
+              {{ nearbyIncident.distance ? `${nearbyIncident.distance} km` : nearbyIncident.city }}
+            </span>
+            <span 
+              class="px-2 py-0.5 rounded-full text-xs font-medium"
+              :class="getStatusColorClass(nearbyIncident.status)"
+            >
+              {{ nearbyIncident.status_label }}
+            </span>
+          </div>
+        </router-link>
       </div>
     </div>
 
@@ -691,11 +727,14 @@
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import PageHeader from './PageHeader.vue'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
 
 const route = useRoute()
 const incident = ref(null)
 const loading = ref(true)
 const error = ref(null)
+const nearbyIncidents = ref([])
 
 // Gallery state
 const showGallery = ref(false)
@@ -708,10 +747,9 @@ const galleryImage = ref(null)
 // Slider state
 const currentSliderIndex = ref(0)
 
-// Google Maps state
+// Leaflet Map state
 const map = ref(null)
 const marker = ref(null)
-const mapType = ref('roadmap')
 
 // Computed property for image media only
 const imageMedia = computed(() => {
@@ -749,11 +787,26 @@ const fetchIncident = async () => {
     
     // Reset slider to first image when incident loads
     currentSliderIndex.value = 0
+    
+    // Fetch nearby incidents
+    fetchNearbyIncidents()
   } catch (err) {
     error.value = 'Network error occurred'
     console.error('Error fetching incident:', err)
   } finally {
     loading.value = false
+  }
+}
+
+const fetchNearbyIncidents = async () => {
+  try {
+    const response = await fetch(`/api/incidents/${route.params.id}/nearby?limit=6`)
+    if (response.ok) {
+      const data = await response.json()
+      nearbyIncidents.value = data.incidents || []
+    }
+  } catch (err) {
+    console.error('Error fetching nearby incidents:', err)
   }
 }
 
@@ -783,86 +836,103 @@ const getVerificationRatio = () => {
   return ratio.toFixed(1)
 }
 
-// Google Maps functions
+// Helper functions for nearby incidents
+const getCategoryColorClass = (category) => {
+  const colors = {
+    theft_robbery: 'bg-red-500',
+    sexual_harassment: 'bg-pink-500',
+    domestic_violence: 'bg-purple-500',
+    suspicious_activities: 'bg-orange-500',
+    traffic_accidents: 'bg-yellow-500',
+    drugs: 'bg-indigo-500',
+    cybercrime: 'bg-blue-500',
+  }
+  return colors[category] || 'bg-gray-500'
+}
+
+const getCategoryIconText = (category) => {
+  const icons = {
+    theft_robbery: '🔒',
+    sexual_harassment: '🚫',
+    domestic_violence: '🏠',
+    suspicious_activities: '👁️',
+    traffic_accidents: '🚗',
+    drugs: '💊',
+    cybercrime: '💻',
+  }
+  return icons[category] || '⚠️'
+}
+
+const getStatusColorClass = (status) => {
+  const colors = {
+    pending: 'bg-yellow-100 text-yellow-800',
+    in_progress: 'bg-blue-100 text-blue-800',
+    resolved: 'bg-green-100 text-green-800',
+  }
+  return colors[status] || 'bg-gray-100 text-gray-800'
+}
+
+// Leaflet OpenStreetMap functions
 const initializeMap = () => {
   if (!incident.value?.latitude || !incident.value?.longitude) return
   
   const mapElement = document.getElementById('incident-map')
   if (!mapElement) return
   
-  const location = {
-    lat: parseFloat(incident.value.latitude),
-    lng: parseFloat(incident.value.longitude)
-  }
+  const lat = parseFloat(incident.value.latitude)
+  const lng = parseFloat(incident.value.longitude)
   
   // Initialize map
-  map.value = new google.maps.Map(mapElement, {
-    zoom: 15,
-    center: location,
-    mapTypeId: mapType.value === 'roadmap' ? google.maps.MapTypeId.ROADMAP : google.maps.MapTypeId.SATELLITE,
-    styles: [
-      {
-        featureType: 'poi',
-        elementType: 'labels',
-        stylers: [{ visibility: 'off' }]
-      }
-    ]
-  })
+  map.value = L.map('incident-map').setView([lat, lng], 15)
   
-  // Add marker
-  marker.value = new google.maps.Marker({
-    position: location,
-    map: map.value,
-    title: 'Incident Location',
-    icon: {
-      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+  // Add OpenStreetMap tile layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map.value)
+  
+  // Create custom red marker icon
+  const customIcon = L.divIcon({
+    className: 'custom-incident-marker',
+    html: `
+      <div style="
+        position: relative;
+        width: 32px;
+        height: 32px;
+      ">
         <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
           <circle cx="16" cy="16" r="12" fill="#ef4444" stroke="#ffffff" stroke-width="3"/>
           <circle cx="16" cy="16" r="6" fill="#ffffff"/>
         </svg>
-      `),
-      scaledSize: new google.maps.Size(32, 32),
-      anchor: new google.maps.Point(16, 16)
-    }
-  })
-  
-  // Add info window
-  const infoWindow = new google.maps.InfoWindow({
-    content: `
-      <div class="p-2">
-        <h3 class="font-semibold text-gray-900 mb-1">Incident Location</h3>
-        <p class="text-sm text-gray-600 mb-2">${incident.value.address || 'Location coordinates'}</p>
-        <p class="text-xs text-gray-500">${incident.value.latitude}, ${incident.value.longitude}</p>
       </div>
-    `
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16]
   })
   
-  marker.value.addListener('click', () => {
-    infoWindow.open(map.value, marker.value)
-  })
+  // Add marker
+  marker.value = L.marker([lat, lng], { icon: customIcon }).addTo(map.value)
+  
+  // Add popup
+  const popupContent = `
+    <div class="p-2 min-w-[200px]">
+      <h3 class="font-semibold text-gray-900 mb-1">Incident Location</h3>
+      <p class="text-sm text-gray-600 mb-2">${incident.value.address || 'Location coordinates'}</p>
+      <p class="text-xs text-gray-500">${incident.value.latitude}, ${incident.value.longitude}</p>
+    </div>
+  `
+  
+  marker.value.bindPopup(popupContent).openPopup()
 }
 
 const centerMap = () => {
   if (!map.value || !incident.value?.latitude || !incident.value?.longitude) return
   
-  const location = {
-    lat: parseFloat(incident.value.latitude),
-    lng: parseFloat(incident.value.longitude)
-  }
+  const lat = parseFloat(incident.value.latitude)
+  const lng = parseFloat(incident.value.longitude)
   
-  map.value.setCenter(location)
-  map.value.setZoom(15)
-}
-
-const toggleMapType = () => {
-  if (!map.value) return
-  
-  mapType.value = mapType.value === 'roadmap' ? 'satellite' : 'roadmap'
-  map.value.setMapTypeId(
-    mapType.value === 'roadmap' 
-      ? google.maps.MapTypeId.ROADMAP 
-      : google.maps.MapTypeId.SATELLITE
-  )
+  map.value.setView([lat, lng], 15)
 }
 
 const getGoogleMapsUrl = () => {
@@ -1061,6 +1131,28 @@ const handleKeydown = (event) => {
   }
 }
 
+// Watch for route changes (when clicking on nearby incidents)
+watch(() => route.params.id, (newId, oldId) => {
+  if (newId && newId !== oldId) {
+    // Clean up previous map
+    if (map.value) {
+      map.value.remove()
+      map.value = null
+    }
+    
+    // Reset states
+    nearbyIncidents.value = []
+    showGallery.value = false
+    currentSliderIndex.value = 0
+    
+    // Fetch new incident
+    fetchIncident()
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+})
+
 // Watch for incident changes and reset slider
 watch(() => incident.value, (newIncident) => {
   if (newIncident && newIncident.media && newIncident.media.length > 0) {
@@ -1070,18 +1162,9 @@ watch(() => incident.value, (newIncident) => {
   
   // Initialize map when incident loads
   if (newIncident && newIncident.latitude && newIncident.longitude) {
-    // Wait for Google Maps to load
+    // Wait for DOM to be ready
     setTimeout(() => {
-      if (window.google && window.google.maps) {
-        initializeMap()
-      } else {
-        // Retry if Google Maps isn't loaded yet
-        setTimeout(() => {
-          if (window.google && window.google.maps) {
-            initializeMap()
-          }
-        }, 1000)
-      }
+      initializeMap()
     }, 100)
   }
 }, { immediate: true })
@@ -1095,10 +1178,22 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
   document.body.style.overflow = 'auto'
+  
+  // Clean up map
+  if (map.value) {
+    map.value.remove()
+    map.value = null
+  }
 })
 </script>
 
 <style scoped>
+/* Leaflet custom marker */
+:deep(.custom-incident-marker) {
+  background: transparent !important;
+  border: none !important;
+}
+
 /* Modern minimal gallery styles */
 .gallery-image {
   cursor: grab;

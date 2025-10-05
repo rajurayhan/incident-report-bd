@@ -1,11 +1,12 @@
 <template>
-  <div class="max-w-full mx-auto">
+  <div class="max-w-full mx-auto space-y-4">
     <!-- Header -->
-    <PageHeader 
-      title="Incident Map" 
-      subtitle="Interactive map with heat map visualization and incident list"
-    >
-      <template #actions>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Incident Map</h1>
+        <p class="text-gray-600 mt-1">Interactive map with incident visualization and filters</p>
+      </div>
+      <div class="flex items-center gap-4">
         <!-- View Toggle -->
         <ViewToggle 
           v-model="viewMode"
@@ -13,19 +14,24 @@
           label="View"
         />
         
-        <!-- Filters -->
-        <FilterBar 
-          :filters="filters"
-          @filter-change="handleFilterChange"
-        />
-        
         <!-- Stats -->
-        <StatsDisplay 
-          :value="totalIncidents" 
-          label="incidents" 
-        />
-      </template>
-    </PageHeader>
+        <div class="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg border border-blue-200">
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <div class="text-sm">
+            <span class="font-bold text-gray-900">{{ totalIncidents }}</span>
+            <span class="text-gray-600 ml-1">incidents</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <FilterBar 
+      :filters="filters"
+      @filter-change="handleFilterChange"
+    />
 
     <!-- Main Content Area -->
     <div class="flex gap-6">
@@ -36,9 +42,13 @@
           <p class="text-sm text-gray-600">Click to highlight on map</p>
         </div>
         
-        <div class="h-96 overflow-y-auto">
+        <div 
+          ref="incidentListContainer"
+          @scroll="handleScroll"
+          class="h-96 overflow-y-auto"
+        >
           <!-- Loading State -->
-          <div v-if="loading" class="p-4 text-center">
+          <div v-if="loading && !loadingMore" class="p-4 text-center">
             <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
             <p class="text-gray-600 mt-2">Loading incidents...</p>
           </div>
@@ -94,6 +104,17 @@
           <div v-else class="p-4 text-center text-gray-500">
             <p>No incidents found</p>
             <p class="text-sm">Try adjusting your filters</p>
+          </div>
+          
+          <!-- Loading More Indicator -->
+          <div v-if="loadingMore" class="p-4 text-center">
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mx-auto"></div>
+            <p class="text-gray-600 text-sm mt-2">Loading more...</p>
+          </div>
+          
+          <!-- End of Results -->
+          <div v-if="!hasMore && incidents.length > 0 && !loading" class="p-4 text-center text-gray-500 text-sm">
+            No more incidents to load
           </div>
         </div>
       </div>
@@ -176,10 +197,8 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet.heat'
-import PageHeader from './PageHeader.vue'
 import ViewToggle from './ViewToggle.vue'
 import FilterBar from './FilterBar.vue'
-import StatsDisplay from './StatsDisplay.vue'
 
 // Reactive data
 const map = ref(null)
@@ -187,16 +206,27 @@ const heatLayer = ref(null)
 const incidents = ref([])
 const totalIncidents = ref(0)
 const loading = ref(false)
+const loadingMore = ref(false)
 const mapBounds = ref(null)
 const viewMode = ref('markers') // 'markers' or 'heatmap'
 const selectedIncident = ref(null)
 const selectedMarker = ref(null)
+const incidentListContainer = ref(null)
+
+// Pagination
+const currentPage = ref(1)
+const perPage = 20
+const hasMore = ref(true)
 
 // Filters
 const filters = ref({
   category: '',
   status: '',
-  verified: false
+  verified: false,
+  division: '',
+  district: '',
+  date_from: '',
+  date_to: ''
 })
 
 // View options
@@ -222,34 +252,74 @@ const initMap = () => {
 }
 
 // Load incidents from API
-const loadIncidents = async () => {
-  loading.value = true
+const loadIncidents = async (reset = true) => {
+  if (reset) {
+    loading.value = true
+    currentPage.value = 1
+    incidents.value = []
+    hasMore.value = true
+  } else {
+    loadingMore.value = true
+  }
   
   try {
     const params = new URLSearchParams()
     if (filters.value.category) params.append('category', filters.value.category)
     if (filters.value.status) params.append('status', filters.value.status)
     if (filters.value.verified) params.append('verified', 'true')
+    if (filters.value.division) params.append('division', filters.value.division)
+    if (filters.value.district) params.append('district', filters.value.district)
+    if (filters.value.date_from) params.append('date_from', filters.value.date_from)
+    if (filters.value.date_to) params.append('date_to', filters.value.date_to)
+    params.append('page', currentPage.value.toString())
+    params.append('per_page', perPage.toString())
     
     const response = await fetch(`/api/incidents/map/data?${params}`)
     const data = await response.json()
     
-    incidents.value = data.incidents
-    totalIncidents.value = data.total
-    mapBounds.value = data.bounds
-    
-    // Update map visualization
-    updateMapVisualization()
-    
-    // Fit map to bounds if available
-    if (mapBounds.value) {
-      fitToBounds()
+    if (reset) {
+      incidents.value = data.incidents
+      mapBounds.value = data.bounds
+      
+      // Update map visualization
+      updateMapVisualization()
+      
+      // Fit map to bounds if available
+      if (mapBounds.value) {
+        fitToBounds()
+      }
+    } else {
+      // Append new incidents
+      incidents.value = [...incidents.value, ...data.incidents]
+      // Update map with new markers
+      if (viewMode.value === 'markers') {
+        data.incidents.forEach(incident => addIncidentMarker(incident))
+      } else {
+        updateMapVisualization()
+      }
     }
+    
+    totalIncidents.value = data.total
+    hasMore.value = incidents.value.length < data.total
     
   } catch (error) {
     console.error('Error loading incidents:', error)
   } finally {
     loading.value = false
+    loadingMore.value = false
+  }
+}
+
+// Handle scroll for infinite loading
+const handleScroll = (event) => {
+  const container = event.target
+  const scrollPosition = container.scrollTop + container.clientHeight
+  const scrollHeight = container.scrollHeight
+  
+  // Load more when scrolled to 80% of the content
+  if (scrollPosition >= scrollHeight * 0.8 && !loadingMore.value && hasMore.value && !loading.value) {
+    currentPage.value++
+    loadIncidents(false)
   }
 }
 
@@ -471,7 +541,7 @@ const clearSelection = () => {
 const handleFilterChange = (newFilters) => {
   console.log('Filter changed:', newFilters)
   filters.value = { ...newFilters }
-  loadIncidents()
+  loadIncidents(true)
 }
 
 // Watch for view mode changes
