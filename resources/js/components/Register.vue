@@ -29,6 +29,21 @@
           </div>
           
           <div>
+            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+            <input
+              id="username"
+              v-model="form.username"
+              name="username"
+              type="text"
+              required
+              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+              placeholder="unique_username (letters, numbers, underscore only)"
+              pattern="[a-zA-Z0-9_]+"
+              title="Username can only contain letters, numbers, and underscores"
+            />
+          </div>
+          
+          <div>
             <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
             <input
               id="email"
@@ -123,6 +138,7 @@ const authStore = useAuthStore();
 
 const form = reactive({
   name: '',
+  username: '',
   email: '',
   phone: '',
   password: '',

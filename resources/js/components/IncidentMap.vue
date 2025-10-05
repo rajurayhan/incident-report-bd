@@ -194,11 +194,14 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet.heat'
 import ViewToggle from './ViewToggle.vue'
 import FilterBar from './FilterBar.vue'
+
+const router = useRouter()
 
 // Reactive data
 const map = ref(null)
@@ -448,14 +451,22 @@ const addIncidentMarker = (incident) => {
     iconAnchor: [10, 10]
   })
   
+  // Helper function to escape HTML
+  const escapeHtml = (text) => {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
+  
   // Create marker
   const marker = L.marker([lat, lng], { icon })
   
-  // Create popup content
+  // Create popup content with escaped text
   const popupContent = `
     <div class="p-2 min-w-64">
       <div class="flex items-start justify-between mb-2">
-        <h3 class="font-semibold text-gray-900 text-sm">${incident.title}</h3>
+        <h3 class="font-semibold text-gray-900 text-sm">${escapeHtml(incident.title)}</h3>
         <span class="px-2 py-1 text-xs rounded-full ${
           incident.is_verified 
             ? 'bg-green-100 text-green-800' 
@@ -466,31 +477,44 @@ const addIncidentMarker = (incident) => {
       </div>
       
       <div class="space-y-1 text-xs text-gray-600 mb-3">
-        <div><strong>Category:</strong> ${incident.category_label}</div>
-        <div><strong>Status:</strong> ${incident.status_label}</div>
-        <div><strong>Priority:</strong> ${incident.priority_label}</div>
-        <div><strong>Location:</strong> ${incident.address || incident.city || 'Unknown'}</div>
+        <div><strong>Category:</strong> ${escapeHtml(incident.category_label)}</div>
+        <div><strong>Status:</strong> ${escapeHtml(incident.status_label)}</div>
+        <div><strong>Priority:</strong> ${escapeHtml(incident.priority_label)}</div>
+        <div><strong>Location:</strong> ${escapeHtml(incident.address || incident.city || 'Unknown')}</div>
         <div><strong>Date:</strong> ${new Date(incident.incident_date || incident.created_at).toLocaleDateString()}</div>
         ${incident.has_media ? `<div><strong>Media:</strong> ${incident.media_count} file(s)</div>` : ''}
       </div>
       
-      <p class="text-xs text-gray-700 mb-3 line-clamp-3">${incident.description}</p>
+      <p class="text-xs text-gray-700 mb-3">${escapeHtml(incident.description).substring(0, 150)}${incident.description && incident.description.length > 150 ? '...' : ''}</p>
       
       <div class="flex items-center justify-between">
         <div class="text-xs text-gray-500">
           ${incident.verification_count} verifications, ${incident.dispute_count} disputes
         </div>
-        <a 
-          href="/incident/${incident.id}" 
-          class="text-xs text-blue-600 hover:text-blue-800 font-medium"
+        <button 
+          data-incident-id="${incident.id}"
+          class="incident-details-btn text-xs text-blue-600 hover:text-blue-800 font-medium cursor-pointer hover:underline"
         >
           View Details →
-        </a>
+        </button>
       </div>
     </div>
   `
   
-  marker.bindPopup(popupContent)
+  const popup = L.popup().setContent(popupContent)
+  marker.bindPopup(popup)
+  
+  // Add click listener when popup opens
+  marker.on('popupopen', () => {
+    const btn = document.querySelector('.incident-details-btn')
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const incidentId = btn.getAttribute('data-incident-id')
+        router.push(`/incident/${incidentId}`)
+      })
+    }
+  })
+  
   marker.addTo(map.value)
   
   // Store marker reference for selection

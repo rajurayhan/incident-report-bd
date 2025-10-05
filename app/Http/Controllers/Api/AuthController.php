@@ -15,6 +15,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:50|unique:users|regex:/^[a-zA-Z0-9_]+$/',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
@@ -29,6 +30,7 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
@@ -124,6 +126,72 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Profile updated successfully',
             'user' => $user
+        ]);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        
+        // Generate a simple reset token (in production, use Laravel's password reset functionality)
+        $resetToken = \Str::random(60);
+        
+        // Store the token in the user's remember_token field temporarily
+        $user->update(['remember_token' => $resetToken]);
+
+        // In production, send email with reset link
+        // For now, return the token (for testing purposes only)
+        return response()->json([
+            'message' => 'Password reset token generated',
+            'reset_token' => $resetToken,
+            'info' => 'In production, this would be sent via email'
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'token' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)
+            ->where('remember_token', $request->token)
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Invalid token or email'
+            ], 400);
+        }
+
+        // Update password and clear token
+        $user->update([
+            'password' => Hash::make($request->password),
+            'remember_token' => null
+        ]);
+
+        return response()->json([
+            'message' => 'Password reset successfully'
         ]);
     }
 }

@@ -41,4 +41,41 @@ class AnalyticsController extends Controller
             'message' => 'Trends endpoint'
         ]);
     }
+
+    public function detailed(Request $request)
+    {
+        // Get incidents by category
+        $byCategory = Incident::selectRaw('category, COUNT(*) as count')
+            ->groupBy('category')
+            ->pluck('count', 'category')
+            ->toArray();
+
+        // Get incidents by status
+        $byStatus = Incident::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Get top locations
+        $topLocations = Incident::selectRaw('district, division, COUNT(*) as count')
+            ->whereNotNull('district')
+            ->whereNotNull('division')
+            ->groupBy('district', 'division')
+            ->orderByDesc('count')
+            ->limit(9)
+            ->get()
+            ->map(function($item) {
+                return [
+                    'district' => $item->district,
+                    'division' => $item->division,
+                    'count' => $item->count
+                ];
+            });
+
+        return response()->json([
+            'byCategory' => $byCategory,
+            'byStatus' => $byStatus,
+            'topLocations' => $topLocations
+        ]);
+    }
 }

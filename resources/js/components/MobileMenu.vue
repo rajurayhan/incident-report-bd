@@ -54,6 +54,13 @@
           >
             My Reports
           </router-link>
+          <router-link 
+            to="/my-activity" 
+            class="block px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-md"
+            @click="closeMobileMenu"
+          >
+            My Activity
+          </router-link>
           <button 
             @click="logout"
             class="block w-full text-left px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-md"
@@ -86,8 +93,10 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
+const router = useRouter()
 const authStore = useAuthStore()
 
 // Reactive state
@@ -149,6 +158,7 @@ const getUserInitials = () => {
 const logout = () => {
   authStore.logout()
   closeMobileMenu()
+  router.push('/login')
 }
 
 // Close menu when clicking outside

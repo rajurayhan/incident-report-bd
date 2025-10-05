@@ -53,8 +53,17 @@ class IncidentController extends Controller
 
     public function show($id)
     {
-        $incident = Incident::with(['user', 'media', 'comments.user', 'verifications.user'])
+        $incident = Incident::with(['user', 'media', 'verifications.user'])
+            ->withCount('comments')
             ->findOrFail($id);
+
+        // Load first 10 comments with replies
+        $incident->load(['comments' => function($query) {
+            $query->whereNull('parent_id')
+                  ->with(['user', 'replies.user'])
+                  ->orderBy('created_at', 'desc')
+                  ->limit(10);
+        }]);
 
         return response()->json($incident);
     }

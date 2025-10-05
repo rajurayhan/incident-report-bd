@@ -60,6 +60,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const updateUser = (userData) => {
+    user.value = { ...user.value, ...userData };
+  };
+
   // Initialize auth state
   if (token.value) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
@@ -75,5 +79,6 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
     fetchUser,
+    updateUser,
   };
 });

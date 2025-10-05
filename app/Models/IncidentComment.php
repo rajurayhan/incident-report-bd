@@ -13,8 +13,10 @@ class IncidentComment extends Model
 
     protected $fillable = [
         'incident_id',
+        'parent_id',
         'user_id',
         'content',
+        'mentioned_users',
         'is_anonymous',
         'commenter_name',
         'likes_count',
@@ -26,7 +28,10 @@ class IncidentComment extends Model
     protected $casts = [
         'is_anonymous' => 'boolean',
         'is_moderated' => 'boolean',
+        'mentioned_users' => 'array',
     ];
+
+    protected $appends = ['commenter_display_name'];
 
     // Relationships
     public function incident(): BelongsTo
@@ -37,6 +42,16 @@ class IncidentComment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(IncidentComment::class, 'parent_id');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(IncidentComment::class, 'parent_id');
     }
 
     // Scopes

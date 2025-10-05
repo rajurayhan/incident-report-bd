@@ -14,6 +14,11 @@ import AdminDashboard from './components/AdminDashboard.vue';
 import Analytics from './components/Analytics.vue';
 import Login from './components/Login.vue';
 import Register from './components/Register.vue';
+import ForgotPassword from './components/ForgotPassword.vue';
+import ResetPassword from './components/ResetPassword.vue';
+import Profile from './components/Profile.vue';
+import MyReports from './components/MyReports.vue';
+import MyActivity from './components/MyActivity.vue';
 
 // Create router
 const routes = [
@@ -25,6 +30,11 @@ const routes = [
     { path: '/analytics', name: 'analytics', component: Analytics },
     { path: '/login', name: 'login', component: Login },
     { path: '/register', name: 'register', component: Register },
+    { path: '/forgot-password', name: 'forgot-password', component: ForgotPassword },
+    { path: '/reset-password', name: 'reset-password', component: ResetPassword },
+    { path: '/profile', name: 'profile', component: Profile },
+    { path: '/my-reports', name: 'my-reports', component: MyReports },
+    { path: '/my-activity', name: 'my-activity', component: MyActivity },
 ];
 
 const router = createRouter({

@@ -58,6 +58,14 @@
           </div>
         </div>
 
+        <div class="flex items-center justify-between">
+          <div class="text-sm">
+            <router-link to="/forgot-password" class="font-medium text-red-600 hover:text-red-500">
+              Forgot your password?
+            </router-link>
+          </div>
+        </div>
+
         <div>
           <button
             type="submit"

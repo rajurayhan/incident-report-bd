@@ -269,8 +269,8 @@
 
       <!-- Verification Status -->
       <div class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Verification Status</h3>
-        <div class="flex items-center space-x-4">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Verification Status</h3>
+        <div class="flex items-center space-x-4 mb-4">
           <div class="text-center">
             <div class="text-2xl font-bold text-green-600">{{ incident.verification_count }}</div>
             <div class="text-sm text-gray-600">Confirmations</div>
@@ -284,22 +284,206 @@
             <div class="text-sm text-gray-600">Verified</div>
           </div>
         </div>
+
+        <!-- Add Verification (only for logged-in users) -->
+        <div v-if="isAuthenticated && !userHasVerified" class="mt-4 p-4 bg-gray-50 rounded-lg">
+          <h4 class="text-sm font-semibold text-gray-900 mb-3">Verify this incident</h4>
+          <div class="flex gap-3 mb-3">
+            <button
+              @click="verifyIncident('confirm')"
+              class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Confirm
+            </button>
+            <button
+              @click="verifyIncident('dispute')"
+              class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Dispute
+            </button>
+          </div>
+          <textarea
+            v-model="verificationComment"
+            placeholder="Add a comment (optional)"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            rows="2"
+          ></textarea>
+        </div>
+        <div v-else-if="isAuthenticated && userHasVerified" class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+          You have already verified this incident
+        </div>
       </div>
 
       <!-- Comments -->
-      <div v-if="incident.comments && incident.comments.length > 0" class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Comments ({{ incident.comments.length }})</h3>
-        <div class="space-y-4">
-          <div v-for="comment in incident.comments" :key="comment.id" 
-               class="border-l-4 border-blue-500 pl-4 py-2">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="font-medium text-gray-900">{{ comment.commenter_display_name }}</p>
-                <p class="text-gray-700">{{ comment.content }}</p>
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">
+          Comments ({{ commentsPagination.total || 0 }})
+        </h3>
+        
+        <!-- Add Comment Form (only for logged-in users) -->
+        <div v-if="isAuthenticated" class="mb-4 p-4 bg-gray-50 rounded-lg">
+          <div v-if="replyingTo" class="text-sm text-gray-600 mb-2 flex items-center justify-between">
+            <span>Replying to <strong>{{ replyingTo.commenter_display_name }}</strong></span>
+            <button @click="cancelReply" class="text-red-600 hover:text-red-700">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <textarea
+            ref="commentTextarea"
+            v-model="newCommentText"
+            @input="handleMentionInput"
+            placeholder="Add a comment... (Use @ to mention users)"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+            rows="3"
+          ></textarea>
+          <!-- Mention Suggestions -->
+          <div v-if="showMentionSuggestions && mentionSuggestions.length > 0" 
+               class="border border-gray-300 rounded-lg mb-2 max-h-40 overflow-y-auto bg-white shadow-lg">
+            <button
+              v-for="user in mentionSuggestions"
+              :key="user.id"
+              @click="selectMention(user)"
+              class="w-full text-left px-3 py-2 hover:bg-gray-100 transition"
+            >
+              {{ user.name }} (@{{ user.name.toLowerCase().replace(/\s+/g, '') }})
+            </button>
+          </div>
+          <div class="flex justify-end gap-2">
+            <button
+              v-if="replyingTo"
+              @click="cancelReply"
+              class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
+            >
+              Cancel
+            </button>
+            <button
+              @click="addComment"
+              :disabled="!newCommentText.trim()"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ replyingTo ? 'Post Reply' : 'Post Comment' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Comments List -->
+        <div v-if="allComments.length > 0" class="space-y-4">
+          <div v-for="comment in allComments" :key="comment.id">
+            <!-- Parent Comment -->
+            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+              <div class="flex justify-between items-start mb-2">
+                <div class="flex-1">
+                  <p class="font-medium text-gray-900">{{ comment.commenter_display_name }}</p>
+                  <p class="text-gray-700 mt-1" v-html="formatCommentContent(comment.content)"></p>
+                </div>
+                <span class="text-sm text-gray-500">{{ formatDate(comment.created_at) }}</span>
               </div>
-              <span class="text-sm text-gray-500">{{ formatDate(comment.created_at) }}</span>
+              <div class="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100">
+                <button
+                  @click="upvoteComment(comment.id)"
+                  :disabled="!isAuthenticated"
+                  class="flex items-center gap-1 text-sm text-gray-600 hover:text-green-600 transition disabled:opacity-50"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                  </svg>
+                  <span>{{ comment.likes_count || 0 }}</span>
+                </button>
+                <button
+                  @click="downvoteComment(comment.id)"
+                  :disabled="!isAuthenticated"
+                  class="flex items-center gap-1 text-sm text-gray-600 hover:text-red-600 transition disabled:opacity-50"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                  <span>{{ comment.dislikes_count || 0 }}</span>
+                </button>
+                <button
+                  v-if="isAuthenticated"
+                  @click="replyToComment(comment)"
+                  class="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 transition"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                  </svg>
+                  Reply
+                </button>
+                <button
+                  v-if="isAuthenticated && comment.user_id === currentUserId"
+                  @click="deleteComment(comment.id)"
+                  class="ml-auto text-sm text-red-600 hover:text-red-700 transition"
+                >
+                  Delete
+                </button>
+              </div>
+
+              <!-- Replies -->
+              <div v-if="comment.replies && comment.replies.length > 0" class="mt-4 ml-8 space-y-3">
+                <div v-for="reply in comment.replies" :key="reply.id" 
+                     class="border-l-2 border-blue-300 pl-4 py-2 bg-blue-50">
+                  <div class="flex justify-between items-start mb-1">
+                    <div class="flex-1">
+                      <p class="font-medium text-gray-900 text-sm">{{ reply.commenter_display_name }}</p>
+                      <p class="text-gray-700 text-sm mt-1" v-html="formatCommentContent(reply.content)"></p>
+                    </div>
+                    <span class="text-xs text-gray-500">{{ formatDate(reply.created_at) }}</span>
+                  </div>
+                  <div class="flex items-center gap-3 mt-2">
+                    <button
+                      @click="upvoteComment(reply.id)"
+                      :disabled="!isAuthenticated"
+                      class="flex items-center gap-1 text-xs text-gray-600 hover:text-green-600 transition disabled:opacity-50"
+                    >
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                      </svg>
+                      <span>{{ reply.likes_count || 0 }}</span>
+                    </button>
+                    <button
+                      @click="downvoteComment(reply.id)"
+                      :disabled="!isAuthenticated"
+                      class="flex items-center gap-1 text-xs text-gray-600 hover:text-red-600 transition disabled:opacity-50"
+                    >
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                      <span>{{ reply.dislikes_count || 0 }}</span>
+                    </button>
+                    <button
+                      v-if="isAuthenticated && reply.user_id === currentUserId"
+                      @click="deleteComment(reply.id, comment.id)"
+                      class="ml-auto text-xs text-red-600 hover:text-red-700 transition"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+        <div v-else class="text-center text-gray-500 py-4">
+          No comments yet. Be the first to comment!
+        </div>
+
+        <!-- Load More Button -->
+        <div v-if="commentsPagination.current_page < commentsPagination.last_page" class="mt-4 text-center">
+          <button
+            @click="loadMoreComments"
+            :disabled="loadingComments"
+            class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+          >
+            {{ loadingComments ? 'Loading...' : 'Load More Comments' }}
+          </button>
         </div>
       </div>
     </div>
@@ -726,15 +910,46 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
+import axios from 'axios'
 import PageHeader from './PageHeader.vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 const route = useRoute()
+const authStore = useAuthStore()
 const incident = ref(null)
 const loading = ref(true)
 const error = ref(null)
 const nearbyIncidents = ref([])
+
+// Auth state
+const isAuthenticated = computed(() => authStore.isAuthenticated)
+const currentUserId = computed(() => authStore.user?.id)
+
+// Comment & Verification state
+const newCommentText = ref('')
+const verificationComment = ref('')
+const replyingTo = ref(null)
+const commentTextarea = ref(null)
+const userHasVerified = computed(() => {
+  if (!isAuthenticated.value || !incident.value?.verifications) return false
+  return incident.value.verifications.some(v => v.user_id === currentUserId.value)
+})
+
+// Pagination state
+const allComments = ref([])
+const commentsPagination = ref({
+  current_page: 1,
+  last_page: 1,
+  total: 0
+})
+const loadingComments = ref(false)
+
+// Mention state
+const showMentionSuggestions = ref(false)
+const mentionSuggestions = ref([])
+const mentionStartPos = ref(0)
 
 // Gallery state
 const showGallery = ref(false)
@@ -1131,6 +1346,224 @@ const handleKeydown = (event) => {
   }
 }
 
+// Comment functions
+const addComment = async () => {
+  if (!newCommentText.value.trim()) return
+
+  try {
+    const response = await axios.post(`/api/incidents/${incident.value.id}/comments`, {
+      content: newCommentText.value,
+      parent_id: replyingTo.value?.id,
+      is_anonymous: false
+    })
+    
+    // If it's a reply, add to parent's replies
+    if (replyingTo.value) {
+      const parent = allComments.value.find(c => c.id === replyingTo.value.id)
+      if (parent) {
+        if (!parent.replies) parent.replies = []
+        parent.replies.push(response.data.comment)
+      }
+    } else {
+      // Add as new top-level comment
+      allComments.value.unshift(response.data.comment)
+      commentsPagination.value.total++
+    }
+    
+    newCommentText.value = ''
+    replyingTo.value = null
+  } catch (error) {
+    console.error('Error adding comment:', error)
+    alert('Failed to add comment. Please try again.')
+  }
+}
+
+const deleteComment = async (commentId, parentId = null) => {
+  if (!confirm('Are you sure you want to delete this comment?')) return
+
+  try {
+    await axios.delete(`/api/comments/${commentId}`)
+    
+    if (parentId) {
+      // Delete reply
+      const parent = allComments.value.find(c => c.id === parentId)
+      if (parent && parent.replies) {
+        parent.replies = parent.replies.filter(r => r.id !== commentId)
+      }
+    } else {
+      // Delete top-level comment
+      allComments.value = allComments.value.filter(c => c.id !== commentId)
+      commentsPagination.value.total--
+    }
+  } catch (error) {
+    console.error('Error deleting comment:', error)
+    alert('Failed to delete comment. Please try again.')
+  }
+}
+
+const replyToComment = (comment) => {
+  replyingTo.value = comment
+  newCommentText.value = `@${comment.commenter_display_name} `
+  setTimeout(() => commentTextarea.value?.focus(), 100)
+}
+
+const cancelReply = () => {
+  replyingTo.value = null
+  newCommentText.value = ''
+}
+
+const loadMoreComments = async () => {
+  if (loadingComments.value) return
+  loadingComments.value = true
+  
+  try {
+    const response = await axios.get(`/api/incidents/${incident.value.id}/comments`, {
+      params: {
+        page: commentsPagination.value.current_page + 1,
+        per_page: 10
+      }
+    })
+    
+    allComments.value.push(...response.data.data)
+    commentsPagination.value = {
+      current_page: response.data.current_page,
+      last_page: response.data.last_page,
+      total: response.data.total
+    }
+  } catch (error) {
+    console.error('Error loading more comments:', error)
+  } finally {
+    loadingComments.value = false
+  }
+}
+
+const handleMentionInput = () => {
+  const text = newCommentText.value
+  const textarea = commentTextarea.value
+  if (!textarea) return
+  
+  const cursorPos = textarea.selectionStart
+  const textBeforeCursor = text.substring(0, cursorPos)
+  const lastAtIndex = textBeforeCursor.lastIndexOf('@')
+  
+  if (lastAtIndex !== -1 && lastAtIndex === textBeforeCursor.length - 1) {
+    showMentionSuggestions.value = true
+    mentionStartPos.value = lastAtIndex
+    searchUsers('')
+  } else if (lastAtIndex !== -1) {
+    const searchTerm = textBeforeCursor.substring(lastAtIndex + 1)
+    if (searchTerm && !searchTerm.includes(' ')) {
+      showMentionSuggestions.value = true
+      mentionStartPos.value = lastAtIndex
+      searchUsers(searchTerm)
+    } else {
+      showMentionSuggestions.value = false
+    }
+  } else {
+    showMentionSuggestions.value = false
+  }
+}
+
+const searchUsers = async (term) => {
+  const uniqueUsers = new Map()
+  
+  allComments.value.forEach(comment => {
+    if (comment.user) {
+      uniqueUsers.set(comment.user.id, comment.user)
+    }
+    comment.replies?.forEach(reply => {
+      if (reply.user) {
+        uniqueUsers.set(reply.user.id, reply.user)
+      }
+    })
+  })
+  
+  const users = Array.from(uniqueUsers.values())
+  mentionSuggestions.value = term 
+    ? users.filter(u => u.name.toLowerCase().includes(term.toLowerCase()))
+    : users.slice(0, 5)
+}
+
+const selectMention = (user) => {
+  const text = newCommentText.value
+  const textarea = commentTextarea.value
+  if (!textarea) return
+  
+  const before = text.substring(0, mentionStartPos.value)
+  const after = text.substring(textarea.selectionStart || text.length)
+  
+  newCommentText.value = `${before}@${user.name} ${after}`
+  showMentionSuggestions.value = false
+  setTimeout(() => textarea.focus(), 100)
+}
+
+const formatCommentContent = (content) => {
+  if (!content) return ''
+  return content.replace(/@([\w\s]+)/g, '<span class="text-blue-600 font-medium">@$1</span>')
+}
+
+const upvoteComment = async (commentId) => {
+  try {
+    const response = await axios.post(`/api/comments/${commentId}/upvote`)
+    
+    // Update the comment's likes count
+    const comment = incident.value.comments.find(c => c.id === commentId)
+    if (comment) {
+      comment.likes_count = response.data.likes_count
+    }
+  } catch (error) {
+    console.error('Error upvoting comment:', error)
+  }
+}
+
+const downvoteComment = async (commentId) => {
+  try {
+    const response = await axios.post(`/api/comments/${commentId}/downvote`)
+    
+    // Update the comment's dislikes count
+    const comment = incident.value.comments.find(c => c.id === commentId)
+    if (comment) {
+      comment.dislikes_count = response.data.dislikes_count
+    }
+  } catch (error) {
+    console.error('Error downvoting comment:', error)
+  }
+}
+
+// Verification functions
+const verifyIncident = async (type) => {
+  try {
+    const response = await axios.post(`/api/incidents/${incident.value.id}/verifications`, {
+      verification_type: type,
+      comment: verificationComment.value,
+      is_anonymous: false
+    })
+    
+    // Update the incident
+    if (!incident.value.verifications) {
+      incident.value.verifications = []
+    }
+    incident.value.verifications.push(response.data.verification)
+    
+    // Update counts
+    if (type === 'confirm') {
+      incident.value.verification_count++
+    } else {
+      incident.value.dispute_count++
+    }
+    
+    // Clear the form
+    verificationComment.value = ''
+  } catch (error) {
+    console.error('Error verifying incident:', error)
+    if (error.response?.status === 409) {
+      alert('You have already verified this incident.')
+    } else {
+      alert('Failed to verify incident. Please try again.')
+    }
+  }
+}
+
 // Watch for route changes (when clicking on nearby incidents)
 watch(() => route.params.id, (newId, oldId) => {
   if (newId && newId !== oldId) {
@@ -1166,6 +1599,16 @@ watch(() => incident.value, (newIncident) => {
     setTimeout(() => {
       initializeMap()
     }, 100)
+  }
+  
+  // Initialize comments
+  if (newIncident && newIncident.comments) {
+    allComments.value = newIncident.comments
+    commentsPagination.value = {
+      current_page: 1,
+      last_page: Math.ceil((newIncident.comments_count || 10) / 10),
+      total: newIncident.comments_count || newIncident.comments.length
+    }
   }
 }, { immediate: true })
 
