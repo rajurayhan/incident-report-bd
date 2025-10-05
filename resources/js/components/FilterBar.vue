@@ -8,13 +8,13 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
           </svg>
-          <span class="text-sm">Filters</span>
+          <span class="text-sm">{{ $t('filters.title') }}</span>
         </div>
 
         <!-- Active Filter Count Badge -->
         <div v-if="activeFilterCount > 0" class="flex items-center gap-2">
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            {{ activeFilterCount }} active
+            {{ activeFilterCount }} {{ $t('filters.active') }}
           </span>
         </div>
 
@@ -28,14 +28,14 @@
               class="appearance-none pl-9 pr-8 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white hover:border-gray-400 transition-colors"
               :class="localFilters.category ? 'border-blue-500 bg-blue-50' : ''"
             >
-              <option value="">Category</option>
-              <option value="theft_robbery">🔒 Theft / Robbery</option>
-              <option value="sexual_harassment">🚫 Sexual Harassment</option>
-              <option value="domestic_violence">🏠 Domestic Violence</option>
-              <option value="suspicious_activities">👁️ Suspicious Activities</option>
-              <option value="traffic_accidents">🚗 Traffic Accidents</option>
-              <option value="drugs">💊 Drugs</option>
-              <option value="cybercrime">💻 Cybercrime</option>
+              <option value="">{{ $t('filters.category') }}</option>
+              <option value="theft_robbery">🔒 {{ $t('filters.categories.theftRobbery') }}</option>
+              <option value="sexual_harassment">🚫 {{ $t('filters.categories.sexualHarassment') }}</option>
+              <option value="domestic_violence">🏠 {{ $t('filters.categories.domesticViolence') }}</option>
+              <option value="suspicious_activities">👁️ {{ $t('filters.categories.suspiciousActivities') }}</option>
+              <option value="traffic_accidents">🚗 {{ $t('filters.categories.trafficAccidents') }}</option>
+              <option value="drugs">💊 {{ $t('filters.categories.drugs') }}</option>
+              <option value="cybercrime">💻 {{ $t('filters.categories.cybercrime') }}</option>
             </select>
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
@@ -50,10 +50,10 @@
               class="appearance-none pl-9 pr-8 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white hover:border-gray-400 transition-colors"
               :class="localFilters.status ? 'border-blue-500 bg-blue-50' : ''"
             >
-              <option value="">Status</option>
-              <option value="pending">⏳ Pending</option>
-              <option value="in_progress">🔄 In Progress</option>
-              <option value="resolved">✅ Resolved</option>
+              <option value="">{{ $t('filters.status') }}</option>
+              <option value="pending">⏳ {{ $t('filters.statuses.pending') }}</option>
+              <option value="in_progress">🔄 {{ $t('filters.statuses.inProgress') }}</option>
+              <option value="resolved">✅ {{ $t('filters.statuses.resolved') }}</option>
             </select>
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
@@ -72,7 +72,7 @@
             <svg class="w-4 h-4" :class="localFilters.verified ? 'text-green-600' : 'text-gray-400'" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
-            <span :class="localFilters.verified ? 'text-green-700 font-medium' : 'text-gray-700'">Verified</span>
+            <span :class="localFilters.verified ? 'text-green-700 font-medium' : 'text-gray-700'">{{ $t('filters.verified') }}</span>
           </label>
 
           <!-- More Filters Toggle -->
@@ -84,7 +84,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
             </svg>
-            <span>{{ showAdvanced ? 'Less' : 'More' }}</span>
+            <span>{{ showAdvanced ? $t('filters.less') : $t('filters.more') }}</span>
             <svg class="w-4 h-4 transition-transform" :class="showAdvanced ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
             </svg>
@@ -100,7 +100,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
-          Clear
+          {{ $t('filters.clear') }}
         </button>
       </div>
     </div>
@@ -114,14 +114,14 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
             </svg>
-            Division
+            {{ $t('filters.division') }}
           </label>
           <select 
             v-model="localFilters.division" 
             @change="onDivisionChange"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
           >
-            <option value="">All Divisions</option>
+            <option value="">{{ $t('filters.allDivisions') }}</option>
             <option v-for="division in divisions" :key="division" :value="division">
               {{ division }}
             </option>
@@ -130,7 +130,7 @@
 
         <div class="space-y-2">
           <label class="text-xs font-medium text-gray-700 flex items-center gap-1">
-            District
+            {{ $t('filters.district') }}
           </label>
           <select 
             v-model="localFilters.district" 
@@ -138,7 +138,7 @@
             :disabled="!localFilters.division"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
           >
-            <option value="">All Districts</option>
+            <option value="">{{ $t('filters.allDistricts') }}</option>
             <option v-for="district in availableDistricts" :key="district" :value="district">
               {{ district }}
             </option>
@@ -147,7 +147,7 @@
 
         <div class="space-y-2">
           <label class="text-xs font-medium text-gray-700 flex items-center gap-1">
-            Thana / Upazila
+            {{ $t('filters.thanaUpazila') }}
           </label>
           <select 
             v-model="localFilters.thana" 
@@ -155,7 +155,7 @@
             :disabled="!localFilters.district"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
           >
-            <option value="">All Thanas</option>
+            <option value="">{{ $t('filters.allThanas') }}</option>
             <option v-for="thana in availableThanas" :key="thana" :value="thana">
               {{ thana }}
             </option>
@@ -168,7 +168,7 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
-            From Date
+            {{ $t('filters.fromDate') }}
           </label>
           <input 
             type="date" 
@@ -180,7 +180,7 @@
 
         <div class="space-y-2">
           <label class="text-xs font-medium text-gray-700 flex items-center gap-1">
-            To Date
+            {{ $t('filters.toDate') }}
           </label>
           <input 
             type="date" 
@@ -196,7 +196,10 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { getDivisions, getDistricts, getThanas } from '../data/bangladesh-locations'
+
+const { t } = useI18n()
 
 const props = defineProps({
   filters: {

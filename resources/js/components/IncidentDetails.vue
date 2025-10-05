@@ -10,7 +10,7 @@
 
     <div v-else-if="error" class="bg-white shadow-lg rounded-lg p-6">
       <div class="text-red-600">
-        <h2 class="text-xl font-bold mb-2">Error</h2>
+        <h2 class="text-xl font-bold mb-2">{{ $t('incidentDetails.error') }}</h2>
         <p>{{ error }}</p>
       </div>
     </div>
@@ -23,32 +23,32 @@
       >
         <template #actions>
           <div class="text-right text-sm text-gray-500">
-            <p>Reported: {{ formatDate(incident.created_at) }}</p>
-            <p v-if="incident.incident_date">Incident Date: {{ formatDate(incident.incident_date) }}</p>
+            <p>{{ $t('incidentDetails.reported') }}: {{ formatDate(incident.created_at) }}</p>
+            <p v-if="incident.incident_date">{{ $t('incidentDetails.incidentDate') }}: {{ formatDate(incident.incident_date) }}</p>
           </div>
         </template>
       </PageHeader>
 
       <!-- Description -->
       <div class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Description</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('incidentDetails.description') }}</h3>
         <p class="text-gray-700 leading-relaxed">{{ incident.description }}</p>
       </div>
 
       <!-- Location -->
       <div v-if="incident.latitude && incident.longitude" class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Location</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('incidentDetails.location') }}</h3>
         
         <!-- Address Information -->
         <div class="text-gray-700 mb-4">
           <p v-if="incident.address" class="mb-2">
-            <span class="font-medium">Address:</span> {{ incident.address }}
+            <span class="font-medium">{{ $t('incidentDetails.address') }}:</span> {{ incident.address }}
           </p>
           <p v-if="incident.city" class="mb-2">
-            <span class="font-medium">Area:</span> {{ incident.city }}, {{ incident.district }}, {{ incident.division }}
+            <span class="font-medium">{{ $t('incidentDetails.area') }}:</span> {{ incident.city }}, {{ incident.district }}, {{ incident.division }}
           </p>
           <p class="text-sm text-gray-500 mb-4">
-            <span class="font-medium">Coordinates:</span> {{ incident.latitude }}, {{ incident.longitude }}
+            <span class="font-medium">{{ $t('incidentDetails.coordinates') }}:</span> {{ incident.latitude }}, {{ incident.longitude }}
           </p>
         </div>
 
@@ -64,7 +64,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
-              Center
+              {{ $t('incidentDetails.center') }}
             </button>
           </div>
 
@@ -74,7 +74,7 @@
               <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
               </svg>
-              <span>Incident Location</span>
+              <span>{{ $t('incidentDetails.incidentLocation') }}</span>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
             </svg>
-            Open in Google Maps
+            {{ $t('incidentDetails.openInGoogleMaps') }}
           </a>
           
           <button @click="copyCoordinates" 
@@ -95,14 +95,14 @@
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
             </svg>
-            Copy Coordinates
+            {{ $t('incidentDetails.copyCoordinates') }}
           </button>
         </div>
       </div>
 
       <!-- Reporter Info -->
       <div v-if="!incident.is_anonymous" class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Reporter Information</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('incidentDetails.reporterInformation') }}</h3>
         <div class="text-gray-700">
           <p v-if="incident.user">{{ incident.user.name }}</p>
           <p v-if="incident.reporter_phone">{{ incident.reporter_phone }}</p>
@@ -112,7 +112,7 @@
 
       <!-- Media Slider -->
       <div v-if="incident.media && incident.media.length > 0" class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Media</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('incidentDetails.media') }}</h3>
         
         <!-- CSS Radio Button Slider -->
         <div class="media-slider">
@@ -269,25 +269,25 @@
 
       <!-- Verification Status -->
       <div class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-3">Verification Status</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ $t('incidentDetails.verificationStatus') }}</h3>
         <div class="flex items-center space-x-4 mb-4">
           <div class="text-center">
             <div class="text-2xl font-bold text-green-600">{{ incident.verification_count }}</div>
-            <div class="text-sm text-gray-600">Confirmations</div>
+            <div class="text-sm text-gray-600">{{ $t('incidentDetails.confirmations') }}</div>
           </div>
           <div class="text-center">
             <div class="text-2xl font-bold text-red-600">{{ incident.dispute_count }}</div>
-            <div class="text-sm text-gray-600">Disputes</div>
+            <div class="text-sm text-gray-600">{{ $t('incidentDetails.disputes') }}</div>
           </div>
           <div class="text-center">
             <div class="text-2xl font-bold text-blue-600">{{ getVerificationRatio() }}%</div>
-            <div class="text-sm text-gray-600">Verified</div>
+            <div class="text-sm text-gray-600">{{ $t('incidentDetails.verified') }}</div>
           </div>
         </div>
 
         <!-- Add Verification (only for logged-in users) -->
         <div v-if="isAuthenticated && !userHasVerified" class="mt-4 p-4 bg-gray-50 rounded-lg">
-          <h4 class="text-sm font-semibold text-gray-900 mb-3">Verify this incident</h4>
+          <h4 class="text-sm font-semibold text-gray-900 mb-3">{{ $t('incidentDetails.verifyThisIncident') }}</h4>
           <div class="flex gap-3 mb-3">
             <button
               @click="verifyIncident('confirm')"
@@ -296,7 +296,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              Confirm
+              {{ $t('incidentDetails.confirm') }}
             </button>
             <button
               @click="verifyIncident('dispute')"
@@ -305,31 +305,31 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              Dispute
+              {{ $t('incidentDetails.dispute') }}
             </button>
           </div>
           <textarea
             v-model="verificationComment"
-            placeholder="Add a comment (optional)"
+            :placeholder="$t('incidentDetails.addCommentOptional')"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             rows="2"
           ></textarea>
         </div>
         <div v-else-if="isAuthenticated && userHasVerified" class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-          You have already verified this incident
+          {{ $t('incidentDetails.alreadyVerified') }}
         </div>
       </div>
 
       <!-- Comments -->
       <div class="mb-6">
         <h3 class="text-lg font-semibold text-gray-900 mb-3">
-          Comments ({{ commentsPagination.total || 0 }})
+          {{ $t('incidentDetails.comments') }} ({{ commentsPagination.total || 0 }})
         </h3>
         
         <!-- Add Comment Form (only for logged-in users) -->
         <div v-if="isAuthenticated" class="mb-4 p-4 bg-gray-50 rounded-lg">
           <div v-if="replyingTo" class="text-sm text-gray-600 mb-2 flex items-center justify-between">
-            <span>Replying to <strong>{{ replyingTo.commenter_display_name }}</strong></span>
+            <span>{{ $t('incidentDetails.replyingTo') }} <strong>{{ replyingTo.commenter_display_name }}</strong></span>
             <button @click="cancelReply" class="text-red-600 hover:text-red-700">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -340,7 +340,7 @@
             ref="commentTextarea"
             v-model="newCommentText"
             @input="handleMentionInput"
-            placeholder="Add a comment... (Use @ to mention users)"
+            :placeholder="$t('incidentDetails.addComment')"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
             rows="3"
           ></textarea>
@@ -362,14 +362,14 @@
               @click="cancelReply"
               class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
             >
-              Cancel
+              {{ $t('incidentDetails.cancel') }}
             </button>
             <button
               @click="addComment"
               :disabled="!newCommentText.trim()"
               class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {{ replyingTo ? 'Post Reply' : 'Post Comment' }}
+              {{ replyingTo ? $t('incidentDetails.postReply') : $t('incidentDetails.postComment') }}
             </button>
           </div>
         </div>
@@ -415,14 +415,14 @@
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
                   </svg>
-                  Reply
+                  {{ $t('incidentDetails.reply') }}
                 </button>
                 <button
                   v-if="isAuthenticated && comment.user_id === currentUserId"
                   @click="deleteComment(comment.id)"
                   class="ml-auto text-sm text-red-600 hover:text-red-700 transition"
                 >
-                  Delete
+                  {{ $t('incidentDetails.delete') }}
                 </button>
               </div>
 
@@ -463,7 +463,7 @@
                       @click="deleteComment(reply.id, comment.id)"
                       class="ml-auto text-xs text-red-600 hover:text-red-700 transition"
                     >
-                      Delete
+                      {{ $t('incidentDetails.delete') }}
                     </button>
                   </div>
                 </div>
@@ -472,7 +472,7 @@
           </div>
         </div>
         <div v-else class="text-center text-gray-500 py-4">
-          No comments yet. Be the first to comment!
+          {{ $t('incidentDetails.noCommentsYet') }}
         </div>
 
         <!-- Load More Button -->
@@ -482,7 +482,7 @@
             :disabled="loadingComments"
             class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
           >
-            {{ loadingComments ? 'Loading...' : 'Load More Comments' }}
+            {{ loadingComments ? $t('incidentDetails.loading') : $t('incidentDetails.loadMoreComments') }}
           </button>
         </div>
       </div>
@@ -490,7 +490,7 @@
 
     <!-- Nearby Incidents Section -->
     <div v-if="incident && nearbyIncidents.length > 0" class="bg-white shadow-lg rounded-lg p-6 mt-6">
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Nearby Incidents</h3>
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('incidentDetails.nearbyIncidents') }}</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <router-link 
           v-for="nearbyIncident in nearbyIncidents" 
@@ -534,8 +534,8 @@
 
     <div v-else class="bg-white shadow-lg rounded-lg p-6">
       <div class="text-center text-gray-600">
-        <h2 class="text-xl font-bold mb-2">Incident Not Found</h2>
-        <p>The incident you're looking for doesn't exist or has been removed.</p>
+        <h2 class="text-xl font-bold mb-2">{{ $t('incidentDetails.incidentNotFound') }}</h2>
+        <p>{{ $t('incidentDetails.incidentNotFoundDescription') }}</p>
       </div>
     </div>
   </div>
@@ -910,6 +910,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../stores/auth'
 import axios from 'axios'
 import PageHeader from './PageHeader.vue'
@@ -918,6 +919,7 @@ import 'leaflet/dist/leaflet.css'
 
 const route = useRoute()
 const authStore = useAuthStore()
+const { t } = useI18n()
 const incident = ref(null)
 const loading = ref(true)
 const error = ref(null)
@@ -985,9 +987,9 @@ const fetchIncident = async () => {
     
     if (!response.ok) {
       if (response.status === 404) {
-        error.value = 'Incident not found'
+        error.value = t('incidentDetails.incidentNotFound')
       } else {
-        error.value = 'Failed to load incident'
+        error.value = t('incidentDetails.incidentNotFoundDescription')
       }
       return
     }
@@ -1006,7 +1008,7 @@ const fetchIncident = async () => {
     // Fetch nearby incidents
     fetchNearbyIncidents()
   } catch (err) {
-    error.value = 'Network error occurred'
+    error.value = t('incidentDetails.incidentNotFoundDescription')
     console.error('Error fetching incident:', err)
   } finally {
     loading.value = false
@@ -1132,8 +1134,8 @@ const initializeMap = () => {
   // Add popup
   const popupContent = `
     <div class="p-2 min-w-[200px]">
-      <h3 class="font-semibold text-gray-900 mb-1">Incident Location</h3>
-      <p class="text-sm text-gray-600 mb-2">${incident.value.address || 'Location coordinates'}</p>
+      <h3 class="font-semibold text-gray-900 mb-1">${t('incidentDetails.incidentLocation')}</h3>
+      <p class="text-sm text-gray-600 mb-2">${incident.value.address || t('incidentDetails.locationCoordinates')}</p>
       <p class="text-xs text-gray-500">${incident.value.latitude}, ${incident.value.longitude}</p>
     </div>
   `
@@ -1374,12 +1376,12 @@ const addComment = async () => {
     replyingTo.value = null
   } catch (error) {
     console.error('Error adding comment:', error)
-    alert('Failed to add comment. Please try again.')
+    alert(t('incidentDetails.failedToAddComment'))
   }
 }
 
 const deleteComment = async (commentId, parentId = null) => {
-  if (!confirm('Are you sure you want to delete this comment?')) return
+  if (!confirm(t('incidentDetails.areYouSureDeleteComment'))) return
 
   try {
     await axios.delete(`/api/comments/${commentId}`)
@@ -1397,7 +1399,7 @@ const deleteComment = async (commentId, parentId = null) => {
     }
   } catch (error) {
     console.error('Error deleting comment:', error)
-    alert('Failed to delete comment. Please try again.')
+    alert(t('incidentDetails.failedToDeleteComment'))
   }
 }
 
@@ -1557,9 +1559,9 @@ const verifyIncident = async (type) => {
   } catch (error) {
     console.error('Error verifying incident:', error)
     if (error.response?.status === 409) {
-      alert('You have already verified this incident.')
+      alert(t('incidentDetails.alreadyVerifiedAlert'))
     } else {
-      alert('Failed to verify incident. Please try again.')
+      alert(t('incidentDetails.failedToVerifyIncident'))
     }
   }
 }
