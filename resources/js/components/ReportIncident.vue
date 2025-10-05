@@ -1,8 +1,8 @@
 <template>
   <div class="max-w-4xl mx-auto">
     <PageHeader 
-      title="Report an Incident" 
-      subtitle="Help keep your community safe by reporting incidents. All reports are anonymous by default."
+      :title="$t('report.title')" 
+      :subtitle="$t('report.subtitle')"
     />
     
     <div class="bg-white shadow-lg rounded-lg">
@@ -10,11 +10,11 @@
       <form @submit.prevent="submitReport" class="p-6 space-y-6">
         <!-- Basic Information -->
         <div class="space-y-4">
-          <h2 class="text-lg font-semibold text-gray-900">Basic Information</h2>
+          <h2 class="text-lg font-semibold text-gray-900">{{ $t('report.basicInformation') }}</h2>
           
           <div>
             <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-              Incident Title *
+              {{ $t('report.incidentTitle') }} *
             </label>
             <input
               id="title"
@@ -22,13 +22,13 @@
               type="text"
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              placeholder="Brief description of the incident"
+              :placeholder="$t('report.incidentTitlePlaceholder')"
             />
           </div>
 
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-              Detailed Description *
+              {{ $t('report.detailedDescription') }} *
             </label>
             <textarea
               id="description"
@@ -36,13 +36,13 @@
               required
               rows="4"
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              placeholder="Provide detailed information about what happened, when, and any other relevant details"
+              :placeholder="$t('report.detailedDescriptionPlaceholder')"
             ></textarea>
           </div>
 
           <div>
             <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-              Category *
+              {{ $t('report.category') }} *
             </label>
             <select
               id="category"
@@ -50,7 +50,7 @@
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
-              <option value="">Select a category</option>
+              <option value="">{{ $t('report.selectCategory') }}</option>
               <option 
                 v-for="category in categories" 
                 :key="category.value" 
@@ -63,7 +63,7 @@
 
           <div>
             <label for="incident_date" class="block text-sm font-medium text-gray-700 mb-2">
-              When did this happen?
+              {{ $t('report.whenDidThisHappen') }}
             </label>
             <input
               id="incident_date"
@@ -76,12 +76,12 @@
 
         <!-- Location -->
         <div class="space-y-4">
-          <h2 class="text-lg font-semibold text-gray-900">Location</h2>
+          <h2 class="text-lg font-semibold text-gray-900">{{ $t('report.location') }}</h2>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label for="latitude" class="block text-sm font-medium text-gray-700 mb-2">
-                Latitude
+                {{ $t('report.latitude') }}
               </label>
               <input
                 id="latitude"
@@ -94,7 +94,7 @@
             </div>
             <div>
               <label for="longitude" class="block text-sm font-medium text-gray-700 mb-2">
-                Longitude
+                {{ $t('report.longitude') }}
               </label>
               <input
                 id="longitude"
@@ -109,21 +109,21 @@
 
           <div>
             <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
-              Address
+              {{ $t('report.address') }}
             </label>
             <input
               id="address"
               v-model="form.address"
               type="text"
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              placeholder="Street address, area, city"
+              :placeholder="$t('report.addressPlaceholder')"
             />
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label for="division" class="block text-sm font-medium text-gray-700 mb-2">
-                Division
+                {{ $t('report.division') }}
               </label>
               <select
                 id="division"
@@ -131,7 +131,7 @@
                 @change="onDivisionChange"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
               >
-                <option value="">Select Division</option>
+                <option value="">{{ $t('report.selectDivision') }}</option>
                 <option v-for="division in divisions" :key="division" :value="division">
                   {{ division }}
                 </option>
@@ -139,7 +139,7 @@
             </div>
             <div>
               <label for="district" class="block text-sm font-medium text-gray-700 mb-2">
-                District
+                {{ $t('report.district') }}
               </label>
               <select
                 id="district"
@@ -148,7 +148,7 @@
                 :disabled="!form.division"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
-                <option value="">Select District</option>
+                <option value="">{{ $t('report.selectDistrict') }}</option>
                 <option v-for="district in availableDistricts" :key="district" :value="district">
                   {{ district }}
                 </option>
@@ -156,7 +156,7 @@
             </div>
             <div>
               <label for="thana" class="block text-sm font-medium text-gray-700 mb-2">
-                Thana / Upazila
+                {{ $t('report.thana') }}
               </label>
               <select
                 id="thana"
@@ -164,7 +164,7 @@
                 :disabled="!form.district"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
               >
-                <option value="">Select Thana</option>
+                <option value="">{{ $t('report.selectThana') }}</option>
                 <option v-for="thana in availableThanas" :key="thana" :value="thana">
                   {{ thana }}
                 </option>
@@ -178,7 +178,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <span class="text-sm text-blue-800">
-                <strong>Tip:</strong> Click "Get Current Location" to automatically fill coordinates, or manually enter them.
+                <strong>{{ $t('report.tip') }}</strong> {{ $t('report.tipMessage') }}
               </span>
             </div>
             <button
@@ -186,14 +186,14 @@
               @click="getCurrentLocation"
               class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
             >
-              Get Current Location
+              {{ $t('report.getCurrentLocation') }}
             </button>
           </div>
         </div>
 
         <!-- Media Upload -->
         <div class="space-y-4">
-          <h2 class="text-lg font-semibold text-gray-900">Media (Optional)</h2>
+          <h2 class="text-lg font-semibold text-gray-900">{{ $t('report.mediaOptional') }}</h2>
           
           <div class="border-2 border-dashed border-gray-300 rounded-lg p-6">
             <div class="text-center">
@@ -203,10 +203,10 @@
               <div class="mt-4">
                 <label for="media" class="cursor-pointer">
                   <span class="mt-2 block text-sm font-medium text-gray-900">
-                    Upload photos or videos
+                    {{ $t('report.uploadPhotosVideos') }}
                   </span>
                   <span class="mt-1 block text-sm text-gray-500">
-                    PNG, JPG, MP4 up to 10MB each
+                    {{ $t('report.supportedFormatsShort') }}
                   </span>
                 </label>
                 <input
@@ -257,7 +257,7 @@
 
         <!-- Reporter Information -->
         <div class="space-y-4">
-          <h2 class="text-lg font-semibold text-gray-900">Reporter Information</h2>
+          <h2 class="text-lg font-semibold text-gray-900">{{ $t('report.reporterInformation') }}</h2>
           
           <div class="flex items-center">
             <input
@@ -267,26 +267,26 @@
               class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
             />
             <label for="is_anonymous" class="ml-2 block text-sm text-gray-700">
-              Report anonymously (recommended for safety)
+              {{ $t('report.reportAnonymously') }}
             </label>
           </div>
 
           <div v-if="!form.is_anonymous" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label for="reporter_name" class="block text-sm font-medium text-gray-700 mb-2">
-                Your Name
+                {{ $t('report.yourName') }}
               </label>
               <input
                 id="reporter_name"
                 v-model="form.reporter_name"
                 type="text"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                placeholder="Your full name"
+                :placeholder="$t('report.yourFullNamePlaceholder')"
               />
             </div>
             <div>
               <label for="reporter_phone" class="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
+                {{ $t('report.phoneNumber') }}
               </label>
               <input
                 id="reporter_phone"
@@ -306,15 +306,15 @@
             @click="$router.push('/')"
             class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            Cancel
+            {{ $t('report.cancel') }}
           </button>
           <button
             type="submit"
             :disabled="loading"
             class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <span v-if="loading">Submitting...</span>
-            <span v-else>Submit Report</span>
+            <span v-if="loading">{{ $t('report.submitting') }}</span>
+            <span v-else>{{ $t('report.submitReport') }}</span>
           </button>
         </div>
       </form>
@@ -326,11 +326,13 @@
 import { ref, reactive, onMounted, computed } from 'vue';
 import { useIncidentStore } from '../stores/incidents';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import PageHeader from './PageHeader.vue';
 import { getDivisions, getDistricts, getThanas } from '../data/bangladesh-locations';
 
 const incidentStore = useIncidentStore();
 const router = useRouter();
+const { t } = useI18n();
 
 const loading = ref(false);
 const mediaFiles = ref([]);
@@ -383,7 +385,7 @@ onMounted(() => {
 
 const getCurrentLocation = () => {
   if (!navigator.geolocation) {
-    alert('Geolocation is not supported by this browser.');
+    alert(t('report.geolocationNotSupported'));
     return;
   }
 
@@ -394,7 +396,7 @@ const getCurrentLocation = () => {
     },
     (error) => {
       console.error('Error getting location:', error);
-      alert('Unable to get your location. Please enter coordinates manually.');
+      alert(t('report.unableToGetLocation'));
     }
   );
 };
@@ -404,7 +406,7 @@ const handleMediaUpload = (event) => {
   
   files.forEach(file => {
     if (file.size > 10 * 1024 * 1024) { // 10MB limit
-      alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+      alert(t('report.fileTooLarge', { fileName: file.name }));
       return;
     }
 
@@ -455,13 +457,13 @@ const submitReport = async () => {
     const incident = await incidentStore.createIncident(formData);
     
     // Show success message
-    alert('Incident reported successfully! Thank you for helping keep the community safe.');
+    alert(t('report.successMessage'));
     
     // Redirect to incident details
     router.push(`/incident/${incident.id}`);
   } catch (error) {
     console.error('Error submitting report:', error);
-    alert('Failed to submit report. Please try again.');
+    alert(t('report.errorMessage'));
   } finally {
     loading.value = false;
   }
