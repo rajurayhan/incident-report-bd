@@ -78,7 +78,23 @@ export default {
     verifiedReports: 'Verified Reports',
     memberSince: 'Member Since',
     updating: 'Updating...',
-    changing: 'Changing...'
+    changing: 'Changing...',
+    activeAccount: 'Active Account',
+    enterYourName: 'Enter your name',
+    yourEmail: 'Your email address',
+    phonePlaceholder: '+880 1XXX-XXXXXX',
+    yourCity: 'Your city',
+    profileUpdatedSuccessfully: 'Profile updated successfully!',
+    failedToUpdateProfile: 'Failed to update profile',
+    errorUpdatingProfile: 'An error occurred while updating profile',
+    updateProfileButton: 'Update Profile',
+    passwordChangedSuccessfully: 'Password changed successfully!',
+    failedToChangePassword: 'Failed to change password',
+    errorChangingPassword: 'An error occurred while changing password',
+    enterCurrentPassword: 'Enter your current password',
+    enterNewPassword: 'Enter new password (min 8 characters)',
+    confirmNewPassword: 'Confirm new password',
+    changePasswordButton: 'Change Password'
   },
   activity: {
     myActivity: 'My Activity',
@@ -306,6 +322,65 @@ export default {
     alreadyVerifiedAlert: 'You have already verified this incident.',
     failedToVerifyIncident: 'Failed to verify incident. Please try again.',
     locationCoordinates: 'Location coordinates'
+  },
+  analytics: {
+    title: 'Analytics Dashboard',
+    subtitle: 'Comprehensive insights and statistics',
+    totalReports: 'Total Reports',
+    verifiedReports: 'Verified Reports',
+    activeLocations: 'Active Locations',
+    resolvedToday: 'Resolved Today',
+    allTimeSubmissions: 'All time submissions',
+    verificationRate: 'verification rate',
+    districtsWithReports: 'Districts with reports',
+    casesClosedToday: 'Cases closed today',
+    reportsByCategory: 'Reports by Category',
+    reportsByStatus: 'Reports by Status',
+    topLocations: 'Top Locations',
+    noLocationData: 'No location data available yet',
+    categories: {
+      theftRobbery: 'Theft / Robbery',
+      sexualHarassment: 'Sexual Harassment',
+      domesticViolence: 'Domestic Violence',
+      suspiciousActivities: 'Suspicious Activities',
+      trafficAccidents: 'Traffic Accidents',
+      drugs: 'Drugs',
+      cybercrime: 'Cybercrime'
+    },
+    statuses: {
+      pending: 'Pending',
+      inProgress: 'In Progress',
+      resolved: 'Resolved'
+    }
+  },
+  myReports: {
+    title: 'My Reports',
+    subtitle: 'View and manage your incident reports',
+    totalReports: 'Total Reports',
+    pending: 'Pending',
+    investigating: 'Investigating',
+    resolved: 'Resolved',
+    verified: 'Verified',
+    allReports: 'All Reports',
+    noReportsFound: 'No reports found',
+    noReportsDescription: 'You haven\'t submitted any {type} reports yet.',
+    submitFirstReport: 'Submit Your First Report',
+    loading: 'Loading your reports...',
+    viewDetails: 'View Details',
+    categories: {
+      fire: 'Fire',
+      accident: 'Accident',
+      crime: 'Crime',
+      naturalDisaster: 'Natural Disaster',
+      health: 'Health',
+      other: 'Other'
+    },
+    statuses: {
+      pending: 'Pending',
+      investigating: 'Investigating',
+      resolved: 'Resolved',
+      rejected: 'Rejected'
+    }
   },
 }
 

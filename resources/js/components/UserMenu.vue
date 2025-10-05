@@ -21,28 +21,28 @@
         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         @click="closeUserMenu"
       >
-        Profile
+        {{ $t('nav.profile') }}
       </router-link>
       <router-link 
         to="/my-reports" 
         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         @click="closeUserMenu"
       >
-        My Reports
+        {{ $t('nav.myReports') }}
       </router-link>
       <router-link 
         to="/my-activity" 
         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         @click="closeUserMenu"
       >
-        My Activity
+        {{ $t('nav.myActivity') }}
       </router-link>
       <div class="border-t border-gray-200"></div>
       <button 
         @click="logout"
         class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
       >
-        Logout
+        {{ $t('nav.logout') }}
       </button>
     </div>
   </div>

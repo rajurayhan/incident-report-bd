@@ -99,16 +99,8 @@ class Incident extends Model
     // Accessors & Mutators
     public function getCategoryLabelAttribute(): string
     {
-        return match($this->category) {
-            'theft_robbery' => 'Theft / Robbery',
-            'sexual_harassment' => 'Sexual Harassment / Abuse',
-            'domestic_violence' => 'Domestic Violence',
-            'suspicious_activities' => 'Suspicious Activities',
-            'traffic_accidents' => 'Traffic Accidents / Public Hazards',
-            'drugs' => 'Drugs',
-            'cybercrime' => 'Cybercrime',
-            default => ucfirst(str_replace('_', ' ', $this->category))
-        };
+        // Return the category key for frontend localization
+        return $this->category;
     }
 
     public function getStatusLabelAttribute(): string

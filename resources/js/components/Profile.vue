@@ -23,7 +23,7 @@
                   <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  Active Account
+                  {{ $t('profile.activeAccount') }}
                 </span>
               </div>
             </div>
@@ -40,7 +40,7 @@
                   id="name"
                   v-model="form.name"
                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  placeholder="Enter your name"
+                  :placeholder="$t('profile.enterYourName')"
                 />
               </div>
 
@@ -52,7 +52,7 @@
                   id="email"
                   v-model="form.email"
                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  placeholder="your@email.com"
+                  :placeholder="$t('profile.yourEmail')"
                 />
               </div>
 
@@ -64,7 +64,7 @@
                   id="phone"
                   v-model="form.phone"
                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  placeholder="+880 1XXX-XXXXXX"
+                  :placeholder="$t('profile.phonePlaceholder')"
                 />
               </div>
 
@@ -76,7 +76,7 @@
                   id="city"
                   v-model="form.city"
                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  placeholder="Your city"
+                  :placeholder="$t('profile.yourCity')"
                 />
               </div>
             </div>
@@ -106,9 +106,9 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Updating...
+                  {{ $t('profile.updating') }}
                 </span>
-                <span v-else>Update Profile</span>
+                <span v-else>{{ $t('profile.updateProfileButton') }}</span>
               </button>
             </div>
           </form>
@@ -118,7 +118,7 @@
       <!-- Change Password Section -->
       <div class="bg-white shadow-md rounded-lg overflow-hidden mt-6">
         <div class="p-6">
-          <h3 class="text-xl font-bold text-gray-900 mb-4">Change Password</h3>
+          <h3 class="text-xl font-bold text-gray-900 mb-4">{{ $t('profile.changePassword') }}</h3>
           <form @submit.prevent="changePassword" class="space-y-6">
             <div class="grid grid-cols-1 gap-6">
               <!-- Current Password -->
@@ -129,7 +129,7 @@
                   id="current_password"
                   v-model="passwordForm.current_password"
                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  placeholder="Enter your current password"
+                  :placeholder="$t('profile.enterCurrentPassword')"
                 />
               </div>
 
@@ -141,7 +141,7 @@
                   id="new_password"
                   v-model="passwordForm.password"
                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  placeholder="Enter new password (min 8 characters)"
+                  :placeholder="$t('profile.enterNewPassword')"
                 />
               </div>
 
@@ -153,7 +153,7 @@
                   id="password_confirmation"
                   v-model="passwordForm.password_confirmation"
                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  placeholder="Confirm new password"
+                  :placeholder="$t('profile.confirmNewPassword')"
                 />
               </div>
             </div>
@@ -183,9 +183,9 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Changing...
+                  {{ $t('profile.changing') }}
                 </span>
-                <span v-else>Change Password</span>
+                <span v-else>{{ $t('profile.changePasswordButton') }}</span>
               </button>
             </div>
           </form>
@@ -197,7 +197,7 @@
         <div class="bg-white p-6 rounded-lg shadow-md">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-gray-600 text-sm">Reports Submitted</p>
+              <p class="text-gray-600 text-sm">{{ $t('profile.reportsSubmitted') }}</p>
               <p class="text-2xl font-bold text-gray-900 mt-1">{{ stats.totalReports }}</p>
             </div>
             <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
@@ -211,7 +211,7 @@
         <div class="bg-white p-6 rounded-lg shadow-md">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-gray-600 text-sm">Verified Reports</p>
+              <p class="text-gray-600 text-sm">{{ $t('profile.verifiedReports') }}</p>
               <p class="text-2xl font-bold text-gray-900 mt-1">{{ stats.verifiedReports }}</p>
             </div>
             <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -225,7 +225,7 @@
         <div class="bg-white p-6 rounded-lg shadow-md">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-gray-600 text-sm">Member Since</p>
+              <p class="text-gray-600 text-sm">{{ $t('profile.memberSince') }}</p>
               <p class="text-2xl font-bold text-gray-900 mt-1">{{ memberSince }}</p>
             </div>
             <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -243,8 +243,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 // Reactive state
 const form = ref({
@@ -291,12 +293,14 @@ const getUserInitials = () => {
 }
 
 const loadUserData = () => {
+  console.log('Loading user data:', user.value)
   form.value = {
     name: user.value.name || '',
     email: user.value.email || '',
     phone: user.value.phone || '',
     city: user.value.city || ''
   }
+  console.log('Form data loaded:', form.value)
 }
 
 const fetchUserStats = async () => {
@@ -339,18 +343,18 @@ const updateProfile = async () => {
 
     if (response.ok) {
       messageType.value = 'success'
-      message.value = 'Profile updated successfully!'
+      message.value = t('profile.profileUpdatedSuccessfully')
       authStore.updateUser(data.user)
       setTimeout(() => {
         message.value = ''
       }, 3000)
     } else {
       messageType.value = 'error'
-      message.value = data.message || 'Failed to update profile'
+      message.value = data.message || t('profile.failedToUpdateProfile')
     }
   } catch (error) {
     messageType.value = 'error'
-    message.value = 'An error occurred while updating profile'
+    message.value = t('profile.errorUpdatingProfile')
   } finally {
     loading.value = false
   }
@@ -374,7 +378,7 @@ const changePassword = async () => {
 
     if (response.ok) {
       passwordMessageType.value = 'success'
-      passwordMessage.value = 'Password changed successfully!'
+      passwordMessage.value = t('profile.passwordChangedSuccessfully')
       // Clear form
       passwordForm.value = {
         current_password: '',
@@ -386,18 +390,24 @@ const changePassword = async () => {
       }, 3000)
     } else {
       passwordMessageType.value = 'error'
-      passwordMessage.value = data.message || 'Failed to change password'
+      passwordMessage.value = data.message || t('profile.failedToChangePassword')
     }
   } catch (error) {
     passwordMessageType.value = 'error'
-    passwordMessage.value = 'An error occurred while changing password'
+    passwordMessage.value = t('profile.errorChangingPassword')
   } finally {
     passwordLoading.value = false
   }
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  // Wait for user data to be available
+  if (!user.value && authStore.token) {
+    await authStore.fetchUser()
+  }
+  
+  // Now load the form data
   loadUserData()
   fetchUserStats()
 })

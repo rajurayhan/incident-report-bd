@@ -42,13 +42,13 @@
               to="/login" 
               class="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
             >
-              Login
+              {{ $t('nav.login') }}
             </router-link>
             <router-link 
               to="/register" 
               class="bg-red-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors duration-200"
             >
-              Register
+              {{ $t('nav.register') }}
             </router-link>
           </div>
         </div>

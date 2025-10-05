@@ -272,7 +272,7 @@
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                   </svg>
-                  {{ incident.category_label }}
+                  {{ getCategoryLabel(incident.category) }}
                 </span>
                 <span class="inline-flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -327,9 +327,11 @@
 import { ref, onMounted } from 'vue';
 import { useIncidentStore } from '../stores/incidents';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const incidentStore = useIncidentStore();
 const router = useRouter();
+const { t } = useI18n();
 
 const stats = ref({
   totalReports: 0,
@@ -479,6 +481,19 @@ const formatDate = (date) => {
 const filterByCategory = (category) => {
   incidentStore.setFilters({ category });
   router.push('/map');
+};
+
+const getCategoryLabel = (category) => {
+  const categoryMap = {
+    'theft_robbery': t('filters.categories.theftRobbery'),
+    'sexual_harassment': t('filters.categories.sexualHarassment'),
+    'domestic_violence': t('filters.categories.domesticViolence'),
+    'suspicious_activities': t('filters.categories.suspiciousActivities'),
+    'traffic_accidents': t('filters.categories.trafficAccidents'),
+    'drugs': t('filters.categories.drugs'),
+    'cybercrime': t('filters.categories.cybercrime')
+  };
+  return categoryMap[category] || category;
 };
 </script>
 

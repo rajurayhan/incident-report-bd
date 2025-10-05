@@ -143,8 +143,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useAuthStore } from '../stores/auth'
 import axios from 'axios'
 
+const authStore = useAuthStore()
 const activeTab = ref('comments')
 const comments = ref([])
 const verifications = ref([])
@@ -152,6 +154,10 @@ const loading = ref(true)
 
 const fetchComments = async () => {
   try {
+    // Ensure axios has the auth header
+    if (authStore.token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${authStore.token}`
+    }
     const response = await axios.get('/api/user/comments')
     console.log('Comments response:', response.data)
     comments.value = response.data || []
@@ -164,6 +170,10 @@ const fetchComments = async () => {
 
 const fetchVerifications = async () => {
   try {
+    // Ensure axios has the auth header
+    if (authStore.token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${authStore.token}`
+    }
     const response = await axios.get('/api/user/verifications')
     console.log('Verifications response:', response.data)
     verifications.value = response.data || []

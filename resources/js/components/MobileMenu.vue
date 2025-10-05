@@ -45,27 +45,27 @@
             class="block px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-md"
             @click="closeMobileMenu"
           >
-            Profile
+            {{ $t('nav.profile') }}
           </router-link>
           <router-link 
             to="/my-reports" 
             class="block px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-md"
             @click="closeMobileMenu"
           >
-            My Reports
+            {{ $t('nav.myReports') }}
           </router-link>
           <router-link 
             to="/my-activity" 
             class="block px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-md"
             @click="closeMobileMenu"
           >
-            My Activity
+            {{ $t('nav.myActivity') }}
           </router-link>
           <button 
             @click="logout"
             class="block w-full text-left px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-md"
           >
-            Logout
+            {{ $t('nav.logout') }}
           </button>
         </div>
         
@@ -76,14 +76,14 @@
             class="block px-3 py-2 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded-md"
             @click="closeMobileMenu"
           >
-            Login
+            {{ $t('nav.login') }}
           </router-link>
           <router-link 
             to="/register" 
             class="block px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
             @click="closeMobileMenu"
           >
-            Register
+            {{ $t('nav.register') }}
           </router-link>
         </div>
       </div>

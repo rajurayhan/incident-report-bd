@@ -78,7 +78,23 @@ export default {
     verifiedReports: 'যাচাইকৃত রিপোর্ট',
     memberSince: 'সদস্য হওয়ার তারিখ',
     updating: 'আপডেট হচ্ছে...',
-    changing: 'পরিবর্তন হচ্ছে...'
+    changing: 'পরিবর্তন হচ্ছে...',
+    activeAccount: 'সক্রিয় অ্যাকাউন্ট',
+    enterYourName: 'আপনার নাম লিখুন',
+    yourEmail: 'আপনার ইমেইল ঠিকানা',
+    phonePlaceholder: '+৮৮০ ১XXX-XXXXXX',
+    yourCity: 'আপনার শহর',
+    profileUpdatedSuccessfully: 'প্রোফাইল সফলভাবে আপডেট করা হয়েছে!',
+    failedToUpdateProfile: 'প্রোফাইল আপডেট করতে ব্যর্থ',
+    errorUpdatingProfile: 'প্রোফাইল আপডেট করার সময় একটি ত্রুটি ঘটেছে',
+    updateProfileButton: 'প্রোফাইল আপডেট করুন',
+    passwordChangedSuccessfully: 'পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!',
+    failedToChangePassword: 'পাসওয়ার্ড পরিবর্তন করতে ব্যর্থ',
+    errorChangingPassword: 'পাসওয়ার্ড পরিবর্তন করার সময় একটি ত্রুটি ঘটেছে',
+    enterCurrentPassword: 'আপনার বর্তমান পাসওয়ার্ড লিখুন',
+    enterNewPassword: 'নতুন পাসওয়ার্ড লিখুন (সর্বনিম্ন ৮ অক্ষর)',
+    confirmNewPassword: 'নতুন পাসওয়ার্ড নিশ্চিত করুন',
+    changePasswordButton: 'পাসওয়ার্ড পরিবর্তন করুন'
   },
   activity: {
     myActivity: 'আমার কার্যক্রম',
@@ -306,6 +322,65 @@ export default {
     alreadyVerifiedAlert: 'আপনি ইতিমধ্যে এই ঘটনাটি যাচাই করেছেন।',
     failedToVerifyIncident: 'ঘটনা যাচাই করতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।',
     locationCoordinates: 'অবস্থানের স্থানাঙ্ক'
+  },
+  analytics: {
+    title: 'বিশ্লেষণ ড্যাশবোর্ড',
+    subtitle: 'ব্যাপক অন্তর্দৃষ্টি এবং পরিসংখ্যান',
+    totalReports: 'মোট রিপোর্ট',
+    verifiedReports: 'যাচাইকৃত রিপোর্ট',
+    activeLocations: 'সক্রিয় অবস্থান',
+    resolvedToday: 'আজ সমাধান হয়েছে',
+    allTimeSubmissions: 'সব সময়ের জমা',
+    verificationRate: 'যাচাইকরণের হার',
+    districtsWithReports: 'রিপোর্ট সহ জেলা',
+    casesClosedToday: 'আজ বন্ধ হওয়া মামলা',
+    reportsByCategory: 'বিভাগ অনুযায়ী রিপোর্ট',
+    reportsByStatus: 'অবস্থা অনুযায়ী রিপোর্ট',
+    topLocations: 'শীর্ষ অবস্থান',
+    noLocationData: 'এখনো কোনো অবস্থানের ডেটা নেই',
+    categories: {
+      theftRobbery: 'চুরি / ডাকাতি',
+      sexualHarassment: 'যৌন হয়রানি',
+      domesticViolence: 'গার্হস্থ্য সহিংসতা',
+      suspiciousActivities: 'সন্দেহজনক কার্যক্রম',
+      trafficAccidents: 'যানবাহন দুর্ঘটনা',
+      drugs: 'মাদক',
+      cybercrime: 'সাইবার অপরাধ'
+    },
+    statuses: {
+      pending: 'মুলতবি',
+      inProgress: 'চলমান',
+      resolved: 'সমাধান'
+    }
+  },
+  myReports: {
+    title: 'আমার রিপোর্ট',
+    subtitle: 'আপনার ঘটনা রিপোর্ট দেখুন এবং পরিচালনা করুন',
+    totalReports: 'মোট রিপোর্ট',
+    pending: 'মুলতবি',
+    investigating: 'তদন্ত চলছে',
+    resolved: 'সমাধান',
+    verified: 'যাচাইকৃত',
+    allReports: 'সব রিপোর্ট',
+    noReportsFound: 'কোনো রিপোর্ট পাওয়া যায়নি',
+    noReportsDescription: 'আপনি এখনো কোনো {type} রিপোর্ট জমা দেননি।',
+    submitFirstReport: 'আপনার প্রথম রিপোর্ট জমা দিন',
+    loading: 'আপনার রিপোর্ট লোড হচ্ছে...',
+    viewDetails: 'বিস্তারিত দেখুন',
+    categories: {
+      fire: 'আগুন',
+      accident: 'দুর্ঘটনা',
+      crime: 'অপরাধ',
+      naturalDisaster: 'প্রাকৃতিক দুর্যোগ',
+      health: 'স্বাস্থ্য',
+      other: 'অন্যান্য'
+    },
+    statuses: {
+      pending: 'মুলতবি',
+      investigating: 'তদন্ত চলছে',
+      resolved: 'সমাধান',
+      rejected: 'প্রত্যাখ্যান'
+    }
   },
 }
 

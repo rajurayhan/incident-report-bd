@@ -85,7 +85,7 @@
               </div>
               
               <div class="text-xs text-gray-600 space-y-1">
-                <div><strong>{{ incident.category_label }}</strong></div>
+                <div><strong>{{ getCategoryLabel(incident.category) }}</strong></div>
                 <div>{{ incident.status_label }} • {{ incident.priority_label }}</div>
                 <div>{{ formatDate(incident.incident_date || incident.created_at) }}</div>
                 <div v-if="incident.address || incident.city">
@@ -479,7 +479,7 @@ const addIncidentMarker = (incident) => {
       </div>
       
       <div class="space-y-1 text-xs text-gray-600 mb-3">
-        <div><strong>${t('map.category')}:</strong> ${escapeHtml(incident.category_label)}</div>
+        <div><strong>${t('map.category')}:</strong> ${escapeHtml(getCategoryLabel(incident.category))}</div>
         <div><strong>${t('map.status')}:</strong> ${escapeHtml(incident.status_label)}</div>
         <div><strong>${t('map.priority')}:</strong> ${escapeHtml(incident.priority_label)}</div>
         <div><strong>${t('map.location')}:</strong> ${escapeHtml(incident.address || incident.city || t('map.unknown'))}</div>
@@ -612,6 +612,19 @@ const getPriorityColor = (priority) => {
 // Format date
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString()
+}
+
+const getCategoryLabel = (category) => {
+  const categoryMap = {
+    'theft_robbery': t('filters.categories.theftRobbery'),
+    'sexual_harassment': t('filters.categories.sexualHarassment'),
+    'domestic_violence': t('filters.categories.domesticViolence'),
+    'suspicious_activities': t('filters.categories.suspiciousActivities'),
+    'traffic_accidents': t('filters.categories.trafficAccidents'),
+    'drugs': t('filters.categories.drugs'),
+    'cybercrime': t('filters.categories.cybercrime')
+  };
+  return categoryMap[category] || category;
 }
 
 // Fit map to incident bounds

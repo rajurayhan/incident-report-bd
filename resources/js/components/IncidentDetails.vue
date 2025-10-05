@@ -19,7 +19,7 @@
       <!-- Header -->
       <PageHeader 
         :title="incident.title"
-        :subtitle="`${incident.category_label} • ${incident.status_label} • ${incident.priority_label}`"
+        :subtitle="`${getCategoryLabel(incident.category)} • ${incident.status_label} • ${incident.priority_label}`"
       >
         <template #actions>
           <div class="text-right text-sm text-gray-500">
@@ -1035,6 +1035,19 @@ const formatDate = (dateString) => {
     hour: '2-digit',
     minute: '2-digit'
   })
+}
+
+const getCategoryLabel = (category) => {
+  const categoryMap = {
+    'theft_robbery': t('filters.categories.theftRobbery'),
+    'sexual_harassment': t('filters.categories.sexualHarassment'),
+    'domestic_violence': t('filters.categories.domesticViolence'),
+    'suspicious_activities': t('filters.categories.suspiciousActivities'),
+    'traffic_accidents': t('filters.categories.trafficAccidents'),
+    'drugs': t('filters.categories.drugs'),
+    'cybercrime': t('filters.categories.cybercrime')
+  };
+  return categoryMap[category] || category;
 }
 
 const getMediaUrl = (media) => {
