@@ -85,9 +85,11 @@
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const form = reactive({
   email: '',
@@ -105,7 +107,7 @@ const handleLogin = async () => {
     await authStore.login(form);
     router.push('/');
   } catch (err) {
-    error.value = err.message || 'Login failed. Please try again.';
+    error.value = err.message || t('auth.loginFailed');
   } finally {
     loading.value = false;
   }

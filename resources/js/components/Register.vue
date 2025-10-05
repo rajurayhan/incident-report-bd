@@ -3,12 +3,12 @@
     <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Create your account
+          {{ $t('auth.createAccount') }}
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          Or
+          {{ $t('auth.orSignInExisting') }}
           <router-link to="/login" class="font-medium text-red-600 hover:text-red-500">
-            sign in to existing account
+            {{ $t('nav.login') }}
           </router-link>
         </p>
       </div>
@@ -16,7 +16,7 @@
       <form class="mt-8 space-y-6" @submit.prevent="handleRegister">
         <div class="space-y-4">
           <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <label for="name" class="block text-sm font-medium text-gray-700">{{ $t('auth.name') }}</label>
             <input
               id="name"
               v-model="form.name"
@@ -24,12 +24,12 @@
               type="text"
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-              placeholder="Your full name"
+              :placeholder="$t('auth.yourFullName')"
             />
           </div>
           
           <div>
-            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+            <label for="username" class="block text-sm font-medium text-gray-700">{{ $t('auth.username') }}</label>
             <input
               id="username"
               v-model="form.username"
@@ -37,14 +37,14 @@
               type="text"
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-              placeholder="unique_username (letters, numbers, underscore only)"
+              :placeholder="$t('auth.uniqueUsername')"
               pattern="[a-zA-Z0-9_]+"
-              title="Username can only contain letters, numbers, and underscores"
+              :title="$t('auth.usernamePattern')"
             />
           </div>
           
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+            <label for="email" class="block text-sm font-medium text-gray-700">{{ $t('auth.emailAddress') }}</label>
             <input
               id="email"
               v-model="form.email"
@@ -53,24 +53,24 @@
               autocomplete="email"
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-              placeholder="Email address"
+              :placeholder="$t('auth.email')"
             />
           </div>
           
           <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number (Optional)</label>
+            <label for="phone" class="block text-sm font-medium text-gray-700">{{ $t('auth.phoneNumberOptional') }}</label>
             <input
               id="phone"
               v-model="form.phone"
               name="phone"
               type="tel"
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-              placeholder="+880 1XXX XXXXXX"
+              :placeholder="$t('auth.phonePlaceholder')"
             />
           </div>
           
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <label for="password" class="block text-sm font-medium text-gray-700">{{ $t('auth.password') }}</label>
             <input
               id="password"
               v-model="form.password"
@@ -79,12 +79,12 @@
               autocomplete="new-password"
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-              placeholder="Password"
+              :placeholder="$t('auth.password')"
             />
           </div>
           
           <div>
-            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">{{ $t('auth.confirmPassword') }}</label>
             <input
               id="password_confirmation"
               v-model="form.password_confirmation"
@@ -93,7 +93,7 @@
               autocomplete="new-password"
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-              placeholder="Confirm password"
+              :placeholder="$t('auth.confirmPasswordPlaceholder')"
             />
           </div>
         </div>
@@ -119,8 +119,8 @@
             :disabled="loading"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span v-if="loading">Creating account...</span>
-            <span v-else>Create account</span>
+            <span v-if="loading">{{ $t('auth.creatingAccount') }}</span>
+            <span v-else>{{ $t('auth.registerButton') }}</span>
           </button>
         </div>
       </form>
@@ -132,9 +132,11 @@
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const form = reactive({
   name: '',
@@ -156,7 +158,7 @@ const handleRegister = async () => {
     await authStore.register(form);
     router.push('/');
   } catch (err) {
-    error.value = err.message || 'Registration failed. Please try again.';
+    error.value = err.message || t('auth.registrationFailed');
   } finally {
     loading.value = false;
   }

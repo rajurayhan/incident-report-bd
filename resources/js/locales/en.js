@@ -27,7 +27,19 @@ export default {
     signingIn: 'Signing in...',
     creatingAccount: 'Creating account...',
     orCreate: 'Or create a new account',
-    orSignIn: 'Or sign in to existing account'
+    orSignIn: 'Or sign in to existing account',
+    loginFailed: 'Login failed. Please try again.',
+    createAccount: 'Create your account',
+    orSignInExisting: 'Or sign in to existing account',
+    yourFullName: 'Your full name',
+    uniqueUsername: 'unique_username (letters, numbers, underscore only)',
+    usernamePattern: 'Username can only contain letters, numbers, and underscores',
+    emailAddress: 'Email Address',
+    phoneNumberOptional: 'Phone Number (Optional)',
+    phonePlaceholder: '+880 1XXX XXXXXX',
+    confirmPassword: 'Confirm Password',
+    confirmPasswordPlaceholder: 'Confirm password',
+    registrationFailed: 'Registration failed. Please try again.'
   },
   incident: {
     title: 'Title',

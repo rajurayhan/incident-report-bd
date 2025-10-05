@@ -27,7 +27,19 @@ export default {
     signingIn: 'সাইন ইন হচ্ছে...',
     creatingAccount: 'অ্যাকাউন্ট তৈরি হচ্ছে...',
     orCreate: 'অথবা একটি নতুন অ্যাকাউন্ট তৈরি করুন',
-    orSignIn: 'অথবা বিদ্যমান অ্যাকাউন্টে সাইন ইন করুন'
+    orSignIn: 'অথবা বিদ্যমান অ্যাকাউন্টে সাইন ইন করুন',
+    loginFailed: 'লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।',
+    createAccount: 'আপনার অ্যাকাউন্ট তৈরি করুন',
+    orSignInExisting: 'অথবা বিদ্যমান অ্যাকাউন্টে সাইন ইন করুন',
+    yourFullName: 'আপনার পূর্ণ নাম',
+    uniqueUsername: 'অনন্য_ব্যবহারকারীর_নাম (শুধুমাত্র অক্ষর, সংখ্যা, আন্ডারস্কোর)',
+    usernamePattern: 'ব্যবহারকারীর নামে শুধুমাত্র অক্ষর, সংখ্যা এবং আন্ডারস্কোর থাকতে পারে',
+    emailAddress: 'ইমেল ঠিকানা',
+    phoneNumberOptional: 'ফোন নম্বর (ঐচ্ছিক)',
+    phonePlaceholder: '+৮৮০ ১XXX XXXXXX',
+    confirmPassword: 'পাসওয়ার্ড নিশ্চিত করুন',
+    confirmPasswordPlaceholder: 'পাসওয়ার্ড নিশ্চিত করুন',
+    registrationFailed: 'নিবন্ধন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।'
   },
   incident: {
     title: 'শিরোনাম',
