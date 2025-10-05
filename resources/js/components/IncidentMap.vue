@@ -3,15 +3,15 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">Incident Map</h1>
-        <p class="text-gray-600 mt-1">Interactive map with incident visualization and filters</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ $t('map.title') }}</h1>
+        <p class="text-gray-600 mt-1">{{ $t('map.subtitle') }}</p>
       </div>
       <div class="flex items-center gap-4">
         <!-- View Toggle -->
         <ViewToggle 
           v-model="viewMode"
           :options="viewOptions"
-          label="View"
+          :label="$t('map.view')"
         />
         
         <!-- Stats -->
@@ -21,7 +21,7 @@
           </svg>
           <div class="text-sm">
             <span class="font-bold text-gray-900">{{ totalIncidents }}</span>
-            <span class="text-gray-600 ml-1">incidents</span>
+            <span class="text-gray-600 ml-1">{{ $t('map.incidents') }}</span>
           </div>
         </div>
       </div>
@@ -38,8 +38,8 @@
       <!-- Left Panel - Incident List -->
       <div class="w-96 bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="p-4 border-b border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-900">Incident List</h3>
-          <p class="text-sm text-gray-600">Click to highlight on map</p>
+          <h3 class="text-lg font-semibold text-gray-900">{{ $t('map.incidentList') }}</h3>
+          <p class="text-sm text-gray-600">{{ $t('map.clickToHighlight') }}</p>
         </div>
         
         <div 
@@ -50,7 +50,7 @@
           <!-- Loading State -->
           <div v-if="loading && !loadingMore" class="p-4 text-center">
             <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
-            <p class="text-gray-600 mt-2">Loading incidents...</p>
+            <p class="text-gray-600 mt-2">{{ $t('map.loadingIncidents') }}</p>
           </div>
           
           <!-- Incident List -->
@@ -102,19 +102,19 @@
           
           <!-- Empty State -->
           <div v-else class="p-4 text-center text-gray-500">
-            <p>No incidents found</p>
-            <p class="text-sm">Try adjusting your filters</p>
+            <p>{{ $t('map.noIncidentsFound') }}</p>
+            <p class="text-sm">{{ $t('map.tryAdjustingFilters') }}</p>
           </div>
           
           <!-- Loading More Indicator -->
           <div v-if="loadingMore" class="p-4 text-center">
             <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mx-auto"></div>
-            <p class="text-gray-600 text-sm mt-2">Loading more...</p>
+            <p class="text-gray-600 text-sm mt-2">{{ $t('map.loadingMore') }}</p>
           </div>
           
           <!-- End of Results -->
           <div v-if="!hasMore && incidents.length > 0 && !loading" class="p-4 text-center text-gray-500 text-sm">
-            No more incidents to load
+            {{ $t('map.noMoreIncidents') }}
           </div>
         </div>
       </div>
@@ -126,7 +126,7 @@
           <div v-if="loading" class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
             <div class="flex items-center space-x-2">
               <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-              <span class="text-gray-600">Loading map...</span>
+              <span class="text-gray-600">{{ $t('map.loadingMap') }}</span>
             </div>
           </div>
 
@@ -139,14 +139,14 @@
               @click="fitToBounds"
               class="bg-white shadow-md rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 block"
             >
-              Fit to Data
+              {{ $t('map.fitToData') }}
             </button>
             <button 
               v-if="selectedIncident"
               @click="clearSelection"
               class="bg-white shadow-md rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 block"
             >
-              Clear Selection
+              {{ $t('map.clearSelection') }}
             </button>
           </div>
         </div>
@@ -155,38 +155,38 @@
 
     <!-- Legend -->
     <div class="mt-6 bg-white shadow-lg rounded-lg p-6">
-      <h3 class="text-lg font-semibold text-gray-900 mb-4">Legend</h3>
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('map.legend') }}</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-red-500 rounded-full"></div>
-          <span class="text-sm text-gray-600">Urgent</span>
+          <span class="text-sm text-gray-600">{{ $t('map.urgent') }}</span>
         </div>
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-orange-500 rounded-full"></div>
-          <span class="text-sm text-gray-600">High</span>
+          <span class="text-sm text-gray-600">{{ $t('map.high') }}</span>
         </div>
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
-          <span class="text-sm text-gray-600">Medium</span>
+          <span class="text-sm text-gray-600">{{ $t('map.medium') }}</span>
         </div>
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-green-500 rounded-full"></div>
-          <span class="text-sm text-gray-600">Low</span>
+          <span class="text-sm text-gray-600">{{ $t('map.low') }}</span>
         </div>
       </div>
       <div class="mt-4 flex items-center space-x-4">
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white"></div>
-          <span class="text-sm text-gray-600">Verified</span>
+          <span class="text-sm text-gray-600">{{ $t('map.verified') }}</span>
         </div>
         <div class="flex items-center space-x-2">
           <div class="w-4 h-4 bg-gray-500 rounded-full"></div>
-          <span class="text-sm text-gray-600">Unverified</span>
+          <span class="text-sm text-gray-600">{{ $t('map.unverified') }}</span>
         </div>
       </div>
       <div class="mt-4 text-sm text-gray-600">
-        <p><strong>Heat Map:</strong> Shows incident density - red areas indicate higher concentration of incidents</p>
-        <p><strong>Markers:</strong> Individual incident locations with detailed popups</p>
+        <p><strong>{{ $t('map.heatMapDescription') }}</strong></p>
+        <p><strong>{{ $t('map.markersDescription') }}</strong></p>
       </div>
     </div>
   </div>
@@ -195,6 +195,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet.heat'
@@ -202,6 +203,7 @@ import ViewToggle from './ViewToggle.vue'
 import FilterBar from './FilterBar.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 
 // Reactive data
 const map = ref(null)
@@ -235,8 +237,8 @@ const filters = ref({
 
 // View options
 const viewOptions = [
-  { value: 'markers', label: 'Markers' },
-  { value: 'heatmap', label: 'Heat Map' }
+  { value: 'markers', label: t('map.markers') },
+  { value: 'heatmap', label: t('map.heatMap') }
 ]
 
 // Initialize map
@@ -472,30 +474,30 @@ const addIncidentMarker = (incident) => {
             ? 'bg-green-100 text-green-800' 
             : 'bg-gray-100 text-gray-800'
         }">
-          ${incident.is_verified ? 'Verified' : 'Unverified'}
+          ${incident.is_verified ? t('map.verified') : t('map.unverified')}
         </span>
       </div>
       
       <div class="space-y-1 text-xs text-gray-600 mb-3">
-        <div><strong>Category:</strong> ${escapeHtml(incident.category_label)}</div>
-        <div><strong>Status:</strong> ${escapeHtml(incident.status_label)}</div>
-        <div><strong>Priority:</strong> ${escapeHtml(incident.priority_label)}</div>
-        <div><strong>Location:</strong> ${escapeHtml(incident.address || incident.city || 'Unknown')}</div>
-        <div><strong>Date:</strong> ${new Date(incident.incident_date || incident.created_at).toLocaleDateString()}</div>
-        ${incident.has_media ? `<div><strong>Media:</strong> ${incident.media_count} file(s)</div>` : ''}
+        <div><strong>${t('map.category')}:</strong> ${escapeHtml(incident.category_label)}</div>
+        <div><strong>${t('map.status')}:</strong> ${escapeHtml(incident.status_label)}</div>
+        <div><strong>${t('map.priority')}:</strong> ${escapeHtml(incident.priority_label)}</div>
+        <div><strong>${t('map.location')}:</strong> ${escapeHtml(incident.address || incident.city || t('map.unknown'))}</div>
+        <div><strong>${t('map.date')}:</strong> ${new Date(incident.incident_date || incident.created_at).toLocaleDateString()}</div>
+        ${incident.has_media ? `<div><strong>${t('map.media')}:</strong> ${incident.media_count} ${t('map.files')}</div>` : ''}
       </div>
       
       <p class="text-xs text-gray-700 mb-3">${escapeHtml(incident.description).substring(0, 150)}${incident.description && incident.description.length > 150 ? '...' : ''}</p>
       
       <div class="flex items-center justify-between">
         <div class="text-xs text-gray-500">
-          ${incident.verification_count} verifications, ${incident.dispute_count} disputes
+          ${incident.verification_count} ${t('map.verifications')}, ${incident.dispute_count} ${t('map.disputes')}
         </div>
         <button 
           data-incident-id="${incident.id}"
           class="incident-details-btn text-xs text-blue-600 hover:text-blue-800 font-medium cursor-pointer hover:underline"
         >
-          View Details →
+          ${t('map.viewDetails')} →
         </button>
       </div>
     </div>
