@@ -2,14 +2,14 @@
   <footer class="bg-gray-800 text-white py-8 mt-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center">
-        <h3 class="text-lg font-semibold mb-2">IncidentReport Bangladesh</h3>
+        <h3 class="text-lg font-semibold mb-2">{{ $t('footer.title') }}</h3>
         <p class="text-gray-400 mb-4">
-          A community-driven platform for reporting and tracking incidents across Bangladesh
+          {{ $t('footer.description') }}
         </p>
         <div class="flex justify-center space-x-6">
-          <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a>
-          <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Terms of Service</a>
-          <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">{{ $t('footer.privacyPolicy') }}</a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">{{ $t('footer.termsOfService') }}</a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">{{ $t('footer.contact') }}</a>
         </div>
         
         <!-- Social Links -->
@@ -34,7 +34,7 @@
         <!-- Copyright -->
         <div class="mt-6 pt-6 border-t border-gray-700">
           <p class="text-sm text-gray-400">
-            © {{ currentYear }} IncidentReport Bangladesh. All rights reserved.
+            © {{ currentYear }} {{ $t('footer.title') }}. {{ $t('footer.copyright') }}
           </p>
         </div>
       </div>

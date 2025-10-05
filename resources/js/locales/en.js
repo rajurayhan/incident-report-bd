@@ -119,5 +119,13 @@ export default {
       description: 'Browse incidents by category'
     }
   },
+  footer: {
+    title: 'IncidentReport Bangladesh',
+    description: 'A community-driven platform for reporting and tracking incidents across Bangladesh',
+    privacyPolicy: 'Privacy Policy',
+    termsOfService: 'Terms of Service',
+    contact: 'Contact',
+    copyright: 'All rights reserved.'
+  },
 }
 
