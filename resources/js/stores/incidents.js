@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 
 export const useIncidentStore = defineStore('incidents', () => {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const incidents = ref([]);
   const currentIncident = ref(null);
   const loading = ref(false);
@@ -34,21 +34,29 @@ export const useIncidentStore = defineStore('incidents', () => {
     return filtered;
   });
 
-  const categories = computed(() => [
-    { value: 'theft_robbery', label: t('filters.categories.theftRobbery'), color: 'red' },
-    { value: 'sexual_harassment', label: t('filters.categories.sexualHarassment'), color: 'pink' },
-    { value: 'domestic_violence', label: t('filters.categories.domesticViolence'), color: 'purple' },
-    { value: 'suspicious_activities', label: t('filters.categories.suspiciousActivities'), color: 'yellow' },
-    { value: 'traffic_accidents', label: t('filters.categories.trafficAccidents'), color: 'orange' },
-    { value: 'drugs', label: t('filters.categories.drugs'), color: 'green' },
-    { value: 'cybercrime', label: t('filters.categories.cybercrime'), color: 'blue' },
-  ]);
+  const categories = computed(() => {
+    // Force reactivity to locale changes
+    locale.value; // This makes the computed property reactive to locale changes
+    return [
+      { value: 'theft_robbery', label: t('filters.categories.theftRobbery'), color: 'red' },
+      { value: 'sexual_harassment', label: t('filters.categories.sexualHarassment'), color: 'pink' },
+      { value: 'domestic_violence', label: t('filters.categories.domesticViolence'), color: 'purple' },
+      { value: 'suspicious_activities', label: t('filters.categories.suspiciousActivities'), color: 'yellow' },
+      { value: 'traffic_accidents', label: t('filters.categories.trafficAccidents'), color: 'orange' },
+      { value: 'drugs', label: t('filters.categories.drugs'), color: 'green' },
+      { value: 'cybercrime', label: t('filters.categories.cybercrime'), color: 'blue' },
+    ];
+  });
 
-  const statuses = computed(() => [
-    { value: 'pending', label: t('filters.statuses.pending'), color: 'yellow' },
-    { value: 'in_progress', label: t('filters.statuses.inProgress'), color: 'blue' },
-    { value: 'resolved', label: t('filters.statuses.resolved'), color: 'green' },
-  ]);
+  const statuses = computed(() => {
+    // Force reactivity to locale changes
+    locale.value; // This makes the computed property reactive to locale changes
+    return [
+      { value: 'pending', label: t('filters.statuses.pending'), color: 'yellow' },
+      { value: 'in_progress', label: t('filters.statuses.inProgress'), color: 'blue' },
+      { value: 'resolved', label: t('filters.statuses.resolved'), color: 'green' },
+    ];
+  });
 
   const fetchIncidents = async (params = {}) => {
     loading.value = true;

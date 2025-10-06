@@ -3,8 +3,8 @@
     class="bg-white shadow-lg transition-all duration-300 ease-in-out"
     :class="{
       'fixed top-0 left-0 right-0 z-50 transform': isFloating,
-      'relative transform -translate-y-full opacity-0': isHidden,
-      'relative transform translate-y-0 opacity-100': !isFloating && !isHidden
+      'relative z-50 transform -translate-y-full opacity-0': isHidden,
+      'relative z-50 transform translate-y-0 opacity-100': !isFloating && !isHidden
     }"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -206,6 +206,10 @@ nav.transform.translate-y-0 {
 }
 
 /* Ensure proper z-index stacking */
+nav {
+  z-index: 50;
+}
+
 nav.fixed {
   z-index: 1000;
 }
@@ -218,5 +222,10 @@ nav + div {
 /* Smooth backdrop blur transition */
 nav.fixed {
   transition: backdrop-filter 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ensure dropdowns appear above hero section */
+nav .relative {
+  z-index: 60;
 }
 </style>

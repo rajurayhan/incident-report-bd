@@ -15,7 +15,7 @@
     
     <!-- Dropdown Menu -->
     <div v-if="showUserMenu" 
-         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-[60] border border-gray-200">
       <router-link 
         to="/profile" 
         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

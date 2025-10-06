@@ -15,7 +15,7 @@
 
     <div
       v-if="showDropdown"
-      class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200"
+      class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-[60] border border-gray-200"
     >
       <button
         v-for="lang in languages"

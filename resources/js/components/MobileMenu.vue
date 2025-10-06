@@ -13,7 +13,7 @@
     </button>
     
     <!-- Mobile Navigation Menu -->
-    <div v-if="showMobileMenu" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+    <div v-if="showMobileMenu" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-[60] border border-gray-200">
       <div class="px-2 pt-2 pb-3 space-y-1">
         <!-- Mobile Navigation Links -->
         <router-link 
