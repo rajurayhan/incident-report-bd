@@ -14,16 +14,23 @@ class IncidentSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create('bn_BD'); // Use Bengali locale for Bangladesh context
+        // Try to use Bengali locale, fallback to English if intl extension is not available
+        try {
+            $faker = Faker::create('bn_BD'); // Use Bengali locale for Bangladesh context
+        } catch (\Exception $e) {
+            // Fallback to English locale if intl extension is not available
+            $faker = Faker::create('en_US');
+            $this->command->warn('Bengali locale not available, using English locale instead. Consider installing intl PHP extension for better localization.');
+        }
         
         // Get a user to assign as reporter
         $user = User::first();
         if (!$user) {
             // Create a default user if none exists
             $user = User::create([
-                'name' => 'Test User',
-                'email' => 'test@example.com',
-                'password' => bcrypt('password'),
+                'name' => 'Raju Rayhan',
+                'email' => 'raju.rayhan@yandex.com',
+                'password' => bcrypt('raju@2025'),
             ]);
         }
 
@@ -331,8 +338,10 @@ class IncidentSeeder extends Seeder
             'Road', 'Street', 'Lane', 'Avenue', 'Boulevard', 'Gali', 'Moholla', 'Para'
         ];
         
+        // Use a simple name generator that works without intl extension
+        $simpleNames = ['Main', 'Central', 'New', 'Old', 'East', 'West', 'North', 'South', 'Green', 'Blue'];
         $streetName = $faker->randomElement($streetNumbers) . ', ' . 
-                     $faker->firstName() . ' ' . $faker->randomElement($streetNames) . ', ' . 
+                     $faker->randomElement($simpleNames) . ' ' . $faker->randomElement($streetNames) . ', ' . 
                      $location['name'] . ', ' . $location['district'];
         
         return $streetName;
