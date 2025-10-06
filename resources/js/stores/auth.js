@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
   const loading = ref(false);
 
   const isAuthenticated = computed(() => !!token.value);
+  const isEmailVerified = computed(() => user.value?.email_verified_at !== null);
 
   const login = async (credentials) => {
     loading.value = true;
@@ -75,6 +76,7 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     loading,
     isAuthenticated,
+    isEmailVerified,
     login,
     register,
     logout,

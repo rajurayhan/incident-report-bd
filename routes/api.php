@@ -27,6 +27,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
 
 // Incident routes (public read access)
 Route::get('/incidents', [IncidentController::class, 'index']);
@@ -55,26 +56,31 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/comments', [UserController::class, 'userComments']);
     Route::get('/user/verifications', [UserController::class, 'userVerifications']);
     
-    // Incident management
-    Route::post('/incidents', [IncidentController::class, 'store']);
-    Route::put('/incidents/{id}', [IncidentController::class, 'update']);
-    Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
+    // Email verification
+    Route::post('/email/verification-notification', [AuthController::class, 'resendVerificationEmail']);
     
-    // Comments
-    Route::post('/incidents/{id}/comments', [IncidentCommentController::class, 'store']);
-    Route::put('/comments/{id}', [IncidentCommentController::class, 'update']);
-    Route::delete('/comments/{id}', [IncidentCommentController::class, 'destroy']);
-    Route::post('/comments/{id}/upvote', [IncidentCommentController::class, 'upvote']);
-    Route::post('/comments/{id}/downvote', [IncidentCommentController::class, 'downvote']);
-    
-    // Verifications
-    Route::post('/incidents/{id}/verifications', [IncidentVerificationController::class, 'store']);
-    Route::put('/verifications/{id}', [IncidentVerificationController::class, 'update']);
-    Route::delete('/verifications/{id}', [IncidentVerificationController::class, 'destroy']);
-    
-    // Media
-    Route::post('/incidents/{id}/media', [IncidentMediaController::class, 'store']);
-    Route::delete('/media/{id}', [IncidentMediaController::class, 'destroy']);
+    // Incident management (requires email verification)
+    Route::middleware('verified')->group(function () {
+        Route::post('/incidents', [IncidentController::class, 'store']);
+        Route::put('/incidents/{id}', [IncidentController::class, 'update']);
+        Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
+        
+        // Comments (requires email verification)
+        Route::post('/incidents/{id}/comments', [IncidentCommentController::class, 'store']);
+        Route::put('/comments/{id}', [IncidentCommentController::class, 'update']);
+        Route::delete('/comments/{id}', [IncidentCommentController::class, 'destroy']);
+        Route::post('/comments/{id}/upvote', [IncidentCommentController::class, 'upvote']);
+        Route::post('/comments/{id}/downvote', [IncidentCommentController::class, 'downvote']);
+        
+        // Verifications (requires email verification)
+        Route::post('/incidents/{id}/verifications', [IncidentVerificationController::class, 'store']);
+        Route::put('/verifications/{id}', [IncidentVerificationController::class, 'update']);
+        Route::delete('/verifications/{id}', [IncidentVerificationController::class, 'destroy']);
+        
+        // Media (requires email verification)
+        Route::post('/incidents/{id}/media', [IncidentMediaController::class, 'store']);
+        Route::delete('/media/{id}', [IncidentMediaController::class, 'destroy']);
+    });
 });
 
 // Admin routes

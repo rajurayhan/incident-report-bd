@@ -6,13 +6,13 @@
           Reset your password
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          Enter your email address and we'll send you a reset token
+          Enter your email address and we'll send you a reset link
         </p>
       </div>
       
       <form class="mt-8 space-y-6" @submit.prevent="handleForgotPassword">
         <div>
-          <label for="email" class="sr-only">Email address</label>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
           <input
             id="email"
             v-model="email"
@@ -20,9 +20,13 @@
             type="email"
             autocomplete="email"
             required
-            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+            :class="[
+              'mt-1 appearance-none relative block w-full px-3 py-2 border rounded-md focus:outline-none sm:text-sm',
+              errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-red-500 focus:border-red-500'
+            ]"
             placeholder="Email address"
           />
+          <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email[0] }}</p>
         </div>
 
         <div v-if="success" class="rounded-md bg-green-50 p-4">
@@ -36,12 +40,8 @@
               <h3 class="text-sm font-medium text-green-800">
                 {{ successMessage }}
               </h3>
-              <div v-if="resetToken" class="mt-2 text-sm text-green-700">
-                <p class="font-semibold">Your reset token (for testing):</p>
-                <code class="block mt-1 p-2 bg-green-100 rounded">{{ resetToken }}</code>
-                <router-link to="/reset-password" class="mt-2 inline-block text-green-600 hover:text-green-500 font-medium">
-                  Go to Reset Password →
-                </router-link>
+              <div class="mt-2 text-sm text-green-700">
+                <p>Please check your email for the password reset link.</p>
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="loading">Sending...</span>
-            <span v-else>Send Reset Token</span>
+            <span v-else>Send Reset Link</span>
           </button>
         </div>
 
@@ -89,14 +89,15 @@ import axios from 'axios'
 
 const email = ref('')
 const error = ref('')
+const errors = ref({})
 const success = ref(false)
 const successMessage = ref('')
-const resetToken = ref('')
 const loading = ref(false)
 
 const handleForgotPassword = async () => {
   loading.value = true
   error.value = ''
+  errors.value = {}
   success.value = false
 
   try {
@@ -106,9 +107,12 @@ const handleForgotPassword = async () => {
     
     success.value = true
     successMessage.value = response.data.message
-    resetToken.value = response.data.reset_token
   } catch (err) {
-    error.value = err.response?.data?.message || 'Failed to send reset token. Please try again.'
+    if (err.response?.data?.errors) {
+      errors.value = err.response.data.errors
+    } else {
+      error.value = err.response?.data?.message || 'Failed to send reset link. Please try again.'
+    }
   } finally {
     loading.value = false
   }

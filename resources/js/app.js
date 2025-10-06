@@ -4,6 +4,7 @@ import { createPinia } from 'pinia';
 import { createRouter, createWebHistory } from 'vue-router';
 import { createHead } from '@vueuse/head';
 import i18n from './i18n';
+import { useAuthStore } from './stores/auth';
 
 // Import components
 import App from './components/App.vue';
@@ -17,6 +18,7 @@ import Login from './components/Login.vue';
 import Register from './components/Register.vue';
 import ForgotPassword from './components/ForgotPassword.vue';
 import ResetPassword from './components/ResetPassword.vue';
+import EmailVerification from './components/EmailVerification.vue';
 import Profile from './components/Profile.vue';
 import MyReports from './components/MyReports.vue';
 import MyActivity from './components/MyActivity.vue';
@@ -35,6 +37,7 @@ const routes = [
     { path: '/register', name: 'register', component: Register },
     { path: '/forgot-password', name: 'forgot-password', component: ForgotPassword },
     { path: '/reset-password', name: 'reset-password', component: ResetPassword },
+    { path: '/email-verification', name: 'email-verification', component: EmailVerification },
     { path: '/profile', name: 'profile', component: Profile },
     { path: '/my-reports', name: 'my-reports', component: MyReports },
     { path: '/my-activity', name: 'my-activity', component: MyActivity },
@@ -45,6 +48,27 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+});
+
+// Navigation guards
+router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
+    
+    // Routes that require email verification
+    const requiresEmailVerification = [
+        'report', 'my-reports', 'my-activity', 'profile'
+    ];
+    
+    // Check if user is authenticated
+    if (authStore.isAuthenticated) {
+        // If user is authenticated but email is not verified and trying to access protected routes
+        if (!authStore.isEmailVerified && requiresEmailVerification.includes(to.name)) {
+            next('/email-verification');
+            return;
+        }
+    }
+    
+    next();
 });
 
 // Smooth scroll to top utility function

@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\EmailVerificationNotification;
+use App\Notifications\PasswordResetNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -35,14 +40,20 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'role' => 'user',
+            'is_verified' => false,
+            'is_active' => true,
         ]);
+
+        // Send email verification notification
+        $user->notify(new EmailVerificationNotification());
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'User registered successfully',
+            'message' => 'User registered successfully. Please check your email to verify your account.',
             'user' => $user,
             'token' => $token,
+            'requires_verification' => true
         ], 201);
     }
 
@@ -144,19 +155,42 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
         
-        // Generate a simple reset token (in production, use Laravel's password reset functionality)
-        $resetToken = \Str::random(60);
-        
-        // Store the token in the user's remember_token field temporarily
-        $user->update(['remember_token' => $resetToken]);
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
 
-        // In production, send email with reset link
-        // For now, return the token (for testing purposes only)
-        return response()->json([
-            'message' => 'Password reset token generated',
-            'reset_token' => $resetToken,
-            'info' => 'In production, this would be sent via email'
-        ]);
+        try {
+            // Delete any existing password reset tokens for this user
+            DB::table('password_reset_tokens')
+                ->where('email', $user->email)
+                ->delete();
+
+            // Generate a new token
+            $token = Str::random(64);
+            
+            // Store the new token
+            DB::table('password_reset_tokens')->insert([
+                'email' => $user->email,
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]);
+
+            // Send the notification with the plain token
+            $user->notify(new PasswordResetNotification($token));
+
+            return response()->json([
+                'message' => 'Password reset link sent to your email address.'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Password reset error: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Unable to send password reset link. Please try again later.'
+            ], 500);
+        }
     }
 
     public function resetPassword(Request $request)
@@ -174,24 +208,103 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $request->email)
-            ->where('remember_token', $request->token)
-            ->first();
+        try {
+            // Find the password reset record
+            $passwordReset = DB::table('password_reset_tokens')
+                ->where('email', $request->email)
+                ->first();
 
-        if (!$user) {
+            if (!$passwordReset) {
+                return response()->json([
+                    'message' => 'Invalid or expired reset token.'
+                ], 400);
+            }
+
+            // Check if token is valid (within 60 minutes)
+            if (now()->diffInMinutes($passwordReset->created_at) > 60) {
+                // Delete expired token
+                DB::table('password_reset_tokens')
+                    ->where('email', $request->email)
+                    ->delete();
+                    
+                return response()->json([
+                    'message' => 'Reset token has expired. Please request a new one.'
+                ], 400);
+            }
+
+            // Verify the token
+            if (!Hash::check($request->token, $passwordReset->token)) {
+                return response()->json([
+                    'message' => 'Invalid reset token.'
+                ], 400);
+            }
+
+            // Find the user and update password
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                return response()->json([
+                    'message' => 'User not found.'
+                ], 404);
+            }
+
+            // Update password
+            $user->update([
+                'password' => Hash::make($request->password)
+            ]);
+
+            // Delete the used token
+            DB::table('password_reset_tokens')
+                ->where('email', $request->email)
+                ->delete();
+
             return response()->json([
-                'message' => 'Invalid token or email'
+                'message' => 'Password reset successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Password reset error: ' . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'Unable to reset password. Please try again later.'
+            ], 500);
+        }
+    }
+
+    public function verifyEmail(Request $request, $id, $hash)
+    {
+        $user = User::findOrFail($id);
+
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return response()->json([
+                'message' => 'Invalid verification link'
             ], 400);
         }
 
-        // Update password and clear token
-        $user->update([
-            'password' => Hash::make($request->password),
-            'remember_token' => null
-        ]);
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Email already verified'
+            ]);
+        }
+
+        $user->markEmailAsVerified();
 
         return response()->json([
-            'message' => 'Password reset successfully'
+            'message' => 'Email verified successfully'
+        ]);
+    }
+
+    public function resendVerificationEmail(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Email already verified'
+            ]);
+        }
+
+        $request->user()->notify(new EmailVerificationNotification());
+
+        return response()->json([
+            'message' => 'Verification email sent'
         ]);
     }
 }
