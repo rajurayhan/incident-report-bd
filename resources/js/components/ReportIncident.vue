@@ -93,9 +93,13 @@
               v-model="form.title"
               type="text"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              :class="[
+                'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent',
+                errors.title ? 'border-red-500' : 'border-gray-300'
+              ]"
               :placeholder="$t('report.incidentTitlePlaceholder')"
             />
+            <p v-if="errors.title" class="mt-1 text-sm text-red-600">{{ getFieldError('title') }}</p>
           </div>
 
           <div>
@@ -107,9 +111,13 @@
               v-model="form.description"
               required
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              :class="[
+                'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent',
+                errors.description ? 'border-red-500' : 'border-gray-300'
+              ]"
               :placeholder="$t('report.detailedDescriptionPlaceholder')"
             ></textarea>
+            <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ getFieldError('description') }}</p>
           </div>
 
           <div>
@@ -120,7 +128,10 @@
               id="category"
               v-model="form.category"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              :class="[
+                'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent',
+                errors.category ? 'border-red-500' : 'border-gray-300'
+              ]"
             >
               <option value="">{{ $t('report.selectCategory') }}</option>
               <option 
@@ -131,6 +142,7 @@
                 {{ category.label }}
               </option>
             </select>
+            <p v-if="errors.category" class="mt-1 text-sm text-red-600">{{ getFieldError('category') }}</p>
           </div>
 
           <div>
@@ -387,6 +399,7 @@ const { t } = useI18n();
 const loading = ref(false);
 const mediaFiles = ref([]);
 const mediaInput = ref(null);
+const errors = ref({});
 
 const form = reactive({
   title: '',
@@ -493,6 +506,7 @@ const removeMedia = (index) => {
 
 const submitReport = async () => {
   loading.value = true;
+  errors.value = {};
   
   try {
     const formData = new FormData();
@@ -518,9 +532,45 @@ const submitReport = async () => {
     router.push(`/incident/${incident.id}`);
   } catch (error) {
     console.error('Error submitting report:', error);
-    alert(t('report.errorMessage'));
+    if (error.errors) {
+      errors.value = error.errors;
+    } else {
+      alert(t('report.errorMessage'));
+    }
   } finally {
     loading.value = false;
   }
+};
+
+const getFieldError = (field) => {
+  if (!errors.value[field]) return '';
+  
+  const error = errors.value[field][0];
+  const errorKey = error.split(' ')[0]; // Extract the validation rule
+  
+  // Map Laravel validation rules to our translation keys
+  const ruleMap = {
+    'The': 'required',
+    'required': 'required',
+    'max:': 'max',
+    'in:': 'in',
+    'date': 'date',
+    'numeric': 'numeric',
+    'between:': 'between',
+    'email': 'email',
+    'array': 'array',
+    'file': 'file',
+    'mimes:': 'mimes'
+  };
+  
+  let rule = 'required';
+  for (const [key, value] of Object.entries(ruleMap)) {
+    if (error.includes(key)) {
+      rule = value;
+      break;
+    }
+  }
+  
+  return t(`report.validation.${field}.${rule}`);
 };
 </script>

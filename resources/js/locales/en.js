@@ -40,7 +40,34 @@ export default {
     phonePlaceholder: '+880 1XXX XXXXXX',
     confirmPassword: 'Confirm Password',
     confirmPasswordPlaceholder: 'Confirm password',
-    registrationFailed: 'Registration failed. Please try again.'
+    registrationFailed: 'Registration failed. Please try again.',
+    validation: {
+      name: {
+        required: 'Full name is required',
+        max: 'Name must not exceed 255 characters'
+      },
+      username: {
+        required: 'Username is required',
+        max: 'Username must not exceed 50 characters',
+        unique: 'This username is already taken',
+        regex: 'Username can only contain letters, numbers, and underscores'
+      },
+      email: {
+        required: 'Email address is required',
+        email: 'Please enter a valid email address',
+        max: 'Email must not exceed 255 characters',
+        unique: 'This email address is already registered'
+      },
+      password: {
+        required: 'Password is required',
+        min: 'Password must be at least 8 characters long',
+        confirmed: 'Password confirmation does not match'
+      },
+      phone: {
+        required: 'Phone number is required',
+        max: 'Phone number must not exceed 20 characters'
+      }
+    }
   },
   incident: {
     title: 'Title',
@@ -178,7 +205,7 @@ export default {
     selectDivision: 'Select Division',
     selectDistrict: 'Select District',
     selectThana: 'Select Thana/Upazila',
-    reporterInformation: 'Reporter Information',
+    reporterInformation: 'Reported By',
     anonymousReport: 'Submit as Anonymous Report',
     anonymousDescription: 'Your personal information will not be shared',
     provideContactInfo: 'Provide Contact Information',
@@ -195,6 +222,58 @@ export default {
     submitting: 'Submitting...',
     successMessage: 'Incident reported successfully! Thank you for helping keep the community safe.',
     errorMessage: 'Failed to submit report. Please try again.',
+    validation: {
+      title: {
+        required: 'Incident title is required',
+        max: 'Title must not exceed 255 characters'
+      },
+      description: {
+        required: 'Detailed description is required'
+      },
+      category: {
+        required: 'Please select a category',
+        in: 'Please select a valid category'
+      },
+      incident_date: {
+        date: 'Please enter a valid date'
+      },
+      latitude: {
+        numeric: 'Latitude must be a valid number',
+        between: 'Latitude must be between -90 and 90'
+      },
+      longitude: {
+        numeric: 'Longitude must be a valid number',
+        between: 'Longitude must be between -180 and 180'
+      },
+      address: {
+        max: 'Address must not exceed 500 characters'
+      },
+      city: {
+        max: 'City name must not exceed 255 characters'
+      },
+      district: {
+        max: 'District name must not exceed 255 characters'
+      },
+      division: {
+        max: 'Division name must not exceed 255 characters'
+      },
+      reporter_name: {
+        max: 'Reporter name must not exceed 255 characters'
+      },
+      reporter_phone: {
+        max: 'Reporter phone must not exceed 20 characters'
+      },
+      reporter_email: {
+        email: 'Please enter a valid email address',
+        max: 'Email must not exceed 255 characters'
+      },
+      media: {
+        array: 'Media must be an array of files',
+        file: 'Each media item must be a valid file',
+        mimes: 'Media files must be JPG, JPEG, PNG, GIF, MP4, AVI, or MOV format',
+        max: 'Each media file must not exceed 10MB'
+      }
+    },
     tip: 'Tip:',
     tipMessage: 'Click "Get Current Location" to automatically fill coordinates, or manually enter them.',
     getCurrentLocation: 'Get Current Location',
@@ -295,7 +374,7 @@ export default {
     incidentLocation: 'Incident Location',
     openInGoogleMaps: 'Open in Google Maps',
     copyCoordinates: 'Copy Coordinates',
-    reporterInformation: 'Reporter Information',
+    reporterInformation: 'Reported By',
     media: 'Media',
     verificationStatus: 'Verification Status',
     confirmations: 'Confirmations',

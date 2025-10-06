@@ -100,13 +100,11 @@
         </div>
       </div>
 
-      <!-- Reporter Info -->
-      <div v-if="!incident.is_anonymous" class="mb-6">
+      <!-- Anonymous Reporter -->
+      <div class="mb-6">
         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('incidentDetails.reporterInformation') }}</h3>
         <div class="text-gray-700">
-          <p v-if="incident.user">{{ incident.user.name }}</p>
-          <p v-if="incident.reporter_phone">{{ incident.reporter_phone }}</p>
-          <p v-if="incident.reporter_email">{{ incident.reporter_email }}</p>
+          <p class="text-sm text-gray-500 italic">{{ getRandomAnonymousName() }}</p>
         </div>
       </div>
 
@@ -1701,6 +1699,24 @@ onUnmounted(() => {
     map.value = null
   }
 })
+
+// Random anonymous name generator
+const getRandomAnonymousName = () => {
+  const adjectives = [
+    'Anonymous', 'Mysterious', 'Silent', 'Hidden', 'Secret', 'Unknown', 'Quiet', 'Discrete',
+    'Private', 'Confidential', 'Unnamed', 'Faceless', 'Shadow', 'Ghost', 'Phantom', 'Invisible'
+  ]
+  
+  const nouns = [
+    'Reporter', 'Witness', 'Observer', 'Citizen', 'Resident', 'Neighbor', 'Passerby', 'Bystander',
+    'Guardian', 'Protector', 'Advocate', 'Whistleblower', 'Source', 'Informant', 'Contributor', 'Helper'
+  ]
+  
+  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)]
+  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)]
+  
+  return `${randomAdjective} ${randomNoun}`
+}
 </script>
 
 <style scoped>
