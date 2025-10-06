@@ -15,8 +15,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user() || !$request->user()->isAdmin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        if (!auth()->check()) {
+            return redirect()->route('admin.login');
+        }
+
+        if (!auth()->user()->hasRole('admin')) {
+            abort(403, 'Unauthorized access to admin area.');
         }
 
         return $next($request);
