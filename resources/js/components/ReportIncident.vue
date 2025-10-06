@@ -394,6 +394,27 @@ import { useI18n } from 'vue-i18n';
 import PageHeader from './PageHeader.vue';
 import MapPinSelector from './MapPinSelector.vue';
 import { getDivisions, getDistricts, getThanas } from '../data/bangladesh-locations';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
+
+// Configure toastr
+toastr.options = {
+  closeButton: true,
+  debug: false,
+  newestOnTop: true,
+  progressBar: true,
+  positionClass: 'toast-top-right',
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: '300',
+  hideDuration: '1000',
+  timeOut: '5000',
+  extendedTimeOut: '1000',
+  showEasing: 'swing',
+  hideEasing: 'linear',
+  showMethod: 'fadeIn',
+  hideMethod: 'fadeOut'
+};
 
 const incidentStore = useIncidentStore();
 const authStore = useAuthStore();
@@ -462,7 +483,7 @@ watch([() => form.latitude, () => form.longitude], ([lat, lng]) => {
 
 const getCurrentLocation = () => {
   if (!navigator.geolocation) {
-    alert(t('report.geolocationNotSupported'));
+    toastr.error(t('report.geolocationNotSupported'));
     return;
   }
 
@@ -476,10 +497,12 @@ const getCurrentLocation = () => {
       
       // Update map location
       mapLocation.value = { latitude: lat, longitude: lng };
+      
+      toastr.success(t('report.locationDetected'));
     },
     (error) => {
       console.error('Error getting location:', error);
-      alert(t('report.unableToGetLocation'));
+      toastr.error(t('report.unableToGetLocation'));
     }
   );
 };
@@ -499,7 +522,7 @@ const handleMediaUpload = (event) => {
   
   // Check if adding these files would exceed the 3-file limit
   if (mediaFiles.value.length + files.length > 3) {
-    alert(t('report.maxFilesExceeded'));
+    toastr.warning(t('report.maxFilesExceeded'));
     event.target.value = '';
     return;
   }
@@ -507,12 +530,12 @@ const handleMediaUpload = (event) => {
   files.forEach(file => {
     // Check if we've already reached the limit
     if (mediaFiles.value.length >= 3) {
-      alert(t('report.maxFilesReached'));
+      toastr.warning(t('report.maxFilesReached'));
       return;
     }
 
     if (file.size > 10 * 1024 * 1024) { // 10MB limit
-      alert(t('report.fileTooLarge', { fileName: file.name }));
+      toastr.error(t('report.fileTooLarge', { fileName: file.name }));
       return;
     }
 
@@ -559,7 +582,7 @@ const submitReport = async () => {
     const incident = await incidentStore.createIncident(formData);
     
     // Show success message
-    alert(t('report.successMessage'));
+    toastr.success(t('report.successMessage'));
     
     // Redirect to incident details
     router.push(`/incident/${incident.id}`);
@@ -567,8 +590,9 @@ const submitReport = async () => {
     console.error('Error submitting report:', error);
     if (error.errors) {
       errors.value = error.errors;
+      toastr.error(t('report.validationError'));
     } else {
-      alert(t('report.errorMessage'));
+      toastr.error(t('report.errorMessage'));
     }
   } finally {
     loading.value = false;

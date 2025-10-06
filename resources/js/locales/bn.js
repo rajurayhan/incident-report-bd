@@ -270,9 +270,11 @@ export default {
     phoneNumber: 'ফোন নম্বর',
     geolocationNotSupported: 'এই ব্রাউজার দ্বারা জিওলোকেশন সমর্থিত নয়।',
     unableToGetLocation: 'আপনার অবস্থান পাওয়া যাচ্ছে না। অনুগ্রহ করে স্থানাঙ্ক ম্যানুয়ালি প্রবেশ করান।',
+    locationDetected: 'অবস্থান সফলভাবে সনাক্ত হয়েছে!',
     fileTooLarge: 'ফাইল {fileName} খুব বড়। সর্বোচ্চ আকার ১০MB।',
     maxFilesReached: 'সর্বোচ্চ ৩টি ফাইল অনুমোদিত। নতুন ফাইল যোগ করার আগে কিছু ফাইল সরান।',
     maxFilesExceeded: 'আপনি সর্বোচ্চ ৩টি ফাইল আপলোড করতে পারেন।',
+    validationError: 'অনুগ্রহ করে ফর্মের ত্রুটিগুলি পরীক্ষা করুন।',
     mapPinSelector: {
       title: 'ঘটনার অবস্থান নির্বাচন করুন',
       getCurrentLocation: 'বর্তমান অবস্থান পান',
@@ -281,7 +283,9 @@ export default {
       clickToDropPin: 'ঘটনার অবস্থানে পিন রাখতে মানচিত্রে ক্লিক করুন',
       selectedLocation: 'নির্বাচিত অবস্থান',
       copyCoordinates: 'স্থানাঙ্ক কপি করুন',
-      incidentLocation: 'ঘটনার অবস্থান'
+      incidentLocation: 'ঘটনার অবস্থান',
+      coordinatesCopied: 'স্থানাঙ্ক ক্লিপবোর্ডে কপি হয়েছে!',
+      copyFailed: 'স্থানাঙ্ক কপি করতে ব্যর্থ'
     }
   },
   map: {

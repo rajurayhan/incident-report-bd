@@ -19,25 +19,13 @@
           </svg>
           {{ $t('report.mapPinSelector.getCurrentLocation') }}
         </button>
-        <button
-          type="button"
-          @click="clearPin"
-          :disabled="!hasPin"
-          class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-          {{ $t('report.mapPinSelector.clearPin') }}
-        </button>
       </div>
     </div>
 
     <div class="relative">
       <div 
         ref="mapContainer" 
-        class="w-full h-96 border border-gray-300 rounded-lg overflow-hidden bg-gray-100"
-        :class="{ 'cursor-crosshair': !hasPin }"
+        class="w-full h-96 border border-gray-300 rounded-lg overflow-hidden bg-gray-100 cursor-crosshair"
         style="min-height: 384px;"
       ></div>
       
@@ -53,7 +41,7 @@
       </div>
 
       <!-- Instructions overlay -->
-      <div v-if="!mapLoading && !hasPin" class="absolute top-4 left-4 bg-white bg-opacity-90 px-3 py-2 rounded-lg shadow-sm">
+      <div v-if="!mapLoading" class="absolute top-4 left-4 bg-white bg-opacity-90 px-3 py-2 rounded-lg shadow-sm">
         <p class="text-sm text-gray-600">
           <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -93,6 +81,27 @@ import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
+
+// Configure toastr
+toastr.options = {
+  closeButton: true,
+  debug: false,
+  newestOnTop: true,
+  progressBar: true,
+  positionClass: 'toast-top-right',
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: '300',
+  hideDuration: '1000',
+  timeOut: '5000',
+  extendedTimeOut: '1000',
+  showEasing: 'swing',
+  hideEasing: 'linear',
+  showMethod: 'fadeIn',
+  hideMethod: 'fadeOut'
+};
 
 // Fix for default markers in Leaflet with Vite
 delete L.Icon.Default.prototype._getIconUrl;
@@ -252,7 +261,7 @@ const dropPin = (lat, lng) => {
 
 const getCurrentLocation = () => {
   if (!navigator.geolocation) {
-    alert(t('report.geolocationNotSupported'));
+    toastr.error(t('report.geolocationNotSupported'));
     return;
   }
 
@@ -283,7 +292,7 @@ const getCurrentLocation = () => {
     },
     (error) => {
       console.error('Error getting location:', error);
-      alert(t('report.unableToGetLocation'));
+      toastr.error(t('report.unableToGetLocation'));
       loadingLocation.value = false;
       
       // Center on Dhaka if location fails
@@ -299,25 +308,13 @@ const getCurrentLocation = () => {
   );
 };
 
-const clearPin = () => {
-  if (marker.value) {
-    map.value.removeLayer(marker.value);
-    marker.value = null;
-  }
-  
-  pinLatitude.value = null;
-  pinLongitude.value = null;
-  
-  // Emit changes
-  emit('update:modelValue', { latitude: null, longitude: null });
-  emit('location-changed', { latitude: null, longitude: null });
-};
 
 const copyCoordinates = () => {
   const coords = `${pinLatitude.value.toFixed(6)}, ${pinLongitude.value.toFixed(6)}`;
   navigator.clipboard.writeText(coords).then(() => {
-    // You could add a toast notification here
-    console.log('Coordinates copied to clipboard');
+    toastr.success(t('report.mapPinSelector.coordinatesCopied'));
+  }).catch(() => {
+    toastr.error(t('report.mapPinSelector.copyFailed'));
   });
 };
 
