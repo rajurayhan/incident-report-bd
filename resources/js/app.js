@@ -54,19 +54,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
     
-    // Routes that require email verification
-    const requiresEmailVerification = [
-        'report', 'my-reports', 'my-activity', 'profile'
-    ];
-    
-    // Check if user is authenticated
-    if (authStore.isAuthenticated) {
-        // If user is authenticated but email is not verified and trying to access protected routes
-        if (!authStore.isEmailVerified && requiresEmailVerification.includes(to.name)) {
-            next('/email-verification');
-            return;
-        }
-    }
+    // Email verification is temporarily disabled
+    // All routes are accessible without email verification
     
     next();
 });

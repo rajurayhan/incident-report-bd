@@ -40,20 +40,20 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'role' => 'user',
-            'is_verified' => false,
+            'is_verified' => true, // Set to true since email verification is disabled
             'is_active' => true,
+            'email_verified_at' => now(), // Mark as verified immediately
         ]);
 
-        // Send email verification notification
-        $user->notify(new EmailVerificationNotification());
+        // Email verification is temporarily disabled
+        // $user->notify(new EmailVerificationNotification());
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'User registered successfully. Please check your email to verify your account.',
+            'message' => 'User registered successfully',
             'user' => $user,
             'token' => $token,
-            'requires_verification' => true
         ], 201);
     }
 

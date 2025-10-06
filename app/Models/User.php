@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\PasswordResetNotification;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, HasUuids;
@@ -156,11 +155,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Check if user has verified email
+     * Check if user has verified email (temporarily disabled)
      */
     public function hasVerifiedEmail(): bool
     {
-        return !is_null($this->email_verified_at);
+        return true; // Always return true for now
     }
 
     /**
@@ -168,7 +167,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function canPerformVerifiedActions(): bool
     {
-        return $this->hasVerifiedEmail() && $this->is_active;
+        return true; // Always return true for now
     }
 
     /**

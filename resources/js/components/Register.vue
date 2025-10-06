@@ -181,12 +181,8 @@ const handleRegister = async () => {
 
   try {
     const response = await authStore.register(form);
-    // Check if email verification is required
-    if (response.requires_verification) {
-      router.push('/email-verification');
-    } else {
-      router.push('/');
-    }
+    // Email verification is temporarily disabled
+    router.push('/');
   } catch (err) {
     if (err.errors) {
       errors.value = err.errors;
