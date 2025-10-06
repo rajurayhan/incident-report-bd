@@ -272,7 +272,17 @@ export default {
     unableToGetLocation: 'Unable to get your location. Please enter coordinates manually.',
     fileTooLarge: 'File {fileName} is too large. Maximum size is 10MB.',
     maxFilesReached: 'Maximum 3 files allowed. Please remove some files before adding new ones.',
-    maxFilesExceeded: 'You can only upload a maximum of 3 files.'
+    maxFilesExceeded: 'You can only upload a maximum of 3 files.',
+    mapPinSelector: {
+      title: 'Select Incident Location',
+      getCurrentLocation: 'Get Current Location',
+      clearPin: 'Clear Pin',
+      loadingMap: 'Loading map...',
+      clickToDropPin: 'Click on the map to drop a pin at the incident location',
+      selectedLocation: 'Selected Location',
+      copyCoordinates: 'Copy Coordinates',
+      incidentLocation: 'Incident Location'
+    }
   },
   map: {
     title: 'Incident Map',

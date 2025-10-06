@@ -162,6 +162,25 @@
         <div class="space-y-4">
           <h2 class="text-lg font-semibold text-gray-900">{{ $t('report.location') }}</h2>
           
+          <!-- Location Helper -->
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="text-sm text-blue-800">
+                <strong>{{ $t('report.tip') }}</strong> {{ $t('report.tipMessage') }}
+              </span>
+            </div> 
+          </div>
+          
+          <!-- Map Pin Selector -->
+          <MapPinSelector
+            v-model="mapLocation"
+            @location-changed="onLocationChanged"
+            :initial-location="{ latitude: 23.8103, longitude: 90.4125 }"
+          />
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label for="latitude" class="block text-sm font-medium text-gray-700 mb-2">
@@ -172,7 +191,8 @@
                 v-model="form.latitude"
                 type="number"
                 step="any"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                disabled
+                class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed"
                 placeholder="23.8103"
               />
             </div>
@@ -185,7 +205,8 @@
                 v-model="form.longitude"
                 type="number"
                 step="any"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                disabled
+                class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed"
                 placeholder="90.4125"
               />
             </div>
@@ -254,25 +275,7 @@
                 </option>
               </select>
             </div>
-          </div>
-
-          <div class="bg-blue-50 p-4 rounded-lg">
-            <div class="flex items-center">
-              <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <span class="text-sm text-blue-800">
-                <strong>{{ $t('report.tip') }}</strong> {{ $t('report.tipMessage') }}
-              </span>
-            </div>
-            <button
-              type="button"
-              @click="getCurrentLocation"
-              class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-            >
-              {{ $t('report.getCurrentLocation') }}
-            </button>
-          </div>
+          </div> 
         </div>
 
         <!-- Media Upload -->
@@ -383,12 +386,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue';
+import { ref, reactive, onMounted, computed, watch } from 'vue';
 import { useIncidentStore } from '../stores/incidents';
 import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import PageHeader from './PageHeader.vue';
+import MapPinSelector from './MapPinSelector.vue';
 import { getDivisions, getDistricts, getThanas } from '../data/bangladesh-locations';
 
 const incidentStore = useIncidentStore();
@@ -400,6 +404,7 @@ const loading = ref(false);
 const mediaFiles = ref([]);
 const mediaInput = ref(null);
 const errors = ref({});
+const mapLocation = ref({ latitude: null, longitude: null });
 
 const form = reactive({
   title: '',
@@ -443,6 +448,18 @@ onMounted(() => {
   form.incident_date = now.toISOString().slice(0, 16);
 });
 
+// Watch for manual coordinate changes to sync with map
+watch([() => form.latitude, () => form.longitude], ([lat, lng]) => {
+  if (lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
+    mapLocation.value = { 
+      latitude: parseFloat(lat), 
+      longitude: parseFloat(lng) 
+    };
+  } else if (!lat || !lng) {
+    mapLocation.value = { latitude: null, longitude: null };
+  }
+});
+
 const getCurrentLocation = () => {
   if (!navigator.geolocation) {
     alert(t('report.geolocationNotSupported'));
@@ -451,14 +468,30 @@ const getCurrentLocation = () => {
 
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      form.latitude = position.coords.latitude.toFixed(8);
-      form.longitude = position.coords.longitude.toFixed(8);
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      
+      form.latitude = lat.toFixed(8);
+      form.longitude = lng.toFixed(8);
+      
+      // Update map location
+      mapLocation.value = { latitude: lat, longitude: lng };
     },
     (error) => {
       console.error('Error getting location:', error);
       alert(t('report.unableToGetLocation'));
     }
   );
+};
+
+const onLocationChanged = (location) => {
+  if (location.latitude && location.longitude) {
+    form.latitude = location.latitude.toFixed(8);
+    form.longitude = location.longitude.toFixed(8);
+  } else {
+    form.latitude = '';
+    form.longitude = '';
+  }
 };
 
 const handleMediaUpload = (event) => {
