@@ -1,8 +1,8 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" style="stop-color:#28a745;stop-opacity:1" />
-<stop offset="100%" style="stop-color:#20c997;stop-opacity:1" />
+<stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
 </linearGradient>
 </defs>
 <rect width="1200" height="630" fill="url(#gradient)"/>
@@ -15,11 +15,11 @@
 <!-- Main Icon -->
 <rect x="500" y="200" width="200" height="200" rx="20" fill="rgba(255,255,255,0.9)"/>
 <!-- Map Icon -->
-<path d="M550 250L650 250L650 350L550 350Z" fill="#28a745"/>
+<path d="M550 250L650 250L650 350L550 350Z" fill="#3b82f6"/>
 <path d="M570 270L630 270L630 330L570 330Z" fill="#ffffff"/>
 <!-- Location Pin -->
-<circle cx="600" cy="300" r="8" fill="#ff6b35"/>
-<path d="M600 308L595 320L605 320Z" fill="#ff6b35"/>
+<circle cx="600" cy="300" r="8" fill="#f87171"/>
+<path d="M600 308L595 320L605 320Z" fill="#f87171"/>
 <!-- Text -->
 <text x="600" y="480" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#ffffff" text-anchor="middle">Incident Map</text>
 <text x="600" y="530" font-family="Arial, sans-serif" font-size="24" fill="rgba(255,255,255,0.8)" text-anchor="middle">View incidents on interactive map</text>
