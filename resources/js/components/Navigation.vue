@@ -13,7 +13,7 @@
         <div class="flex items-center">
           <router-link to="/" class="flex items-center">
             <div class="flex-shrink-0">
-              <h1 class="text-2xl font-bold text-red-600">Incident Report Bangladesh</h1>
+              <h1 class="text-2xl font-bold text-red-600">{{ $t('nav.logo') }}</h1>
             </div>
           </router-link>
         </div>

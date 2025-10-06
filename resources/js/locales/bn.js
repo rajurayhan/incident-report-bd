@@ -1,5 +1,6 @@
 export default {
   nav: {
+    logo: 'ইনসিডেন্ট রিপোর্ট বাংলাদেশ',
     home: 'হোম',
     report: 'ঘটনা রিপোর্ট করুন',
     map: 'মানচিত্র',
@@ -200,13 +201,16 @@ export default {
     mediaOptional: 'মিডিয়া (ঐচ্ছিক)',
     uploadPhotosVideos: 'ছবি বা ভিডিও আপলোড করুন',
     supportedFormatsShort: 'PNG, JPG, MP4 প্রতিটি সর্বোচ্চ ১০MB',
+    files: 'ফাইল',
     reportAnonymously: 'বেনামী রিপোর্ট করুন (নিরাপত্তার জন্য সুপারিশকৃত)',
     yourName: 'আপনার নাম',
     yourFullNamePlaceholder: 'আপনার পূর্ণ নাম',
     phoneNumber: 'ফোন নম্বর',
     geolocationNotSupported: 'এই ব্রাউজার দ্বারা জিওলোকেশন সমর্থিত নয়।',
     unableToGetLocation: 'আপনার অবস্থান পাওয়া যাচ্ছে না। অনুগ্রহ করে স্থানাঙ্ক ম্যানুয়ালি প্রবেশ করান।',
-    fileTooLarge: 'ফাইল {fileName} খুব বড়। সর্বোচ্চ আকার ১০MB।'
+    fileTooLarge: 'ফাইল {fileName} খুব বড়। সর্বোচ্চ আকার ১০MB।',
+    maxFilesReached: 'সর্বোচ্চ ৩টি ফাইল অনুমোদিত। নতুন ফাইল যোগ করার আগে কিছু ফাইল সরান।',
+    maxFilesExceeded: 'আপনি সর্বোচ্চ ৩টি ফাইল আপলোড করতে পারেন।'
   },
   map: {
     title: 'ঘটনা মানচিত্র',
@@ -321,7 +325,15 @@ export default {
     failedToDeleteComment: 'মন্তব্য মুছে ফেলতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।',
     alreadyVerifiedAlert: 'আপনি ইতিমধ্যে এই ঘটনাটি যাচাই করেছেন।',
     failedToVerifyIncident: 'ঘটনা যাচাই করতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।',
-    locationCoordinates: 'অবস্থানের স্থানাঙ্ক'
+    locationCoordinates: 'অবস্থানের স্থানাঙ্ক',
+    unknownStatus: 'অজানা অবস্থা',
+    unknownPriority: 'অজানা অগ্রাধিকার',
+    priority: {
+      low: 'নিম্ন',
+      medium: 'মধ্যম',
+      high: 'উচ্চ',
+      urgent: 'জরুরি'
+    }
   },
   analytics: {
     title: 'বিশ্লেষণ ড্যাশবোর্ড',

@@ -193,17 +193,35 @@
 
         <!-- Media Upload -->
         <div class="space-y-4">
-          <h2 class="text-lg font-semibold text-gray-900">{{ $t('report.mediaOptional') }}</h2>
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-semibold text-gray-900">{{ $t('report.mediaOptional') }}</h2>
+            <span class="text-sm text-gray-500">{{ mediaFiles.length }}/3 {{ $t('report.files') }}</span>
+          </div>
           
-          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6">
+          <div 
+            class="border-2 border-dashed rounded-lg p-6 transition-colors"
+            :class="{
+              'border-gray-300 bg-white': mediaFiles.length < 3,
+              'border-gray-200 bg-gray-50': mediaFiles.length >= 3
+            }"
+          >
             <div class="text-center">
               <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
               <div class="mt-4">
-                <label for="media" class="cursor-pointer">
-                  <span class="mt-2 block text-sm font-medium text-gray-900">
-                    {{ $t('report.uploadPhotosVideos') }}
+                <label 
+                  for="media" 
+                  :class="{
+                    'cursor-pointer': mediaFiles.length < 3,
+                    'cursor-not-allowed': mediaFiles.length >= 3
+                  }"
+                >
+                  <span class="mt-2 block text-sm font-medium" :class="{
+                    'text-gray-900': mediaFiles.length < 3,
+                    'text-gray-500': mediaFiles.length >= 3
+                  }">
+                    {{ mediaFiles.length >= 3 ? $t('report.maxFilesReached') : $t('report.uploadPhotosVideos') }}
                   </span>
                   <span class="mt-1 block text-sm text-gray-500">
                     {{ $t('report.supportedFormatsShort') }}
@@ -216,6 +234,7 @@
                   multiple
                   accept="image/*,video/*"
                   @change="handleMediaUpload"
+                  :disabled="mediaFiles.length >= 3"
                   class="sr-only"
                 />
               </div>
@@ -404,7 +423,20 @@ const getCurrentLocation = () => {
 const handleMediaUpload = (event) => {
   const files = Array.from(event.target.files);
   
+  // Check if adding these files would exceed the 3-file limit
+  if (mediaFiles.value.length + files.length > 3) {
+    alert(t('report.maxFilesExceeded'));
+    event.target.value = '';
+    return;
+  }
+  
   files.forEach(file => {
+    // Check if we've already reached the limit
+    if (mediaFiles.value.length >= 3) {
+      alert(t('report.maxFilesReached'));
+      return;
+    }
+
     if (file.size > 10 * 1024 * 1024) { // 10MB limit
       alert(t('report.fileTooLarge', { fileName: file.name }));
       return;

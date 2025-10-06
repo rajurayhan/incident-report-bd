@@ -1,5 +1,6 @@
 export default {
   nav: {
+    logo: 'Incident Report Bangladesh',
     home: 'Home',
     report: 'Report Incident',
     map: 'Map',
@@ -200,13 +201,16 @@ export default {
     mediaOptional: 'Media (Optional)',
     uploadPhotosVideos: 'Upload photos or videos',
     supportedFormatsShort: 'PNG, JPG, MP4 up to 10MB each',
+    files: 'files',
     reportAnonymously: 'Report anonymously (recommended for safety)',
     yourName: 'Your Name',
     yourFullNamePlaceholder: 'Your full name',
     phoneNumber: 'Phone Number',
     geolocationNotSupported: 'Geolocation is not supported by this browser.',
     unableToGetLocation: 'Unable to get your location. Please enter coordinates manually.',
-    fileTooLarge: 'File {fileName} is too large. Maximum size is 10MB.'
+    fileTooLarge: 'File {fileName} is too large. Maximum size is 10MB.',
+    maxFilesReached: 'Maximum 3 files allowed. Please remove some files before adding new ones.',
+    maxFilesExceeded: 'You can only upload a maximum of 3 files.'
   },
   map: {
     title: 'Incident Map',
@@ -321,7 +325,15 @@ export default {
     failedToDeleteComment: 'Failed to delete comment. Please try again.',
     alreadyVerifiedAlert: 'You have already verified this incident.',
     failedToVerifyIncident: 'Failed to verify incident. Please try again.',
-    locationCoordinates: 'Location coordinates'
+    locationCoordinates: 'Location coordinates',
+    unknownStatus: 'Unknown Status',
+    unknownPriority: 'Unknown Priority',
+    priority: {
+      low: 'Low',
+      medium: 'Medium',
+      high: 'High',
+      urgent: 'Urgent'
+    }
   },
   analytics: {
     title: 'Analytics Dashboard',

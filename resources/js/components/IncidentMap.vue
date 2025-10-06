@@ -86,7 +86,7 @@
               
               <div class="text-xs text-gray-600 space-y-1">
                 <div><strong>{{ getCategoryLabel(incident.category) }}</strong></div>
-                <div>{{ incident.status_label }} • {{ incident.priority_label }}</div>
+                <div>{{ getStatusLabel(incident.status) }} • {{ getPriorityLabel(incident.priority) }}</div>
                 <div>{{ formatDate(incident.incident_date || incident.created_at) }}</div>
                 <div v-if="incident.address || incident.city">
                   📍 {{ incident.address || incident.city }}
@@ -193,7 +193,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import L from 'leaflet'
@@ -480,8 +480,8 @@ const addIncidentMarker = (incident) => {
       
       <div class="space-y-1 text-xs text-gray-600 mb-3">
         <div><strong>${t('map.category')}:</strong> ${escapeHtml(getCategoryLabel(incident.category))}</div>
-        <div><strong>${t('map.status')}:</strong> ${escapeHtml(incident.status_label)}</div>
-        <div><strong>${t('map.priority')}:</strong> ${escapeHtml(incident.priority_label)}</div>
+        <div><strong>${t('map.status')}:</strong> ${escapeHtml(getStatusLabel(incident.status))}</div>
+        <div><strong>${t('map.priority')}:</strong> ${escapeHtml(getPriorityLabel(incident.priority))}</div>
         <div><strong>${t('map.location')}:</strong> ${escapeHtml(incident.address || incident.city || t('map.unknown'))}</div>
         <div><strong>${t('map.date')}:</strong> ${new Date(incident.incident_date || incident.created_at).toLocaleDateString()}</div>
         ${incident.has_media ? `<div><strong>${t('map.media')}:</strong> ${incident.media_count} ${t('map.files')}</div>` : ''}
@@ -614,6 +614,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString()
 }
 
+// Reactive functions for localized labels
 const getCategoryLabel = (category) => {
   const categoryMap = {
     'theft_robbery': t('filters.categories.theftRobbery'),
@@ -625,6 +626,25 @@ const getCategoryLabel = (category) => {
     'cybercrime': t('filters.categories.cybercrime')
   };
   return categoryMap[category] || category;
+}
+
+const getStatusLabel = (status) => {
+  const statusMap = {
+    'pending': t('filters.statuses.pending'),
+    'in_progress': t('filters.statuses.inProgress'),
+    'resolved': t('filters.statuses.resolved')
+  };
+  return statusMap[status] || t('incidentDetails.unknownStatus');
+}
+
+const getPriorityLabel = (priority) => {
+  const priorityMap = {
+    'low': t('incidentDetails.priority.low'),
+    'medium': t('incidentDetails.priority.medium'),
+    'high': t('incidentDetails.priority.high'),
+    'urgent': t('incidentDetails.priority.urgent')
+  };
+  return priorityMap[priority] || t('incidentDetails.unknownPriority');
 }
 
 // Fit map to incident bounds

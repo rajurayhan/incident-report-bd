@@ -19,7 +19,7 @@
       <!-- Header -->
       <PageHeader 
         :title="incident.title"
-        :subtitle="`${getCategoryLabel(incident.category)} • ${incident.status_label} • ${incident.priority_label}`"
+        :subtitle="`${getCategoryLabel(incident.category)} • ${getStatusLabel(incident.status)} • ${getPriorityLabel(incident.priority)}`"
       >
         <template #actions>
           <div class="text-right text-sm text-gray-500">
@@ -525,7 +525,7 @@
               class="px-2 py-0.5 rounded-full text-xs font-medium"
               :class="getStatusColorClass(nearbyIncident.status)"
             >
-              {{ nearbyIncident.status_label }}
+              {{ getStatusLabel(nearbyIncident.status) }}
             </span>
           </div>
         </router-link>
@@ -1091,6 +1091,25 @@ const getCategoryIconText = (category) => {
     cybercrime: '💻',
   }
   return icons[category] || '⚠️'
+}
+
+const getStatusLabel = (status) => {
+  const statusMap = {
+    'pending': t('filters.statuses.pending'),
+    'in_progress': t('filters.statuses.inProgress'),
+    'resolved': t('filters.statuses.resolved'),
+  }
+  return statusMap[status] || status || t('incidentDetails.unknownStatus')
+}
+
+const getPriorityLabel = (priority) => {
+  const priorityMap = {
+    'low': t('incidentDetails.priority.low'),
+    'medium': t('incidentDetails.priority.medium'),
+    'high': t('incidentDetails.priority.high'),
+    'urgent': t('incidentDetails.priority.urgent'),
+  }
+  return priorityMap[priority] || priority || t('incidentDetails.unknownPriority')
 }
 
 const getStatusColorClass = (status) => {
