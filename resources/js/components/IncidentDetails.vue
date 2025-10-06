@@ -1683,23 +1683,6 @@ watch(() => incident.value, (newIncident) => {
   }
 }, { immediate: true })
 
-onMounted(() => {
-  fetchIncident()
-  document.addEventListener('keydown', handleKeydown)
-})
-
-// Cleanup
-onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown)
-  document.body.style.overflow = 'auto'
-  
-  // Clean up map
-  if (map.value) {
-    map.value.remove()
-    map.value = null
-  }
-})
-
 // Random anonymous name generator
 const getRandomAnonymousName = () => {
   const adjectives = [
@@ -1717,6 +1700,23 @@ const getRandomAnonymousName = () => {
   
   return `${randomAdjective} ${randomNoun}`
 }
+
+onMounted(() => {
+  fetchIncident()
+  document.addEventListener('keydown', handleKeydown)
+})
+
+// Cleanup
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown)
+  document.body.style.overflow = 'auto'
+  
+  // Clean up map
+  if (map.value) {
+    map.value.remove()
+    map.value = null
+  }
+})
 </script>
 
 <style scoped>
