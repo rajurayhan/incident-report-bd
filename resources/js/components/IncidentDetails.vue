@@ -133,8 +133,8 @@
                   :src="getMediaUrl(media)" 
                   :alt="media.file_name"
                   class="slide-image"
-                  @load="console.log('Image loaded:', media.file_name)"
-                  @error="console.log('Image failed to load:', $event.target.src)"
+                  @load="() => {}"
+                  @error="() => {}"
                 >
                 
                 <!-- Zoom Overlay -->
@@ -1027,10 +1027,7 @@ const fetchIncident = async () => {
     const data = await response.json()
     incident.value = data
     
-    // Debug: Log media data
-    console.log('Incident media:', incident.value.media)
-    console.log('Current slider index:', currentSliderIndex.value)
-    console.log('First media item:', incident.value.media?.[0])
+    // Debug: Log media data (removed for production)
     
     // Reset slider to first image when incident loads
     currentSliderIndex.value = 0
@@ -1039,7 +1036,6 @@ const fetchIncident = async () => {
     fetchNearbyIncidents()
   } catch (err) {
     error.value = t('incidentDetails.incidentNotFoundDescription')
-    console.error('Error fetching incident:', err)
   } finally {
     loading.value = false
   }
@@ -1053,7 +1049,7 @@ const fetchNearbyIncidents = async () => {
       nearbyIncidents.value = data.incidents || []
     }
   } catch (err) {
-    console.error('Error fetching nearby incidents:', err)
+    // Error fetching nearby incidents
   }
 }
 
@@ -1082,7 +1078,6 @@ const getCategoryLabel = (category) => {
 
 const getMediaUrl = (media) => {
   const url = `/storage/${media.file_path}`
-  console.log('Generated media URL:', url, 'for file:', media.file_name)
   return url
 }
 
@@ -1232,9 +1227,7 @@ const copyCoordinates = async () => {
   try {
     await navigator.clipboard.writeText(coordinates)
     // You could add a toast notification here
-    console.log('Coordinates copied to clipboard:', coordinates)
   } catch (err) {
-    console.error('Failed to copy coordinates:', err)
     // Fallback for older browsers
     const textArea = document.createElement('textarea')
     textArea.value = coordinates
@@ -1436,7 +1429,6 @@ const addComment = async () => {
     newCommentText.value = ''
     replyingTo.value = null
   } catch (error) {
-    console.error('Error adding comment:', error)
     alert(t('incidentDetails.failedToAddComment'))
   }
 }
@@ -1459,7 +1451,6 @@ const deleteComment = async (commentId, parentId = null) => {
       commentsPagination.value.total--
     }
   } catch (error) {
-    console.error('Error deleting comment:', error)
     alert(t('incidentDetails.failedToDeleteComment'))
   }
 }
@@ -1494,7 +1485,7 @@ const loadMoreComments = async () => {
       total: response.data.total
     }
   } catch (error) {
-    console.error('Error loading more comments:', error)
+    // Error loading more comments
   } finally {
     loadingComments.value = false
   }
@@ -1575,7 +1566,7 @@ const upvoteComment = async (commentId) => {
       comment.likes_count = response.data.likes_count
     }
   } catch (error) {
-    console.error('Error upvoting comment:', error)
+    // Error upvoting comment
   }
 }
 
@@ -1589,7 +1580,7 @@ const downvoteComment = async (commentId) => {
       comment.dislikes_count = response.data.dislikes_count
     }
   } catch (error) {
-    console.error('Error downvoting comment:', error)
+    // Error downvoting comment
   }
 }
 
@@ -1617,7 +1608,6 @@ const verifyIncident = async (type) => {
     // Clear the form
     verificationComment.value = ''
   } catch (error) {
-    console.error('Error verifying incident:', error)
     if (error.response?.status === 409) {
       alert(t('incidentDetails.alreadyVerifiedAlert'))
     } else {
@@ -1652,7 +1642,6 @@ watch(() => route.params.id, (newId, oldId) => {
 watch(() => incident.value, (newIncident) => {
   if (newIncident && newIncident.media && newIncident.media.length > 0) {
     currentSliderIndex.value = 0
-    console.log('Incident loaded, reset slider to index 0')
   }
   
   // Initialize map when incident loads

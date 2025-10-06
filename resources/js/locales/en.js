@@ -473,6 +473,6 @@ export default {
     message: 'Please sign in to add comments and participate in the discussion.',
     signInButton: 'Sign In',
     signUpButton: 'Create Account'
-  },
+  }
 }
 
