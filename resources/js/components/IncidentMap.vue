@@ -201,6 +201,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useIncidentStore } from '../stores/incidents'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet.heat'
@@ -209,6 +210,7 @@ import FilterBar from './FilterBar.vue'
 
 const router = useRouter()
 const { t } = useI18n()
+const incidentStore = useIncidentStore()
 
 // Reactive data
 const map = ref(null)
@@ -228,17 +230,8 @@ const currentPage = ref(1)
 const perPage = 20
 const hasMore = ref(true)
 
-// Filters
-const filters = ref({
-  category: '',
-  status: '',
-  verified: false,
-  division: '',
-  district: '',
-  thana: '',
-  date_from: '',
-  date_to: ''
-})
+// Use store filters instead of local filters
+const filters = computed(() => incidentStore.filters)
 
 // View options
 const viewOptions = [
@@ -615,7 +608,7 @@ const clearSelection = () => {
 // Handle filter changes
 const handleFilterChange = (newFilters) => {
   console.log('Filter changed:', newFilters)
-  filters.value = { ...newFilters }
+  incidentStore.setFilters(newFilters)
   loadIncidents(true)
 }
 
@@ -625,6 +618,12 @@ watch(viewMode, (newMode, oldMode) => {
   clearSelection()
   updateMapVisualization()
 })
+
+// Watch for store filter changes
+watch(() => incidentStore.filters, (newFilters, oldFilters) => {
+  console.log('Store filters changed:', newFilters)
+  loadIncidents(true)
+}, { deep: true })
 
 // Set view mode
 const setViewMode = (mode) => {
