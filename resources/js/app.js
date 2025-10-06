@@ -97,4 +97,26 @@ app.use(router);
 app.use(head);
 app.use(i18n);
 
+// Global error handler for debugging
+app.config.errorHandler = (err, instance, info) => {
+  console.error('Vue Error:', err);
+  console.error('Error Info:', info);
+  console.error('Component Instance:', instance);
+  
+  // Check if it's the "Invalid linked format" error
+  if (err.message && err.message.includes('Invalid linked format')) {
+    console.error('Invalid linked format error detected!');
+    console.error('Stack trace:', err.stack);
+  }
+};
+
+// Global unhandled promise rejection handler
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled Promise Rejection:', event.reason);
+  if (event.reason && event.reason.message && event.reason.message.includes('Invalid linked format')) {
+    console.error('Invalid linked format error in promise rejection!');
+    console.error('Stack trace:', event.reason.stack);
+  }
+});
+
 app.mount('#app');

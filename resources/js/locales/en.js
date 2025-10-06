@@ -369,7 +369,7 @@ export default {
     alreadyVerified: 'You have already verified this incident',
     comments: 'Comments',
     replyingTo: 'Replying to',
-    addComment: 'Add a comment... (Use @ to mention users)',
+    addComment: 'Add a comment... (Use @ symbol to mention users)',
     cancel: 'Cancel',
     postReply: 'Post Reply',
     postComment: 'Post Comment',

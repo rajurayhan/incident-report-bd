@@ -248,18 +248,32 @@ const viewOptions = [
 
 // Initialize map
 const initMap = () => {
-  // Default center (Dhaka, Bangladesh)
-  const defaultCenter = [23.8103, 90.4125]
-  
-  map.value = L.map('map').setView(defaultCenter, 10)
-  
-  // Add tile layer
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map.value)
-  
-  // Load incidents
-  loadIncidents()
+  try {
+    // Default center (Dhaka, Bangladesh)
+    const defaultCenter = [23.8103, 90.4125]
+    
+    map.value = L.map('map').setView(defaultCenter, 10)
+    
+    // Add tile layer with error handling
+    const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+    })
+    
+    tileLayer.on('tileerror', (error) => {
+      console.error('Tile loading error:', error);
+    });
+    
+    tileLayer.addTo(map.value)
+    
+    // Load incidents
+    loadIncidents()
+  } catch (error) {
+    console.error('Map initialization error:', error);
+    if (error.message && error.message.includes('Invalid linked format')) {
+      console.error('Invalid linked format error in map initialization!');
+    }
+  }
 }
 
 // Load incidents from API
@@ -469,44 +483,59 @@ const addIncidentMarker = (incident) => {
   // Create marker
   const marker = L.marker([lat, lng], { icon })
   
-  // Create popup content with escaped text
-  const popupContent = `
-    <div class="p-2 min-w-64">
-      <div class="flex items-start justify-between mb-2">
-        <h3 class="font-semibold text-gray-900 text-sm">${escapeHtml(incident.title)}</h3>
-        <span class="px-2 py-1 text-xs rounded-full ${
-          incident.is_verified 
-            ? 'bg-green-100 text-green-800' 
-            : 'bg-gray-100 text-gray-800'
-        }">
-          ${incident.is_verified ? t('map.verified') : t('map.unverified')}
-        </span>
-      </div>
-      
-      <div class="space-y-1 text-xs text-gray-600 mb-3">
-        <div><strong>${t('map.category')}:</strong> ${escapeHtml(getCategoryLabel(incident.category))}</div>
-        <div><strong>${t('map.status')}:</strong> ${escapeHtml(getStatusLabel(incident.status))}</div>
-        <div><strong>${t('map.priority')}:</strong> ${escapeHtml(getPriorityLabel(incident.priority))}</div>
-        <div><strong>${t('map.location')}:</strong> ${escapeHtml(incident.address || incident.city || t('map.unknown'))}</div>
-        <div><strong>${t('map.date')}:</strong> ${new Date(incident.incident_date || incident.created_at).toLocaleDateString()}</div>
-        ${incident.has_media ? `<div><strong>${t('map.media')}:</strong> ${incident.media_count} ${t('map.files')}</div>` : ''}
-      </div>
-      
-      <p class="text-xs text-gray-700 mb-3">${escapeHtml(incident.description).substring(0, 150)}${incident.description && incident.description.length > 150 ? '...' : ''}</p>
-      
-      <div class="flex items-center justify-between">
-        <div class="text-xs text-gray-500">
-          ${incident.verification_count} ${t('map.verifications')}, ${incident.dispute_count} ${t('map.disputes')}
+  // Create popup content with escaped text and error handling
+  let popupContent = ''
+  try {
+    popupContent = `
+      <div class="p-2 min-w-64">
+        <div class="flex items-start justify-between mb-2">
+          <h3 class="font-semibold text-gray-900 text-sm">${escapeHtml(incident.title || '')}</h3>
+          <span class="px-2 py-1 text-xs rounded-full ${
+            incident.is_verified 
+              ? 'bg-green-100 text-green-800' 
+              : 'bg-gray-100 text-gray-800'
+          }">
+            ${incident.is_verified ? t('map.verified') : t('map.unverified')}
+          </span>
         </div>
-        <button 
-          data-incident-id="${incident.id}"
-          class="incident-details-btn text-xs text-blue-600 hover:text-blue-800 font-medium cursor-pointer hover:underline"
-        >
-          ${t('map.viewDetails')} →
-        </button>
+        
+        <div class="space-y-1 text-xs text-gray-600 mb-3">
+          <div><strong>${t('map.category')}:</strong> ${escapeHtml(getCategoryLabel(incident.category))}</div>
+          <div><strong>${t('map.status')}:</strong> ${escapeHtml(getStatusLabel(incident.status))}</div>
+          <div><strong>${t('map.priority')}:</strong> ${escapeHtml(getPriorityLabel(incident.priority))}</div>
+          <div><strong>${t('map.location')}:</strong> ${escapeHtml(incident.address || incident.city || t('map.unknown'))}</div>
+          <div><strong>${t('map.date')}:</strong> ${new Date(incident.incident_date || incident.created_at).toLocaleDateString()}</div>
+          ${incident.has_media ? `<div><strong>${t('map.media')}:</strong> ${incident.media_count} ${t('map.files')}</div>` : ''}
+        </div>
+        
+        <p class="text-xs text-gray-700 mb-3">${escapeHtml(incident.description || '').substring(0, 150)}${incident.description && incident.description.length > 150 ? '...' : ''}</p>
+        
+        <div class="flex items-center justify-between">
+          <div class="text-xs text-gray-500">
+            ${incident.verification_count || 0} ${t('map.verifications')}, ${incident.dispute_count || 0} ${t('map.disputes')}
+          </div>
+          <button 
+            data-incident-id="${incident.id}"
+            class="incident-details-btn text-xs text-blue-600 hover:text-blue-800 font-medium cursor-pointer hover:underline"
+          >
+            ${t('map.viewDetails')} →
+          </button>
+        </div>
       </div>
-    </div>
-  `
+    `
+  } catch (error) {
+    console.error('Popup content creation error:', error);
+    if (error.message && error.message.includes('Invalid linked format')) {
+      console.error('Invalid linked format error in popup content!');
+    }
+    // Fallback popup content
+    popupContent = `
+      <div class="p-2 min-w-64">
+        <h3 class="font-semibold text-gray-900 text-sm">${escapeHtml(incident.title || 'Incident')}</h3>
+        <p class="text-xs text-gray-600">Click to view details</p>
+      </div>
+    `
+  }
   
   const popup = L.popup().setContent(popupContent)
   marker.bindPopup(popup)

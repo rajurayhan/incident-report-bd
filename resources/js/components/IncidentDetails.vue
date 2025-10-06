@@ -331,7 +331,7 @@
             ref="commentTextarea"
             v-model="newCommentText"
             @input="handleMentionInput"
-            :placeholder="$t('incidentDetails.addComment')"
+            :placeholder="getAddCommentPlaceholder()"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
             rows="3"
           ></textarea>
@@ -1554,6 +1554,10 @@ const selectMention = (user) => {
 const formatCommentContent = (content) => {
   if (!content) return ''
   return content.replace(/@([\w\s]+)/g, '<span class="text-blue-600 font-medium">@$1</span>')
+}
+
+const getAddCommentPlaceholder = () => {
+  return 'Add a comment... (Use @ to mention users)'
 }
 
 const upvoteComment = async (commentId) => {
