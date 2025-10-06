@@ -244,13 +244,6 @@ class IncidentSeeder extends Seeder
         $statuses = ['pending', 'in_progress', 'resolved'];
         $priorities = ['low', 'medium', 'high', 'urgent'];
 
-        // Bangladesh-specific names and phone numbers
-        $bangladeshiNames = [
-            'Abdul Rahman', 'Fatema Begum', 'Mohammad Ali', 'Rashida Khatun', 'Karim Uddin', 'Nasreen Akter',
-            'Hasan Ahmed', 'Salma Begum', 'Rafiqul Islam', 'Rokeya Khatun', 'Jahangir Alam', 'Nurjahan Begum',
-            'Sirajul Haque', 'Rahima Khatun', 'Mizanur Rahman', 'Shahida Begum', 'Nurul Islam', 'Rashida Akter',
-            'Abul Kalam', 'Feroza Begum', 'Mohammad Hossain', 'Nasima Khatun', 'Rafiq Ahmed', 'Shahana Begum'
-        ];
 
         $incidents = [];
 
@@ -278,21 +271,12 @@ class IncidentSeeder extends Seeder
                 'season' => $faker->randomElement(['summer', 'monsoon', 'winter', 'spring']),
                 'area_type' => $faker->randomElement(['residential', 'commercial', 'educational', 'transport', 'public']),
                 'crowd_density' => $faker->randomElement(['low', 'medium', 'high']),
-                'lighting_condition' => $faker->randomElement(['good', 'poor', 'dark']),
-                'reported_by' => $faker->randomElement(['victim', 'witness', 'family_member', 'neighbor', 'passerby'])
+                'lighting_condition' => $faker->randomElement(['good', 'poor', 'dark'])
             ];
 
             // Generate Bangladesh-specific address
             $address = $this->generateBangladeshiAddress($location, $faker);
             
-            // Generate Bangladesh-specific phone number
-            $phoneNumber = $this->generateBangladeshiPhoneNumber($faker);
-            
-            // Generate reporter name (sometimes anonymous)
-            $isAnonymous = $faker->boolean(25); // 25% anonymous
-            $reporterName = $isAnonymous ? null : $faker->randomElement($bangladeshiNames);
-            $reporterPhone = $isAnonymous ? null : $phoneNumber;
-            $reporterEmail = $isAnonymous ? null : $faker->email();
 
                 $incidents[] = [
                     'id' => $faker->uuid(),
@@ -309,12 +293,8 @@ class IncidentSeeder extends Seeder
                 'division' => $location['division'],
                     'incident_date' => $faker->dateTimeBetween('-6 months', 'now'),
                 'is_verified' => $faker->boolean(35), // 35% verified
-                'is_anonymous' => $isAnonymous,
                 'verification_count' => $faker->numberBetween(0, 15),
                 'dispute_count' => $faker->numberBetween(0, 5),
-                'reporter_name' => $reporterName,
-                'reporter_phone' => $reporterPhone,
-                'reporter_email' => $reporterEmail,
                 'metadata' => json_encode($metadata),
                     'user_id' => $user->id,
                     'created_at' => now(),
@@ -347,15 +327,4 @@ class IncidentSeeder extends Seeder
         return $streetName;
     }
 
-    /**
-     * Generate Bangladesh-specific phone number
-     */
-    private function generateBangladeshiPhoneNumber($faker)
-    {
-        $operators = ['017', '018', '019', '015', '016', '013', '014'];
-        $operator = $faker->randomElement($operators);
-        $number = $faker->numberBetween(10000000, 99999999);
-        
-        return '+880' . $operator . $number;
-    }
 }
