@@ -1,20 +1,39 @@
 <template>
   <div class="relative">
-    <button 
+    <!-- Large clickable area -->
+    <div 
       @click="toggleMobileMenu"
-      class="text-gray-700 hover:text-red-600 p-2 rounded-md transition-colors duration-200"
+      class="text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-md transition-all duration-200 touch-manipulation active:scale-95 cursor-pointer"
+      style="min-width: 60px; min-height: 60px; padding: 12px;"
+      :class="{ 'text-red-600 bg-red-50': showMobileMenu }"
     >
-      <svg v-if="!showMobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-      </svg>
-      <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
+      <div class="flex items-center justify-center w-full h-full">
+        <svg v-if="!showMobileMenu" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg v-else class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </div>
+    </div>
     
     <!-- Mobile Navigation Menu -->
-    <div v-if="showMobileMenu" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-[60] border border-gray-200">
+    <div v-if="showMobileMenu">
+      <!-- Backdrop -->
+      <div 
+        class="fixed top-16 left-0 right-0 bottom-0 bg-gray-900 bg-opacity-10 z-[9998]"
+        @click="closeMobileMenu"
+        style="backdrop-filter: blur(1px);"
+      ></div>
+      
+      <!-- Menu -->
+      <div class="fixed top-20 right-4 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-lg shadow-xl py-2 z-[9999] border border-gray-200 max-h-[calc(100vh-6rem)] overflow-y-auto transform transition-all duration-300 ease-out animate-in slide-in-from-top-2 fade-in">
       <div class="px-2 pt-2 pb-3 space-y-1">
+        <!-- Language Switcher -->
+        <div class="px-3 py-2 border-b border-gray-200 mb-2">
+          <LanguageSwitcher />
+        </div>
+        
         <!-- Mobile Navigation Links -->
         <router-link 
           v-for="item in navigationItems" 
@@ -24,7 +43,7 @@
           :class="$route.name === item.routeName ? 'text-red-600 bg-red-50' : 'text-gray-700 hover:text-red-600 hover:bg-gray-50'"
           @click="closeMobileMenu"
         >
-          {{ item.label }}
+          {{ $t(`nav.${item.name}`) }}
         </router-link>
         
         <!-- Mobile User Actions -->
@@ -87,6 +106,7 @@
           </router-link>
         </div>
       </div>
+      </div>
     </div>
   </div>
 </template>
@@ -95,6 +115,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -109,25 +130,21 @@ const user = computed(() => authStore.user)
 const navigationItems = [
   {
     name: 'home',
-    label: 'Home',
     to: '/',
     routeName: 'home'
   },
   {
     name: 'report',
-    label: 'Report Incident',
     to: '/report',
     routeName: 'report'
   },
   {
     name: 'map',
-    label: 'Map',
     to: '/map',
     routeName: 'map'
   },
   {
     name: 'analytics',
-    label: 'Analytics',
     to: '/analytics',
     routeName: 'analytics'
   }
@@ -163,7 +180,7 @@ const logout = () => {
 
 // Close menu when clicking outside
 const handleClickOutside = (event) => {
-  if (!event.target.closest('.relative')) {
+  if (!event.target.closest('.relative') && !event.target.closest('.fixed')) {
     showMobileMenu.value = false
   }
 }

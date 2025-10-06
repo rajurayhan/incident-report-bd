@@ -487,6 +487,261 @@ export default {
     message: 'Please sign in to add comments and participate in the discussion.',
     signInButton: 'Sign In',
     signUpButton: 'Create Account'
+  },
+  privacyPolicy: {
+    title: 'Privacy Policy',
+    lastUpdated: 'Last updated: January 2025',
+    backButton: 'Go Back',
+    introduction: {
+      title: 'Introduction',
+      content: 'IncidentReport Bangladesh ("we," "our," or "us") is committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our incident reporting platform and related services.'
+    },
+    informationWeCollect: {
+      title: 'Information We Collect',
+      personalInfo: {
+        title: 'Personal Information',
+        name: 'Full name and contact information',
+        email: 'Email address for account management and communications',
+        phone: 'Phone number for verification and emergency contact',
+        username: 'Unique username for platform identification',
+        location: 'General location information (city, district, division)'
+      },
+      incidentInfo: {
+        title: 'Incident Information',
+        description: 'Detailed descriptions of reported incidents',
+        location: 'Specific location data including GPS coordinates',
+        media: 'Photos, videos, and other media files related to incidents',
+        timestamp: 'Date and time of incident occurrence and reporting'
+      },
+      technicalInfo: {
+        title: 'Technical Information',
+        ipAddress: 'IP address and device identifiers',
+        browser: 'Browser type, version, and settings',
+        device: 'Device information including operating system',
+        cookies: 'Cookies and similar tracking technologies'
+      }
+    },
+    howWeUseInfo: {
+      title: 'How We Use Your Information',
+      provideService: 'Provide and maintain our incident reporting services',
+      communicate: 'Send you important updates, notifications, and responses',
+      improve: 'Improve our platform functionality and user experience',
+      analytics: 'Analyze usage patterns and generate statistical reports',
+      security: 'Ensure platform security and prevent fraudulent activities',
+      legal: 'Comply with legal obligations and law enforcement requests'
+    },
+    informationSharing: {
+      title: 'Information Sharing and Disclosure',
+      content: 'We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following limited circumstances:',
+      whenWeShare: {
+        title: 'When We Share Information',
+        consent: 'With your explicit consent',
+        legal: 'To comply with legal requirements or court orders',
+        emergency: 'In emergency situations to protect public safety',
+        anonymized: 'As aggregated, anonymized data for research purposes'
+      }
+    },
+    dataSecurity: {
+      title: 'Data Security',
+      content: 'We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.',
+      encryption: 'Data encryption in transit and at rest',
+      access: 'Restricted access to personal information on a need-to-know basis',
+      monitoring: 'Regular security monitoring and vulnerability assessments',
+      backup: 'Secure backup and recovery procedures'
+    },
+    yourRights: {
+      title: 'Your Rights',
+      access: 'Access your personal information we hold',
+      correction: 'Correct inaccurate or incomplete information',
+      deletion: 'Request deletion of your personal information',
+      portability: 'Receive a copy of your data in a portable format',
+      objection: 'Object to processing of your personal information',
+      withdraw: 'Withdraw consent for data processing activities'
+    },
+    cookies: {
+      title: 'Cookies and Tracking Technologies',
+      content: 'We use cookies and similar technologies to enhance your experience on our platform.',
+      essential: 'Essential cookies for basic platform functionality',
+      analytics: 'Analytics cookies to understand usage patterns',
+      preferences: 'Preference cookies to remember your settings',
+      marketing: 'Marketing cookies for targeted communications (with consent)'
+    },
+    dataRetention: {
+      title: 'Data Retention',
+      content: 'We retain your personal information only for as long as necessary to fulfill the purposes outlined in this Privacy Policy.',
+      incidentData: 'Incident reports: 7 years for legal and safety purposes',
+      userData: 'User account information: Until account deletion',
+      analytics: 'Analytics data: 2 years in anonymized form',
+      legal: 'Legal compliance data: As required by applicable laws'
+    },
+    childrensPrivacy: {
+      title: "Children's Privacy",
+      content: 'Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us immediately.'
+    },
+    internationalTransfers: {
+      title: 'International Data Transfers',
+      content: 'Your information may be transferred to and processed in countries other than your country of residence. We ensure appropriate safeguards are in place to protect your information in accordance with this Privacy Policy.'
+    },
+    changes: {
+      title: 'Changes to This Privacy Policy',
+      content: 'We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date. Your continued use of our services after any modifications constitutes acceptance of the updated Privacy Policy.'
+    },
+    contact: {
+      title: 'Contact Us',
+      content: 'If you have any questions about this Privacy Policy or our data practices, please contact us:',
+      email: 'Email',
+      address: 'Address',
+      addressValue: 'Dhaka, Bangladesh',
+      phone: 'Phone'
+    }
+  },
+  termsOfUse: {
+    title: 'Terms of Use',
+    lastUpdated: 'Last updated: January 2025',
+    backButton: 'Go Back',
+    introduction: {
+      title: 'Introduction',
+      content: 'Welcome to IncidentReport Bangladesh, a community-driven platform for reporting and tracking incidents across Bangladesh. These Terms of Use ("Terms") govern your use of our website, mobile application, and related services (collectively, the "Service").',
+      agreement: 'By accessing or using our Service, you agree to be bound by these Terms. If you disagree with any part of these Terms, you may not access the Service.'
+    },
+    acceptance: {
+      title: 'Acceptance of Terms',
+      content: 'By using our Service, you acknowledge that you have read, understood, and agree to be bound by these Terms and our Privacy Policy.',
+      conditions: 'You agree to comply with all applicable laws and regulations',
+      legalAge: 'You are at least 18 years old or have parental consent',
+      authority: 'You have the legal authority to enter into this agreement',
+      compliance: 'You will comply with all terms and conditions set forth herein'
+    },
+    serviceDescription: {
+      title: 'Description of Service',
+      content: 'IncidentReport Bangladesh provides a platform for community members to report, track, and verify incidents across Bangladesh. Our Service includes:',
+      reporting: 'Incident reporting and documentation tools',
+      tracking: 'Real-time incident tracking and status updates',
+      verification: 'Community-based incident verification system',
+      community: 'Community discussion and collaboration features',
+      analytics: 'Statistical analysis and reporting capabilities'
+    },
+    userAccounts: {
+      title: 'User Accounts',
+      registration: {
+        title: 'Account Registration',
+        accuracy: 'Provide accurate and complete information during registration',
+        security: 'Maintain the security of your account credentials',
+        responsibility: 'Take responsibility for all activities under your account',
+        notification: 'Notify us immediately of any unauthorized use'
+      },
+      accountSecurity: {
+        title: 'Account Security',
+        password: 'Use a strong, unique password for your account',
+        unauthorized: 'Report any unauthorized access attempts immediately',
+        reporting: 'You are responsible for all activities under your account'
+      }
+    },
+    acceptableUse: {
+      title: 'Acceptable Use Policy',
+      content: 'You agree to use our Service only for lawful purposes and in accordance with these Terms.',
+      permitted: {
+        title: 'Permitted Uses',
+        reporting: 'Report genuine incidents and safety concerns',
+        verification: 'Verify incidents based on personal knowledge',
+        communication: 'Engage in respectful community discussions',
+        legal: 'Use the Service in compliance with applicable laws'
+      },
+      prohibited: {
+        title: 'Prohibited Uses',
+        false: 'Submit false, misleading, or fraudulent incident reports',
+        harassment: 'Harass, threaten, or intimidate other users',
+        illegal: 'Use the Service for any illegal or unauthorized purpose',
+        spam: 'Send spam, junk mail, or unsolicited communications',
+        impersonation: 'Impersonate any person or entity',
+        technical: 'Attempt to gain unauthorized access to our systems'
+      }
+    },
+    contentGuidelines: {
+      title: 'Content Guidelines',
+      content: 'All content submitted to our platform must comply with these guidelines:',
+      accuracy: 'Be accurate and truthful in all submissions',
+      relevance: 'Stay relevant to incident reporting and community safety',
+      respectful: 'Maintain respectful and professional communication',
+      legal: 'Comply with all applicable laws and regulations',
+      media: 'Only upload media that is relevant and appropriate'
+    },
+    privacy: {
+      title: 'Privacy and Data Protection',
+      content: 'Your privacy is important to us. Our collection and use of personal information is governed by our Privacy Policy.',
+      collection: 'We collect only necessary information for service provision',
+      usage: 'We use your information to provide and improve our services',
+      sharing: 'We do not sell or rent your personal information',
+      security: 'We implement appropriate security measures to protect your data'
+    },
+    intellectualProperty: {
+      title: 'Intellectual Property Rights',
+      ourContent: {
+        title: 'Our Content',
+        content: 'The Service and its original content, features, and functionality are owned by IncidentReport Bangladesh and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.'
+      },
+      userContent: {
+        title: 'User-Generated Content',
+        content: 'You retain ownership of content you submit to our platform, but grant us certain rights to use it.',
+        license: 'You grant us a non-exclusive, royalty-free license to use your content',
+        warranty: 'You warrant that you have the right to submit the content',
+        removal: 'We reserve the right to remove content that violates these Terms'
+      }
+    },
+    disclaimers: {
+      title: 'Disclaimers',
+      content: 'The Service is provided on an "as is" and "as available" basis. We make no warranties, express or implied, regarding the Service.',
+      accuracy: 'We do not guarantee the accuracy of user-submitted content',
+      availability: 'We do not guarantee uninterrupted service availability',
+      liability: 'We disclaim all liability for any damages arising from use of the Service',
+      thirdParty: 'We are not responsible for third-party content or services'
+    },
+    limitationLiability: {
+      title: 'Limitation of Liability',
+      content: 'To the maximum extent permitted by law, IncidentReport Bangladesh shall not be liable for any indirect, incidental, special, consequential, or punitive damages.',
+      damages: 'We are not liable for any damages resulting from use of the Service',
+      incidents: 'We are not responsible for the accuracy of incident reports',
+      thirdParty: 'We are not liable for third-party actions or content',
+      maximum: 'Our total liability is limited to the amount you paid for the Service'
+    },
+    termination: {
+      title: 'Termination',
+      content: 'We may terminate or suspend your account and access to the Service immediately, without prior notice, for any reason whatsoever.',
+      userTermination: 'You may terminate your account at any time',
+      platformTermination: 'We may terminate accounts that violate these Terms',
+      effect: 'Termination will not affect any rights or obligations that have already accrued',
+      survival: 'Certain provisions will survive termination of these Terms'
+    },
+    governingLaw: {
+      title: 'Governing Law and Dispute Resolution',
+      content: 'These Terms shall be governed by and construed in accordance with the laws of Bangladesh.',
+      jurisdiction: 'Any disputes will be subject to the exclusive jurisdiction of Bangladesh courts',
+      disputes: 'We encourage resolution of disputes through good faith negotiation',
+      arbitration: 'Disputes may be resolved through binding arbitration if necessary'
+    },
+    changes: {
+      title: 'Changes to Terms',
+      content: 'We reserve the right to modify these Terms at any time. We will notify users of any material changes.',
+      notification: 'We will provide notice of changes through the Service or email',
+      acceptance: 'Continued use of the Service constitutes acceptance of modified Terms',
+      continued: 'If you disagree with changes, you must stop using the Service'
+    },
+    contact: {
+      title: 'Contact Information',
+      content: 'If you have any questions about these Terms, please contact us:',
+      email: 'Email',
+      address: 'Address',
+      addressValue: 'Dhaka, Bangladesh',
+      phone: 'Phone'
+    },
+    severability: {
+      title: 'Severability',
+      content: 'If any provision of these Terms is held to be invalid or unenforceable, the remaining provisions will remain in full force and effect.'
+    },
+    entireAgreement: {
+      title: 'Entire Agreement',
+      content: 'These Terms, together with our Privacy Policy, constitute the entire agreement between you and IncidentReport Bangladesh regarding the use of the Service.'
+    }
   }
 }
 

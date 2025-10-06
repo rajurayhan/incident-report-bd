@@ -56,8 +56,8 @@
         <div>
           <h4 class="text-lg font-semibold mb-4 text-white">Legal</h4>
           <ul class="space-y-3">
-            <li><a href="#" class="text-gray-300 hover:text-red-400 transition-colors duration-200">{{ $t('footer.privacyPolicy') }}</a></li>
-            <li><a href="#" class="text-gray-300 hover:text-red-400 transition-colors duration-200">{{ $t('footer.termsOfService') }}</a></li>
+            <li><router-link to="/privacy-policy" class="text-gray-300 hover:text-red-400 transition-colors duration-200">{{ $t('footer.privacyPolicy') }}</router-link></li>
+            <li><router-link to="/terms-of-use" class="text-gray-300 hover:text-red-400 transition-colors duration-200">{{ $t('footer.termsOfService') }}</router-link></li>
             <li><a href="#" class="text-gray-300 hover:text-red-400 transition-colors duration-200">{{ $t('footer.contact') }}</a></li>
           </ul>
         </div>

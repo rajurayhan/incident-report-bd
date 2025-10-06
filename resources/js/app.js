@@ -20,6 +20,8 @@ import ResetPassword from './components/ResetPassword.vue';
 import Profile from './components/Profile.vue';
 import MyReports from './components/MyReports.vue';
 import MyActivity from './components/MyActivity.vue';
+import PrivacyPolicy from './components/PrivacyPolicy.vue';
+import TermsOfUse from './components/TermsOfUse.vue';
 
 // Create router
 const routes = [
@@ -36,6 +38,8 @@ const routes = [
     { path: '/profile', name: 'profile', component: Profile },
     { path: '/my-reports', name: 'my-reports', component: MyReports },
     { path: '/my-activity', name: 'my-activity', component: MyActivity },
+    { path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPolicy },
+    { path: '/terms-of-use', name: 'terms-of-use', component: TermsOfUse },
 ];
 
 const router = createRouter({
