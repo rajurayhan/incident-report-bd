@@ -1,6 +1,6 @@
 export default {
   nav: {
-    logo: 'Incident Report Bangladesh',
+    logo: 'IncidentReport Bangladesh',
     home: 'Home',
     report: 'Report Incident',
     map: 'Map',
