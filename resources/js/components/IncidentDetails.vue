@@ -100,13 +100,6 @@
         </div>
       </div>
 
-      <!-- Anonymous Reporter -->
-      <div class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('incidentDetails.reporterInformation') }}</h3>
-        <div class="text-gray-700">
-          <p class="text-sm text-gray-500 italic">{{ getRandomAnonymousName() }}</p>
-        </div>
-      </div>
 
       <!-- Media Slider -->
       <div v-if="incident.media && incident.media.length > 0" class="mb-6">
@@ -1424,8 +1417,7 @@ const addComment = async () => {
   try {
     const response = await axios.post(`/api/incidents/${incident.value.id}/comments`, {
       content: newCommentText.value,
-      parent_id: replyingTo.value?.id,
-      is_anonymous: false
+      parent_id: replyingTo.value?.id
     })
     
     // If it's a reply, add to parent's replies
@@ -1606,8 +1598,7 @@ const verifyIncident = async (type) => {
   try {
     const response = await axios.post(`/api/incidents/${incident.value.id}/verifications`, {
       verification_type: type,
-      comment: verificationComment.value,
-      is_anonymous: false
+      comment: verificationComment.value
     })
     
     // Update the incident
@@ -1682,24 +1673,6 @@ watch(() => incident.value, (newIncident) => {
     }
   }
 }, { immediate: true })
-
-// Random anonymous name generator
-const getRandomAnonymousName = () => {
-  const adjectives = [
-    'Anonymous', 'Mysterious', 'Silent', 'Hidden', 'Secret', 'Unknown', 'Quiet', 'Discrete',
-    'Private', 'Confidential', 'Unnamed', 'Faceless', 'Shadow', 'Ghost', 'Phantom', 'Invisible'
-  ]
-  
-  const nouns = [
-    'Reporter', 'Witness', 'Observer', 'Citizen', 'Resident', 'Neighbor', 'Passerby', 'Bystander',
-    'Guardian', 'Protector', 'Advocate', 'Whistleblower', 'Source', 'Informant', 'Contributor', 'Helper'
-  ]
-  
-  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)]
-  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)]
-  
-  return `${randomAdjective} ${randomNoun}`
-}
 
 onMounted(() => {
   fetchIncident()

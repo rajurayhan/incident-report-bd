@@ -205,12 +205,6 @@ export default {
     selectDivision: 'Select Division',
     selectDistrict: 'Select District',
     selectThana: 'Select Thana/Upazila',
-    reporterInformation: 'Reported By',
-    anonymousReport: 'Submit as Anonymous Report',
-    anonymousDescription: 'Your personal information will not be shared',
-    provideContactInfo: 'Provide Contact Information',
-    reporterName: 'Reporter Name',
-    reporterPhone: 'Reporter Phone',
     mediaUpload: 'Media Upload',
     uploadMedia: 'Upload Media Files',
     mediaDescription: 'Upload photos or videos related to the incident (optional)',
@@ -257,16 +251,6 @@ export default {
       division: {
         max: 'Division name must not exceed 255 characters'
       },
-      reporter_name: {
-        max: 'Reporter name must not exceed 255 characters'
-      },
-      reporter_phone: {
-        max: 'Reporter phone must not exceed 20 characters'
-      },
-      reporter_email: {
-        email: 'Please enter a valid email address',
-        max: 'Email must not exceed 255 characters'
-      },
       media: {
         array: 'Media must be an array of files',
         file: 'Each media item must be a valid file',
@@ -281,7 +265,6 @@ export default {
     uploadPhotosVideos: 'Upload photos or videos',
     supportedFormatsShort: 'PNG, JPG, MP4 up to 10MB each',
     files: 'files',
-    reportAnonymously: 'Report anonymously (recommended for safety)',
     yourName: 'Your Name',
     yourFullNamePlaceholder: 'Your full name',
     phoneNumber: 'Phone Number',
@@ -374,7 +357,6 @@ export default {
     incidentLocation: 'Incident Location',
     openInGoogleMaps: 'Open in Google Maps',
     copyCoordinates: 'Copy Coordinates',
-    reporterInformation: 'Reported By',
     media: 'Media',
     verificationStatus: 'Verification Status',
     confirmations: 'Confirmations',

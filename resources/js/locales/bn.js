@@ -205,12 +205,6 @@ export default {
     selectDivision: 'বিভাগ নির্বাচন করুন',
     selectDistrict: 'জেলা নির্বাচন করুন',
     selectThana: 'থানা/উপজেলা নির্বাচন করুন',
-    reporterInformation: 'রিপোর্ট করেছেন',
-    anonymousReport: 'বেনামী রিপোর্ট হিসাবে জমা দিন',
-    anonymousDescription: 'আপনার ব্যক্তিগত তথ্য শেয়ার করা হবে না',
-    provideContactInfo: 'যোগাযোগের তথ্য প্রদান করুন',
-    reporterName: 'রিপোর্টারের নাম',
-    reporterPhone: 'রিপোর্টারের ফোন',
     mediaUpload: 'মিডিয়া আপলোড',
     uploadMedia: 'মিডিয়া ফাইল আপলোড করুন',
     mediaDescription: 'ঘটনা সম্পর্কিত ছবি বা ভিডিও আপলোড করুন (ঐচ্ছিক)',
@@ -257,16 +251,6 @@ export default {
       division: {
         max: 'বিভাগের নাম ২৫৫ অক্ষরের বেশি হতে পারে না'
       },
-      reporter_name: {
-        max: 'রিপোর্টারের নাম ২৫৫ অক্ষরের বেশি হতে পারে না'
-      },
-      reporter_phone: {
-        max: 'রিপোর্টারের ফোন ২০ অক্ষরের বেশি হতে পারে না'
-      },
-      reporter_email: {
-        email: 'অনুগ্রহ করে একটি বৈধ ইমেল ঠিকানা লিখুন',
-        max: 'ইমেল ২৫৫ অক্ষরের বেশি হতে পারে না'
-      },
       media: {
         array: 'মিডিয়া ফাইলের একটি অ্যারে হতে হবে',
         file: 'প্রতিটি মিডিয়া আইটেম একটি বৈধ ফাইল হতে হবে',
@@ -281,7 +265,6 @@ export default {
     uploadPhotosVideos: 'ছবি বা ভিডিও আপলোড করুন',
     supportedFormatsShort: 'PNG, JPG, MP4 প্রতিটি সর্বোচ্চ ১০MB',
     files: 'ফাইল',
-    reportAnonymously: 'বেনামী রিপোর্ট করুন (নিরাপত্তার জন্য সুপারিশকৃত)',
     yourName: 'আপনার নাম',
     yourFullNamePlaceholder: 'আপনার পূর্ণ নাম',
     phoneNumber: 'ফোন নম্বর',
@@ -374,7 +357,6 @@ export default {
     incidentLocation: 'ঘটনার অবস্থান',
     openInGoogleMaps: 'গুগল ম্যাপে খুলুন',
     copyCoordinates: 'স্থানাঙ্ক কপি করুন',
-    reporterInformation: 'রিপোর্ট করেছেন',
     media: 'মিডিয়া',
     verificationStatus: 'যাচাইকরণের অবস্থা',
     confirmations: 'নিশ্চিতকরণ',

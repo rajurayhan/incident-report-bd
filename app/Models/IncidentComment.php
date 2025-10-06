@@ -17,7 +17,6 @@ class IncidentComment extends Model
         'user_id',
         'content',
         'mentioned_users',
-        'is_anonymous',
         'commenter_name',
         'likes_count',
         'dislikes_count',
@@ -26,7 +25,6 @@ class IncidentComment extends Model
     ];
 
     protected $casts = [
-        'is_anonymous' => 'boolean',
         'is_moderated' => 'boolean',
         'mentioned_users' => 'array',
     ];
@@ -73,10 +71,6 @@ class IncidentComment extends Model
     // Accessors
     public function getCommenterDisplayNameAttribute(): string
     {
-        if ($this->is_anonymous) {
-            return $this->commenter_name ?? 'Anonymous';
-        }
-        
         return $this->user ? $this->user->name : 'Unknown User';
     }
 }

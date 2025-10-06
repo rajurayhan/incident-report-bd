@@ -81,10 +81,6 @@ class IncidentController extends Controller
             'city' => 'nullable|string|max:255',
             'district' => 'nullable|string|max:255',
             'division' => 'nullable|string|max:255',
-            'is_anonymous' => 'nullable|in:true,false,1,0,"true","false"',
-            'reporter_name' => 'nullable|string|max:255',
-            'reporter_phone' => 'nullable|string|max:20',
-            'reporter_email' => 'nullable|email|max:255',
             'media' => 'nullable|array',
             'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,avi,mov|max:10240', // 10MB max
         ]);
@@ -98,12 +94,9 @@ class IncidentController extends Controller
 
         $incidentData = $request->only([
             'title', 'description', 'category', 'incident_date',
-            'latitude', 'longitude', 'address', 'city', 'district', 'division',
-            'reporter_name', 'reporter_phone', 'reporter_email'
+            'latitude', 'longitude', 'address', 'city', 'district', 'division'
         ]);
 
-        // Convert is_anonymous to proper boolean
-        $incidentData['is_anonymous'] = filter_var($request->input('is_anonymous', false), FILTER_VALIDATE_BOOLEAN);
 
         // Set user_id if authenticated
         if ($request->user()) {
@@ -314,7 +307,6 @@ class IncidentController extends Controller
                 'created_at' => $incident->created_at,
                 'media_count' => $incident->media->count(),
                 'has_media' => $incident->media->count() > 0,
-                'reporter_name' => $incident->is_anonymous ? 'Anonymous' : $incident->reporter_name,
             ];
         });
 

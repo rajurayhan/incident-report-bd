@@ -40,7 +40,6 @@ class IncidentCommentController extends Controller
             'parent_id' => 'nullable|uuid|exists:incident_comments,id',
             'mentioned_users' => 'nullable|array',
             'mentioned_users.*' => 'uuid|exists:users,id',
-            'is_anonymous' => 'boolean',
         ]);
 
         if ($validator->fails()) {
@@ -58,8 +57,7 @@ class IncidentCommentController extends Controller
             'user_id' => $user->id,
             'content' => $request->content,
             'mentioned_users' => $request->mentioned_users,
-            'is_anonymous' => $request->is_anonymous ?? false,
-            'commenter_name' => $request->is_anonymous ? 'Anonymous User' : $user->name,
+            'commenter_name' => $user->name,
         ]);
 
         // Load relationships for response

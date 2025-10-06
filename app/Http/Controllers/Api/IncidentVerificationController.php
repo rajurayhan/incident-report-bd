@@ -21,7 +21,6 @@ class IncidentVerificationController extends Controller
         $validator = Validator::make($request->all(), [
             'verification_type' => 'required|in:confirm,dispute',
             'comment' => 'nullable|string|max:500',
-            'is_anonymous' => 'boolean',
             'verification_source' => 'nullable|string|max:100',
         ]);
 
@@ -50,8 +49,7 @@ class IncidentVerificationController extends Controller
             'user_id' => $user->id,
             'verification_type' => $request->verification_type,
             'comment' => $request->comment,
-            'is_anonymous' => $request->is_anonymous ?? false,
-            'verifier_name' => $request->is_anonymous ? 'Anonymous Verifier' : $user->name,
+            'verifier_name' => $user->name,
             'verification_source' => $request->verification_source,
         ]);
 

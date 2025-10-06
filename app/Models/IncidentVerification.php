@@ -16,7 +16,6 @@ class IncidentVerification extends Model
         'user_id',
         'verification_type',
         'comment',
-        'is_anonymous',
         'verifier_name',
         'latitude',
         'longitude',
@@ -24,7 +23,6 @@ class IncidentVerification extends Model
     ];
 
     protected $casts = [
-        'is_anonymous' => 'boolean',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
     ];
@@ -59,10 +57,6 @@ class IncidentVerification extends Model
     // Accessors
     public function getVerifierDisplayNameAttribute(): string
     {
-        if ($this->is_anonymous) {
-            return $this->verifier_name ?? 'Anonymous';
-        }
-        
         return $this->user ? $this->user->name : 'Unknown User';
     }
 

@@ -18,7 +18,6 @@ class Incident extends Model
         'category',
         'status',
         'priority',
-        'is_anonymous',
         'is_verified',
         'verification_count',
         'dispute_count',
@@ -29,15 +28,11 @@ class Incident extends Model
         'district',
         'division',
         'user_id',
-        'reporter_name',
-        'reporter_phone',
-        'reporter_email',
         'incident_date',
         'metadata',
     ];
 
     protected $casts = [
-        'is_anonymous' => 'boolean',
         'is_verified' => 'boolean',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
