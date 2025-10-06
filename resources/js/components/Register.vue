@@ -58,12 +58,13 @@
           </div>
           
           <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700">{{ $t('auth.phoneNumberOptional') }}</label>
+            <label for="phone" class="block text-sm font-medium text-gray-700">{{ $t('auth.phone') }}</label>
             <input
               id="phone"
               v-model="form.phone"
               name="phone"
               type="tel"
+              required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
               :placeholder="$t('auth.phonePlaceholder')"
             />

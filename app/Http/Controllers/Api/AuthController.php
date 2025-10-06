@@ -18,7 +18,7 @@ class AuthController extends Controller
             'username' => 'required|string|max:50|unique:users|regex:/^[a-zA-Z0-9_]+$/',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'required|string|max:20',
         ]);
 
         if ($validator->fails()) {

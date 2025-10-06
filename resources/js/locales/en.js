@@ -36,7 +36,7 @@ export default {
     uniqueUsername: 'unique_username (letters, numbers, underscore only)',
     usernamePattern: 'Username can only contain letters, numbers, and underscores',
     emailAddress: 'Email Address',
-    phoneNumberOptional: 'Phone Number (Optional)',
+    phoneNumber: 'Phone Number',
     phonePlaceholder: '+880 1XXX XXXXXX',
     confirmPassword: 'Confirm Password',
     confirmPasswordPlaceholder: 'Confirm password',
@@ -393,6 +393,25 @@ export default {
       resolved: 'Resolved',
       rejected: 'Rejected'
     }
+  },
+  signUpInfo: {
+    title: 'Sign Up Required',
+    message: 'You need to be signed in to report an incident. Please create an account or sign in to continue.',
+    benefits: {
+      title: 'Benefits of signing up:',
+      trackReports: 'Track your incident reports',
+      getUpdates: 'Receive updates on your reports',
+      verifyIncidents: 'Verify other incidents in your area',
+      contribute: 'Contribute to community safety'
+    },
+    signUpButton: 'Create Account',
+    signInButton: 'Sign In'
+  },
+  commentLogin: {
+    title: 'Sign In to Comment',
+    message: 'Please sign in to add comments and participate in the discussion.',
+    signInButton: 'Sign In',
+    signUpButton: 'Create Account'
   },
 }
 

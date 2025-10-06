@@ -5,7 +5,79 @@
       :subtitle="$t('report.subtitle')"
     />
     
-    <div class="bg-white shadow-lg rounded-lg">
+    <!-- Sign Up Information Block for Unauthenticated Users -->
+    <div v-if="!authStore.isAuthenticated" class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-3 flex-1">
+          <h3 class="text-lg font-medium text-blue-900 mb-2">
+            {{ $t('signUpInfo.title') }}
+          </h3>
+          <p class="text-blue-700 mb-4">
+            {{ $t('signUpInfo.message') }}
+          </p>
+          
+          <div class="mb-4">
+            <h4 class="text-sm font-medium text-blue-900 mb-2">
+              {{ $t('signUpInfo.benefits.title') }}
+            </h4>
+            <ul class="text-sm text-blue-700 space-y-1">
+              <li class="flex items-center">
+                <svg class="h-4 w-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                {{ $t('signUpInfo.benefits.trackReports') }}
+              </li>
+              <li class="flex items-center">
+                <svg class="h-4 w-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                {{ $t('signUpInfo.benefits.getUpdates') }}
+              </li>
+              <li class="flex items-center">
+                <svg class="h-4 w-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                {{ $t('signUpInfo.benefits.verifyIncidents') }}
+              </li>
+              <li class="flex items-center">
+                <svg class="h-4 w-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                {{ $t('signUpInfo.benefits.contribute') }}
+              </li>
+            </ul>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row gap-3">
+            <router-link
+              to="/register"
+              class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+            >
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              </svg>
+              {{ $t('signUpInfo.signUpButton') }}
+            </router-link>
+            <router-link
+              to="/login"
+              class="inline-flex items-center px-4 py-2 bg-white text-blue-600 text-sm font-medium rounded-md border border-blue-600 hover:bg-blue-50 transition-colors"
+            >
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+              </svg>
+              {{ $t('signUpInfo.signInButton') }}
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div v-if="authStore.isAuthenticated" class="bg-white shadow-lg rounded-lg">
 
       <form @submit.prevent="submitReport" class="p-6 space-y-6">
         <!-- Basic Information -->
@@ -274,49 +346,6 @@
           </div>
         </div>
 
-        <!-- Reporter Information -->
-        <div class="space-y-4">
-          <h2 class="text-lg font-semibold text-gray-900">{{ $t('report.reporterInformation') }}</h2>
-          
-          <div class="flex items-center">
-            <input
-              id="is_anonymous"
-              v-model="form.is_anonymous"
-              type="checkbox"
-              class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
-            />
-            <label for="is_anonymous" class="ml-2 block text-sm text-gray-700">
-              {{ $t('report.reportAnonymously') }}
-            </label>
-          </div>
-
-          <div v-if="!form.is_anonymous" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label for="reporter_name" class="block text-sm font-medium text-gray-700 mb-2">
-                {{ $t('report.yourName') }}
-              </label>
-              <input
-                id="reporter_name"
-                v-model="form.reporter_name"
-                type="text"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                :placeholder="$t('report.yourFullNamePlaceholder')"
-              />
-            </div>
-            <div>
-              <label for="reporter_phone" class="block text-sm font-medium text-gray-700 mb-2">
-                {{ $t('report.phoneNumber') }}
-              </label>
-              <input
-                id="reporter_phone"
-                v-model="form.reporter_phone"
-                type="tel"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                placeholder="+880 1XXX XXXXXX"
-              />
-            </div>
-          </div>
-        </div>
 
         <!-- Submit Button -->
         <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
@@ -344,12 +373,14 @@
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue';
 import { useIncidentStore } from '../stores/incidents';
+import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import PageHeader from './PageHeader.vue';
 import { getDivisions, getDistricts, getThanas } from '../data/bangladesh-locations';
 
 const incidentStore = useIncidentStore();
+const authStore = useAuthStore();
 const router = useRouter();
 const { t } = useI18n();
 
@@ -368,9 +399,6 @@ const form = reactive({
   city: '',
   district: '',
   division: '',
-  is_anonymous: true,
-  reporter_name: '',
-  reporter_phone: '',
 });
 
 const { categories } = incidentStore;
@@ -472,12 +500,7 @@ const submitReport = async () => {
     // Add form fields
     Object.keys(form).forEach(key => {
       if (form[key] !== '') {
-        // Convert boolean to string for FormData
-        if (key === 'is_anonymous') {
-          formData.append(key, form[key] ? 'true' : 'false');
-        } else {
-          formData.append(key, form[key]);
-        }
+        formData.append(key, form[key]);
       }
     });
 

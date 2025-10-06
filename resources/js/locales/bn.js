@@ -36,7 +36,7 @@ export default {
     uniqueUsername: 'অনন্য_ব্যবহারকারীর_নাম (শুধুমাত্র অক্ষর, সংখ্যা, আন্ডারস্কোর)',
     usernamePattern: 'ব্যবহারকারীর নামে শুধুমাত্র অক্ষর, সংখ্যা এবং আন্ডারস্কোর থাকতে পারে',
     emailAddress: 'ইমেল ঠিকানা',
-    phoneNumberOptional: 'ফোন নম্বর (ঐচ্ছিক)',
+    phoneNumber: 'ফোন নম্বর',
     phonePlaceholder: '+৮৮০ ১XXX XXXXXX',
     confirmPassword: 'পাসওয়ার্ড নিশ্চিত করুন',
     confirmPasswordPlaceholder: 'পাসওয়ার্ড নিশ্চিত করুন',
@@ -393,6 +393,25 @@ export default {
       resolved: 'সমাধান',
       rejected: 'প্রত্যাখ্যান'
     }
+  },
+  signUpInfo: {
+    title: 'নিবন্ধন প্রয়োজন',
+    message: 'ঘটনা রিপোর্ট করতে আপনাকে সাইন ইন করতে হবে। চালিয়ে যেতে দয়া করে একটি অ্যাকাউন্ট তৈরি করুন বা সাইন ইন করুন।',
+    benefits: {
+      title: 'নিবন্ধনের সুবিধা:',
+      trackReports: 'আপনার ঘটনা রিপোর্ট ট্র্যাক করুন',
+      getUpdates: 'আপনার রিপোর্টের আপডেট পান',
+      verifyIncidents: 'আপনার এলাকার অন্যান্য ঘটনা যাচাই করুন',
+      contribute: 'সম্প্রদায়ের নিরাপত্তায় অবদান রাখুন'
+    },
+    signUpButton: 'অ্যাকাউন্ট তৈরি করুন',
+    signInButton: 'সাইন ইন'
+  },
+  commentLogin: {
+    title: 'মন্তব্য করতে সাইন ইন করুন',
+    message: 'মন্তব্য যোগ করতে এবং আলোচনায় অংশ নিতে দয়া করে সাইন ইন করুন।',
+    signInButton: 'সাইন ইন',
+    signUpButton: 'অ্যাকাউন্ট তৈরি করুন'
   },
 }
 

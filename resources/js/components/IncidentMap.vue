@@ -1,21 +1,26 @@
 <template>
   <div class="max-w-full mx-auto space-y-4">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="space-y-4">
+      <!-- Title Section -->
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">{{ $t('map.title') }}</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $t('map.title') }}</h1>
         <p class="text-gray-600 mt-1">{{ $t('map.subtitle') }}</p>
       </div>
-      <div class="flex items-center gap-4">
+      
+      <!-- Controls Section -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-4">
         <!-- View Toggle -->
-        <ViewToggle 
-          v-model="viewMode"
-          :options="viewOptions"
-          :label="$t('map.view')"
-        />
+        <div class="flex-shrink-0">
+          <ViewToggle 
+            v-model="viewMode"
+            :options="viewOptions"
+            :label="$t('map.view')"
+          />
+        </div>
         
         <!-- Stats -->
-        <div class="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg border border-blue-200">
+        <div class="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg border border-blue-200 flex-shrink-0">
           <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
           </svg>
@@ -34,9 +39,42 @@
     />
 
     <!-- Main Content Area -->
-    <div class="flex gap-6">
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Map Panel - Top on mobile, Right on desktop -->
+      <div class="lg:order-2 flex-1 bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="relative">
+          <!-- Loading Overlay -->
+          <div v-if="loading" class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+            <div class="flex items-center space-x-2">
+              <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <span class="text-gray-600">{{ $t('map.loadingMap') }}</span>
+            </div>
+          </div>
+
+          <!-- Map -->
+          <div id="map" class="h-80 lg:h-96 w-full"></div>
+          
+          <!-- Map Controls -->
+          <div class="absolute top-4 right-4 z-20 space-y-2">
+            <button 
+              @click="fitToBounds"
+              class="bg-white shadow-md rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 block"
+            >
+              {{ $t('map.fitToData') }}
+            </button>
+            <button 
+              v-if="selectedIncident"
+              @click="clearSelection"
+              class="bg-white shadow-md rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 block"
+            >
+              {{ $t('map.clearSelection') }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Left Panel - Incident List -->
-      <div class="w-96 bg-white shadow-lg rounded-lg overflow-hidden">
+      <div class="lg:order-1 w-full lg:w-96 bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="p-4 border-b border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900">{{ $t('map.incidentList') }}</h3>
           <p class="text-sm text-gray-600">{{ $t('map.clickToHighlight') }}</p>
@@ -45,7 +83,7 @@
         <div 
           ref="incidentListContainer"
           @scroll="handleScroll"
-          class="h-96 overflow-y-auto"
+          class="h-80 lg:h-96 overflow-y-auto"
         >
           <!-- Loading State -->
           <div v-if="loading && !loadingMore" class="p-4 text-center">
@@ -115,39 +153,6 @@
           <!-- End of Results -->
           <div v-if="!hasMore && incidents.length > 0 && !loading" class="p-4 text-center text-gray-500 text-sm">
             {{ $t('map.noMoreIncidents') }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Panel - Map -->
-      <div class="flex-1 bg-white shadow-lg rounded-lg overflow-hidden">
-        <div class="relative">
-          <!-- Loading Overlay -->
-          <div v-if="loading" class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-            <div class="flex items-center space-x-2">
-              <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-              <span class="text-gray-600">{{ $t('map.loadingMap') }}</span>
-            </div>
-          </div>
-
-          <!-- Map -->
-          <div id="map" class="h-96 w-full"></div>
-          
-          <!-- Map Controls -->
-          <div class="absolute top-4 right-4 z-20 space-y-2">
-            <button 
-              @click="fitToBounds"
-              class="bg-white shadow-md rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 block"
-            >
-              {{ $t('map.fitToData') }}
-            </button>
-            <button 
-              v-if="selectedIncident"
-              @click="clearSelection"
-              class="bg-white shadow-md rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 block"
-            >
-              {{ $t('map.clearSelection') }}
-            </button>
           </div>
         </div>
       </div>
@@ -678,7 +683,13 @@ onUnmounted(() => {
 
 /* Ensure map container has proper height */
 #map {
-  min-height: 400px;
+  min-height: 320px;
+}
+
+@media (min-width: 1024px) {
+  #map {
+    min-height: 400px;
+  }
 }
 
 /* Line clamp utility */
