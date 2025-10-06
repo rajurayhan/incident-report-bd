@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Sitemap route
+Route::get('/sitemap.xml', function () {
+    return response()->view('sitemap')->header('Content-Type', 'application/xml');
+});
+
 // Specific routes for better SEO and direct access
 Route::get('/incident/{id}', function () {
     return view('welcome');

@@ -1,5 +1,11 @@
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
+    <!-- Meta Tags Manager -->
+    <MetaTagsManager />
+    
+    <!-- Structured Data Manager -->
+    <StructuredDataManager />
+    
     <!-- Navigation -->
     <Navigation />
 
@@ -20,4 +26,6 @@
 import Navigation from './Navigation.vue'
 import Footer from './Footer.vue'
 import ScrollToTop from './ScrollToTop.vue'
+import MetaTagsManager from './MetaTagsManager.vue'
+import StructuredDataManager from './StructuredDataManager.vue'
 </script>

@@ -1,0 +1,27 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" style="stop-color:#6f42c1;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#e83e8c;stop-opacity:1" />
+</linearGradient>
+</defs>
+<rect width="1200" height="630" fill="url(#gradient)"/>
+<!-- Background Pattern -->
+<circle cx="100" cy="100" r="4" fill="rgba(255,255,255,0.1)"/>
+<circle cx="300" cy="200" r="6" fill="rgba(255,255,255,0.05)"/>
+<circle cx="500" cy="150" r="3" fill="rgba(255,255,255,0.08)"/>
+<circle cx="800" cy="250" r="5" fill="rgba(255,255,255,0.06)"/>
+<circle cx="1000" cy="180" r="4" fill="rgba(255,255,255,0.07)"/>
+<!-- Main Icon -->
+<rect x="500" y="200" width="200" height="200" rx="20" fill="rgba(255,255,255,0.9)"/>
+<!-- Analytics Icon -->
+<path d="M550 250L570 320L590 280L610 340L630 260L650 300L650 350L550 350Z" fill="#6f42c1"/>
+<circle cx="570" cy="320" r="4" fill="#ffffff"/>
+<circle cx="590" cy="280" r="4" fill="#ffffff"/>
+<circle cx="610" cy="340" r="4" fill="#ffffff"/>
+<circle cx="630" cy="260" r="4" fill="#ffffff"/>
+<circle cx="650" cy="300" r="4" fill="#ffffff"/>
+<!-- Text -->
+<text x="600" y="480" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#ffffff" text-anchor="middle">Analytics</text>
+<text x="600" y="530" font-family="Arial, sans-serif" font-size="24" fill="rgba(255,255,255,0.8)" text-anchor="middle">Incident statistics and trends</text>
+</svg>

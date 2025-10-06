@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\IncidentVerificationController;
 use App\Http\Controllers\Api\IncidentMediaController;
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\MetaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,9 @@ Route::get('/incidents/map/data', [IncidentController::class, 'mapData']);
 Route::get('/analytics/stats', [AnalyticsController::class, 'stats']);
 Route::get('/analytics/trends', [AnalyticsController::class, 'trends']);
 Route::get('/analytics/detailed', [AnalyticsController::class, 'detailed']);
+
+// Meta tags for SEO
+Route::get('/meta-tags', [MetaController::class, 'getMetaTags']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
